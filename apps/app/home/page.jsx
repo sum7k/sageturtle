@@ -7,7 +7,7 @@ import Icon, { P } from "@/components/Icon";
 import Art from "@/components/Art";
 import { useMe } from "@/components/useMe";
 import { nextStep } from "@/lib/store";
-import { tilesFor } from "@/lib/variants";
+import { tilesFor, variantById } from "@/lib/variants";
 import { micSpan } from "@/lib/browser";
 import { langById } from "@/lib/langs";
 import { say, sayLine } from "@/lib/speak";
@@ -16,7 +16,7 @@ import { load as loadTaste, pick } from "@/lib/taste";
 
 export default function Home() {
   const router = useRouter();
-  const { me } = useMe();
+  const { me, change } = useMe();
   const [sel, setSel] = useState(null);
   const [top, setTop] = useState(null);
 
@@ -41,6 +41,18 @@ export default function Home() {
         <div className="when"><b>{today}</b><span>{me.pin}</span></div>
         <Link href="/me" className="round white" aria-label="Me"><Icon d={P.person} size={26} /></Link>
       </div>
+      {me.variants.length > 1 && (
+        <div className="hats" role="group" aria-label="What I do">
+          {me.variants.map((id) => {
+            const v = variantById(id);
+            // Switching between your own variants needs no lock: they are all yours.
+            return v && (
+              <button key={id} type="button" className="round white" aria-label={v.label} aria-pressed={me.variant === id}
+                onClick={() => { setSel(null); change((m) => { m.variant = id; }); say(v.label, lang); }}><Icon d={v.icon} size={26} sw={1.8} /></button>
+            );
+          })}
+        </div>
+      )}
       {top && (
         <section className="kcard">
           <div className="art"><Art art={top.art} /></div>

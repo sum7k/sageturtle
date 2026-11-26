@@ -74,25 +74,31 @@ function Place({ me, done, lang }) {
 }
 
 function Variant({ me, done, lang }) {
-  const [pick, setPick] = useState(me.variant);
+  // A person can do more than one thing: a farmer who runs a shop, a teacher who is retired. Tap to add, tap again to remove.
+  const [picks, setPicks] = useState(me.variants);
+  const toggle = (v) => {
+    setPicks((p) => (p.includes(v.id) ? p.filter((x) => x !== v.id) : [...p, v.id]));
+    say(v.label, lang);
+  };
   const go = async () => {
     // Changing what you do asks for the lock again. The first choice does not.
-    if (me.variant && me.variant !== pick && me.lock && me.lock !== "none") {
+    const changed = me.variants.length && (picks.length !== me.variants.length || picks.some((x) => !me.variants.includes(x)));
+    if (changed && me.lock && me.lock !== "none") {
       try { await askLock(me.lock); } catch { return; }
     }
-    done((m) => { m.variant = pick; });
+    done((m) => { m.variants = picks; if (!picks.includes(m.variant)) m.variant = picks[0]; });
   };
   return (
     <>
       <div className="blocks">
         {ADULT_VARIANTS.map((v, i) => (
-          <button key={v.id} type="button" className={`block t${i % 4}`} aria-pressed={pick === v.id} onClick={() => { setPick(v.id); say(v.label, lang); }}>
+          <button key={v.id} type="button" className={`block t${i % 4}`} aria-pressed={picks.includes(v.id)} onClick={() => toggle(v)}>
             <Icon d={v.icon} size={32} sw={1.8} />{v.label}
           </button>
         ))}
       </div>
       <div className="grow" />
-      <div className="foot"><Tick disabled={!pick} onClick={go} /></div>
+      <div className="foot"><Tick disabled={!picks.length} onClick={go} /></div>
     </>
   );
 }

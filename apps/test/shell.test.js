@@ -42,7 +42,7 @@ test("a variant shows only the lists that fit it", () => {
 test("first run goes language, lock, place, what you do, alerts", () => {
   const me = blank();
   const seen = [];
-  const fill = { language: ["lang", "hi"], lock: ["lock", "abc"], place: ["pin", "221001"], variant: ["variant", "farm"], alerts: ["alerts", "no"] };
+  const fill = { language: ["lang", "hi"], lock: ["lock", "abc"], place: ["pin", "221001"], variant: ["variants", ["farm"]], alerts: ["alerts", "no"] };
   for (let s = nextStep(me); s; s = nextStep(me)) { seen.push(s); me[fill[s][0]] = fill[s][1]; }
   assert.deepEqual(seen, STEPS);
 });
@@ -105,4 +105,23 @@ test("a khabar is one piece with a source, and uses no em dash", () => {
     assert.ok(!JSON.stringify(k).includes("—"), k.id);
     assert.ok(!/\bnews\b/i.test(k.title + k.dek + k.paras.join(" ")), k.id);
   }
+});
+
+test("a person can hold any number of variants, and one of them shows on Home", () => {
+  const me = normalise({ v: 1, variants: ["farm", "shop", "farm", 7], variant: "shop" });
+  assert.deepEqual(me.variants, ["farm", "shop"]);
+  assert.equal(me.variant, "shop");
+  assert.equal(normalise({ v: 1, variants: ["farm"], variant: "teach" }).variant, "teach");
+  assert.equal(normalise({ v: 1, variants: ["farm", "shop"] }).variant, "farm");
+});
+
+test("a store from the days of one variant keeps that variant", () => {
+  const me = normalise({ v: 1, variant: "farm" });
+  assert.deepEqual(me.variants, ["farm"]);
+  assert.equal(nextStep({ ...me, lang: "hi", lock: "x", pin: "221001", alerts: "no" }), null);
+});
+
+test("the lists of a person are the union over everything they do, each once", () => {
+  assert.deepEqual(listsFor(["farm", "teach"]).map((l) => l.id), ["family", "friends", "work", "trade", "neighbours", "class"]);
+  assert.deepEqual(listsFor([]), []);
 });

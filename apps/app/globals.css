@@ -50,6 +50,8 @@ h1, h2, p { margin: 0; }
 .head { display: flex; align-items: center; justify-content: space-between; }
 .head .when { display: flex; flex-direction: column; }
 .head .when b { font-size: 17px; } .head .when span { font-size: 14px; color: var(--muted); }
+.hats { display: flex; gap: 8px; }
+.hats .round[aria-pressed="true"] { background: var(--navy); color: var(--white); }
 .kcard { border-radius: 28px; overflow: hidden; background: var(--white); }
 .kcard .art { height: 88px; }
 .kcard .in { display: flex; flex-direction: column; gap: 10px; padding: 16px; }

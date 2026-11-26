@@ -74,4 +74,8 @@ export const LISTS = {
   class: { name: "Class", icon: "M4 5h16v11H4z M9 20l3-4 3 4 M8 9h8 M8 12h5" },
   guardians: { name: "Guardians", icon: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4.5 20a7.5 7.5 0 0 1 15 0" },
 };
-export const listsFor = (id) => (variantById(id)?.lists ?? []).map((l) => ({ id: l, ...LISTS[l] }));
+/** Lists for one variant, or for everything a person does: each list once, in the order of LISTS. */
+export function listsFor(ids) {
+  const want = new Set([].concat(ids).flatMap((id) => variantById(id)?.lists ?? []));
+  return Object.keys(LISTS).filter((l) => want.has(l)).map((l) => ({ id: l, ...LISTS[l] }));
+}

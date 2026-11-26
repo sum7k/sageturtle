@@ -22,7 +22,7 @@ export default function Me() {
   const count = (l) => (me.people[l] ?? []).length;
   const settings = [
     { href: "/start?step=language", label: "Language", icon: P.talk, value: langById(lang).name },
-    { href: "/start?step=variant", label: "What I do", icon: P.grid, value: variantById(me.variant)?.label },
+    { href: "/start?step=variant", label: "What I do", icon: P.grid, value: variantById(me.variant)?.label + (me.variants.length > 1 ? ` +${me.variants.length - 1}` : "") },
     { href: "/start?step=place", label: "My place", icon: P.pin, value: me.pin },
     { href: "/start?step=alerts", label: "Khabar alerts", icon: P.bell, value: <Icon d={me.alerts === "yes" ? P.tick : P.cross} size={18} sw={3} /> },
     { href: "/start?step=lock", label: "My lock", icon: P.finger, value: <Icon d={me.lock && me.lock !== "none" ? P.tick : P.cross} size={18} sw={3} /> },
@@ -36,7 +36,7 @@ export default function Me() {
         <span className="user">@{me.username}</span>
       </div>
       <div className="band">
-        {listsFor(me.variant).map((l, i) => (
+        {listsFor(me.variants).map((l, i) => (
           <Link key={l.id} href={`/me/list?l=${l.id}`} className={`block t${i % 4}`} aria-label={l.name}>
             <Icon d={l.icon} size={28} sw={1.8} />{count(l.id)}
           </Link>
