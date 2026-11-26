@@ -3,8 +3,9 @@
 ## Waiting on sumeet
 
 - Review and merge pull request 2 (sum7k/sageturtle).
+- Decide whether SageTurtle may ask for an optional mobile number (Reach me), so that hand-off links can work. See `apps/shell/backlog.md`. Pull request 3 is a draft until then.
 - In Vercel, project "sageturtle": set Root Directory to `apps`. Until then the preview link shows "page not found", because Vercel builds the top of the repository.
-- Check Claude's choices marked (C) in `decisions.md`, above all: Reach me asks for a mobile number (not the account), the limit of three variants, the five clashing pairs, the group tile names, the table of lists per variant, and the Hindi spoken lines.
+- Check Claude's choices marked (C) in `decisions.md`, above all: the limit of three variants, the five clashing pairs, the group tile names, the table of lists per variant, and the Hindi spoken lines.
 
 ## Designed, with small gaps
 

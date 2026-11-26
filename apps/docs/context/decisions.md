@@ -54,12 +54,12 @@ As of 2026-11-26. (S) = decided by sumeet. (C) = chosen by Claude under the "dec
 - (S) One-to-one calls and messages are handed off by link: the phone's dialer (`tel:`), SMS (`sms:`), WhatsApp (`wa.me/<number>`) or Telegram (`t.me`), whichever that person uses. No APIs, no fees.
 - (S) Kids are never handed off. They keep in-app calls and messages with guardians. Voice in the app can later use Cloudflare Realtime.
 - (S) Build nothing that cannot scale easily to 100 crore users. Hosting is Cloudflare only.
-- (C) Each person fills Reach me in Me: one optional mobile number, never checked by OTP, and one app for messages. The number is not the account.
-- (C) A row has a handset (dialer) and the chosen app's mark (message). Telegram opens by number. A teen's Reach me is filled by the guardian, without Telegram. Groups (class chat, speak to all, class call) stay in the app.
+- Not decided: where the other person's number comes from. Claude proposed Reach me in Me (one optional mobile number, never checked by OTP, and one app for messages; not the account). sumeet is not sure; it is parked in `apps/shell/backlog.md`.
+- (C) A row has a handset (dialer) and the chosen app's mark (message). Telegram opens by number. If Reach me stays, a teen's is filled by the guardian, without Telegram. Groups (class chat, speak to all, class call) stay in the app.
 
 ## Me, people and the class
 
-- (S) Me is the twelfth app: profile, username, family, child control, the lists of people, reach me, settings.
+- (S) Me is the twelfth app: profile, username, family, child control, the lists of people, settings.
 - (S) A person keeps separate lists of people. (C) The set is Family, Friends, Work, Trade, Neighbours, Class. A variant shows only the lists that fit. One person can be in several lists. People join only by scanning each other's code.
 - (S) The class is one shared group seen through each role. The teacher makes it and people join by the class code. Teacher: students, speak to all, homework, call, office hours. Parent: the class sits under the child, a fingerprint lets a teacher in, other parents are visible. Kid: manages nothing, the teacher is a guardian. Teen: classmates and a class chat the teacher can see.
 - (C) Child control has four things: time each day, sleep time, guardians, which apps are on.

@@ -18,8 +18,8 @@ This is the first slice: first run, Home, the Khabri deck and Me. Everything is 
   tile: keep it on top, move it, or hide it. Hidden tiles wait behind the last tile. There are no folders.
 - **The lock is the account**: a passkey opened by fingerprint, face or the phone's PIN. No phone number, no OTP.
 - **Calls and messages are handed off** (`lib/reach.js`). A person's row opens the phone's dialer (`tel:`) or their chat in
-  the app they chose in Reach me: WhatsApp (`wa.me`), Telegram (`t.me`) or SMS. Plain links, no APIs, no fees. The number
-  in Reach me is not the account. Kids are never handed off.
+  the app they chose in Reach me: WhatsApp (`wa.me`), Telegram (`t.me`) or SMS. Plain links, no APIs, no fees. Kids are never handed off.
+  Reach me (asking for a mobile number) is a proposal the owner has not agreed to yet; see `docs/context/open.md`.
 - **Khabri**: one khabar at a time, read whole on its card, easiest part first. Swipe left to like, right for not for me.
   Say khabar, not "news". No em dashes. True, with sources shown.
 
