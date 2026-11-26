@@ -94,12 +94,6 @@ export function allCombos() {
 }
 export function variantById(id) { return VARIANTS.find((v) => v.id === id) ?? null; }
 
-/** The tiles a variant sees on Home: only apps that are on, with the name used for that variant. */
-export function tilesFor(id) {
-  const v = variantById(id);
-  if (!v) return [];
-  return APPS.filter((a) => v.names[a]).map((a) => ({ app: a, name: v.names[a], icon: APP_ICON[a] }));
-}
 
 /** The separate lists of people a person can keep. A variant shows only the ones that fit it. */
 export const LISTS = {

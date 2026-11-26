@@ -3,8 +3,8 @@ export const KEY = "sageturtle.me.v1";
 export const STEPS = ["language", "lock", "place", "variant", "alerts"];
 
 export function blank() {
-  // `variants` is everything the person does; `variant` is the one showing on Home right now.
-  return { v: 1, lang: "", lock: "", pin: "", variants: [], variant: "", alerts: "", name: "", username: "", people: {} };
+  // `variants` is everything the person does; `variant` is the first of them. `tiles` is how they arranged Home.
+  return { v: 1, lang: "", lock: "", pin: "", variants: [], variant: "", alerts: "", name: "", username: "", people: {}, tiles: { order: [], pinned: [], hidden: [] } };
 }
 
 export function normalise(raw) {
@@ -15,6 +15,8 @@ export function normalise(raw) {
   out.variants = Array.isArray(raw.variants) ? [...new Set(raw.variants.filter((x) => typeof x === "string" && x))] : [];
   if (out.variant && !out.variants.includes(out.variant)) out.variants.unshift(out.variant); // from the days of one variant
   if (!out.variants.includes(out.variant)) out.variant = out.variants[0] ?? "";
+  const strs = (x) => (Array.isArray(x) ? [...new Set(x.filter((s) => typeof s === "string"))] : []);
+  out.tiles = { order: strs(raw.tiles?.order), pinned: strs(raw.tiles?.pinned), hidden: strs(raw.tiles?.hidden) };
   if (!/^\d{6}$/.test(out.pin)) out.pin = "";
   return out;
 }

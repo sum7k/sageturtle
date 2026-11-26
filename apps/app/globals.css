@@ -50,8 +50,12 @@ h1, h2, p { margin: 0; }
 .head { display: flex; align-items: center; justify-content: space-between; }
 .head .when { display: flex; flex-direction: column; }
 .head .when b { font-size: 17px; } .head .when span { font-size: 14px; color: var(--muted); }
-.hats { display: flex; gap: 8px; }
-.hats .round[aria-pressed="true"] { background: var(--navy); color: var(--white); }
+.fan { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; padding: 8px; border-radius: 22px; background: var(--white); animation: rise 0.18s ease; }
+.fan .block { flex: 1 1 0; min-width: 96px; min-height: 84px; background: var(--sky); }
+.block { position: relative; touch-action: manipulation; -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
+.block .pin { position: absolute; top: 6px; right: 6px; display: flex; }
+.block .more { position: absolute; bottom: 6px; display: flex; gap: 3px; }
+.block .more i { width: 5px; height: 5px; border-radius: 999px; background: var(--navy); }
 .kcard { border-radius: 28px; overflow: hidden; background: var(--white); }
 .kcard .art { height: 88px; }
 .kcard .in { display: flex; flex-direction: column; gap: 10px; padding: 16px; }

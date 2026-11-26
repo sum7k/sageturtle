@@ -1,12 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { VARIANTS, ADULT_VARIANTS, APPS, tilesFor, listsFor, LISTS, validCombo, togglePick, allCombos, CLASHES, MAX_VARIANTS } from "../lib/variants.js";
+import { VARIANTS, ADULT_VARIANTS, APPS, listsFor, LISTS, validCombo, togglePick, allCombos, CLASHES, MAX_VARIANTS } from "../lib/variants.js";
 import { blank, normalise, nextStep, STEPS } from "../lib/store.js";
 import { pick, addWeight, blank as blankTaste, normalise as normTaste, OUTSIDE_EVERY } from "../lib/taste.js";
 import { browserKind, micSpan } from "../lib/browser.js";
 import { LANGS, langById } from "../lib/langs.js";
 import { LINES } from "../lib/lines.js";
 import { KHABARS } from "../lib/khabars.js";
+import { homeTiles, togglePin, toggleHide, move, GROUP_NAME, blankTiles } from "../lib/home.js";
 
 test("there are eleven variants and nine of them are for adults", () => {
   assert.equal(VARIANTS.length, 11);
@@ -26,10 +27,9 @@ test("no app is named with a verb", () => {
 });
 
 test("an app that is off for a variant gets no tile", () => {
-  assert.equal(tilesFor("kids").length, 8);
-  assert.equal(tilesFor("farm").length, 10);
-  assert.deepEqual(tilesFor("farm").map((t) => t.name), ["School", "Mandi", "Calendar", "Fun", "Calls", "Messages", "Chaupal", "Melas", "Farms", "Listings"]);
-  assert.deepEqual(tilesFor("nobody"), []);
+  assert.equal(homeTiles(["kids"]).tiles.length, 8);
+  assert.deepEqual(homeTiles(["farm"]).tiles.map((t) => t.name), ["School", "Mandi", "Calendar", "Fun", "Calls", "Messages", "Chaupal", "Melas", "Farms", "Listings"]);
+  assert.deepEqual(homeTiles(["nobody"]).tiles, []);
 });
 
 test("a variant shows only the lists that fit it", () => {
@@ -149,4 +149,45 @@ test("there are 97 kinds of person", () => {
   const by = (n) => all.filter((c) => c.length === n).length;
   assert.deepEqual([by(1), by(2), by(3)], [11, 31, 55]);
   assert.equal(all.length, 97);
+});
+
+
+test("Home shows one tile per app, and a tile opens into versions only where the names differ", () => {
+  const one = homeTiles(["farm"]).tiles;
+  assert.equal(one.length, 10);
+  assert.ok(one.every((t) => t.versions.length === 1));
+  assert.equal(one[1].name, "Mandi");
+  const two = homeTiles(["farm", "shop"]).tiles;
+  assert.equal(two.length, 10);
+  const earn = two.find((t) => t.app === "earn");
+  assert.equal(earn.name, "Earnings");
+  assert.deepEqual(earn.versions.map((v) => v.name), ["Mandi", "Leads"]);
+  const calls = two.find((t) => t.app === "meetings"); // both call it Calls, so it is one plain tile
+  assert.equal(calls.name, "Calls");
+  assert.deepEqual(calls.versions.map((v) => v.variants), [["farm", "shop"]]);
+});
+
+test("a group tile's own name is one word too", () => {
+  for (const n of Object.values(GROUP_NAME)) assert.match(n, /^[A-Z][a-z]+$/);
+});
+
+test("a tile can be kept on top, hidden and brought back, and moved", () => {
+  let p = togglePin(blankTiles(), "events");
+  assert.equal(homeTiles(["farm"], p).tiles[0].app, "events");
+  p = toggleHide(p, "learn");
+  let h = homeTiles(["farm"], p);
+  assert.equal(h.tiles.length, 9);
+  assert.deepEqual(h.hidden.map((t) => t.app), ["learn"]);
+  assert.equal(homeTiles(["farm"], toggleHide(p, "learn")).tiles.length, 10);
+  const before = h.tiles.map((t) => t.app);
+  p = move(["farm"], p, before[2], -1);
+  const after = homeTiles(["farm"], p).tiles.map((t) => t.app);
+  assert.deepEqual([after[1], after[2]], [before[2], before[1]]);
+  assert.equal(move(["farm"], p, after[1], -1), p, "a tile does not jump over the pinned ones");
+  assert.equal(move(["farm"], p, "events", -1), p, "the first tile cannot move earlier");
+});
+
+test("the store keeps how Home is arranged, and repairs a broken arrangement", () => {
+  assert.deepEqual(normalise({ v: 1, tiles: { pinned: ["earn", "earn", 3], hidden: "x" } }).tiles, { order: [], pinned: ["earn"], hidden: [] });
+  assert.deepEqual(blank().tiles, blankTiles());
 });
