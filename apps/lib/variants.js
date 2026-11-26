@@ -55,7 +55,44 @@ export const VARIANTS = [
 ];
 
 export const ADULT_VARIANTS = VARIANTS.filter((v) => v.adult);
-export const variantById = (id) => VARIANTS.find((v) => v.id === id) ?? null;
+
+// A person can hold several variants, but some do not go together, and nobody holds more than three.
+// Kids and Teens always stand alone: they are profiles an adult makes, never mixed with anything.
+export const MAX_VARIANTS = 3;
+export const CLASHES = [
+  ["jobs", "office"],    // looking for a job, or having one
+  ["retired", "office"], // retired from a job, or in one
+  ["retired", "jobs"],   // retired, or looking for a job
+  ["teach", "office"],   // teaching is the job; the Teacher variant already covers it
+  ["college", "retired"], // a college student, or retired
+];
+export const clashesWith = (id) => CLASHES.filter((c) => c.includes(id)).map((c) => (c[0] === id ? c[1] : c[0]));
+
+/** Is this set of variants one that a person may hold? */
+export function validCombo(ids) {
+  if (!ids.length || new Set(ids).size !== ids.length || ids.some((id) => !variantById(id))) return false;
+  if (ids.some((id) => !variantById(id).adult)) return ids.length === 1;
+  return ids.length <= MAX_VARIANTS && !CLASHES.some(([a, b]) => ids.includes(a) && ids.includes(b));
+}
+
+/** Add or remove one variant from a person's picks. Adding one removes whatever clashes with it; a fourth is refused. */
+export function togglePick(picks, id) {
+  if (picks.includes(id)) return picks.filter((x) => x !== id);
+  const kept = picks.filter((x) => !clashesWith(id).includes(x));
+  return kept.length >= MAX_VARIANTS ? picks : [...kept, id];
+}
+
+/** Every kind of person there can be: each valid combination of variants, counted once. */
+export function allCombos() {
+  const ids = VARIANTS.map((v) => v.id);
+  const out = [];
+  for (let m = 1; m < 1 << ids.length; m++) {
+    const set = ids.filter((_, i) => m & (1 << i));
+    if (validCombo(set)) out.push(set);
+  }
+  return out;
+}
+export function variantById(id) { return VARIANTS.find((v) => v.id === id) ?? null; }
 
 /** The tiles a variant sees on Home: only apps that are on, with the name used for that variant. */
 export function tilesFor(id) {

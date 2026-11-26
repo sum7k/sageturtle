@@ -6,7 +6,7 @@ import Bar from "@/components/Bar";
 import Icon, { P } from "@/components/Icon";
 import { useMe } from "@/components/useMe";
 import { LANGS } from "@/lib/langs";
-import { ADULT_VARIANTS } from "@/lib/variants";
+import { ADULT_VARIANTS, MAX_VARIANTS, togglePick } from "@/lib/variants";
 import { STEPS, nextStep } from "@/lib/store";
 import { say, sayLine, line } from "@/lib/speak";
 import { canLock, makeLock, askLock } from "@/lib/lock";
@@ -77,7 +77,7 @@ function Variant({ me, done, lang }) {
   // A person can do more than one thing: a farmer who runs a shop, a teacher who is retired. Tap to add, tap again to remove.
   const [picks, setPicks] = useState(me.variants);
   const toggle = (v) => {
-    setPicks((p) => (p.includes(v.id) ? p.filter((x) => x !== v.id) : [...p, v.id]));
+    setPicks((p) => togglePick(p, v.id)); // adding one drops what clashes with it; a fourth is refused
     say(v.label, lang);
   };
   const go = async () => {
@@ -92,7 +92,7 @@ function Variant({ me, done, lang }) {
     <>
       <div className="blocks">
         {ADULT_VARIANTS.map((v, i) => (
-          <button key={v.id} type="button" className={`block t${i % 4}`} aria-pressed={picks.includes(v.id)} onClick={() => toggle(v)}>
+          <button key={v.id} type="button" className={`block t${i % 4}${picks.length >= MAX_VARIANTS && !picks.includes(v.id) ? " dim" : ""}`} aria-pressed={picks.includes(v.id)} onClick={() => toggle(v)}>
             <Icon d={v.icon} size={32} sw={1.8} />{v.label}
           </button>
         ))}

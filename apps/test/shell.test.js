@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { VARIANTS, ADULT_VARIANTS, APPS, tilesFor, listsFor, LISTS } from "../lib/variants.js";
+import { VARIANTS, ADULT_VARIANTS, APPS, tilesFor, listsFor, LISTS, validCombo, togglePick, allCombos, CLASHES, MAX_VARIANTS } from "../lib/variants.js";
 import { blank, normalise, nextStep, STEPS } from "../lib/store.js";
 import { pick, addWeight, blank as blankTaste, normalise as normTaste, OUTSIDE_EVERY } from "../lib/taste.js";
 import { browserKind, micSpan } from "../lib/browser.js";
@@ -124,4 +124,29 @@ test("a store from the days of one variant keeps that variant", () => {
 test("the lists of a person are the union over everything they do, each once", () => {
   assert.deepEqual(listsFor(["farm", "teach"]).map((l) => l.id), ["family", "friends", "work", "trade", "neighbours", "class"]);
   assert.deepEqual(listsFor([]), []);
+});
+
+test("some variants do not go together, and nobody holds more than three", () => {
+  assert.ok(validCombo(["farm", "shop"]));
+  assert.ok(validCombo(["farm", "shop", "home"]));
+  assert.ok(!validCombo(["farm", "shop", "home", "gig"]));
+  assert.ok(!validCombo(["retired", "jobs"]));
+  assert.ok(!validCombo(["kids", "farm"]));
+  assert.ok(validCombo(["kids"]));
+  assert.ok(!validCombo([]));
+  for (const [a, b] of CLASHES) assert.ok(!validCombo([a, b]), `${a}+${b}`);
+});
+
+test("picking a variant drops what clashes with it, and a fourth pick is refused", () => {
+  assert.deepEqual(togglePick(["office", "farm"], "retired"), ["farm", "retired"]);
+  assert.deepEqual(togglePick(["farm", "shop", "home"], "gig"), ["farm", "shop", "home"]);
+  assert.deepEqual(togglePick(["farm", "shop"], "farm"), ["shop"]);
+  assert.equal(MAX_VARIANTS, 3);
+});
+
+test("there are 97 kinds of person", () => {
+  const all = allCombos();
+  const by = (n) => all.filter((c) => c.length === n).length;
+  assert.deepEqual([by(1), by(2), by(3)], [11, 31, 55]);
+  assert.equal(all.length, 97);
 });

@@ -13,6 +13,7 @@ This is the first slice: first run, Home, the Khabri deck and Me. Everything is 
 - **App names are one word and a noun**, never a verb (`lib/variants.js`).
 - **A person can hold any number of variants** (a farmer who runs a shop). Home shows one at a time, with a row of
   pictures to switch. Adding or removing one asks for the lock; switching does not. Lists of people are the union.
+  Some variants do not go together and nobody holds more than three, which gives 97 kinds of person (`allCombos`).
 - **The lock is the account**: a passkey opened by fingerprint, face or the phone's PIN. No phone number, no OTP.
 - **Khabri**: one khabar at a time, read whole on its card, easiest part first. Swipe left to like, right for not for me.
   Say khabar, not "news". No em dashes. True, with sources shown.
