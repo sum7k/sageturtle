@@ -3,7 +3,10 @@ Base repository for all my professional work
 
 ## Website
 
-A static placeholder landing page lives in `public/`. It is served by a Cloudflare Worker
-(static assets only, config in `wrangler.jsonc`) at https://sageturtle.me and https://www.sageturtle.me.
+All code lives in `software/`. A static placeholder landing page is in `software/public/`, served by a
+Cloudflare Worker (static assets only, config in `software/wrangler.jsonc`) at https://sageturtle.me
+and https://www.sageturtle.me.
 
-Deploy manually with `npx wrangler deploy`, or let Cloudflare Workers Builds deploy on every push to `main`.
+Deploy manually with `cd software && npx wrangler deploy`, or let Cloudflare Workers Builds deploy on
+every push to `main` (set the build's root directory to `software`). Copy `software/.env.example` to
+`software/.env` for local deploy credentials; `.env` is gitignored.
