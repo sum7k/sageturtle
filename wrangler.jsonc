@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sageturtle",
+  "compatibility_date": "2026-11-01",
+  // Static-assets-only Worker: serves everything in ./public, no Worker script needed.
+  "assets": {
+    "directory": "./public",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  // Cloudflare creates the DNS records and certificates for these automatically.
+  "routes": [
+    { "pattern": "sageturtle.me", "custom_domain": true },
+    { "pattern": "www.sageturtle.me", "custom_domain": true }
+  ],
+  "workers_dev": true
+}
