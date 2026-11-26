@@ -4,7 +4,7 @@
 
 - Review and merge pull request 2 (sum7k/sageturtle).
 - In Vercel, project "sageturtle": set Root Directory to `apps`. Until then the preview link shows "page not found", because Vercel builds the top of the repository.
-- Check Claude's choices marked (C) in `decisions.md`, above all: the limit of three variants, the five clashing pairs, the group tile names, the table of lists per variant, and the Hindi spoken lines.
+- Check Claude's choices marked (C) in `decisions.md`, above all: Reach me asks for a mobile number (not the account), the limit of three variants, the five clashing pairs, the group tile names, the table of lists per variant, and the Hindi spoken lines.
 
 ## Designed, with small gaps
 
@@ -17,16 +17,18 @@
 
 The inside of the ten apps: Learn, Earn, Reminders, Hobbies, Meetings, Messages, Discussions, Events, Yellow Pages,
 Advertise. The design map says what each does for each variant, but there are no screens. Suggested first: Messages,
-because the lists of people and the class both lead into it.
+because the lists of people and the class both lead into it. One-to-one talk is handed off to the phone, WhatsApp or
+Telegram, so Messages needs screens only for its list of people, for Kids and for groups.
 
 ## Built (pull request 2) and not built
 
 Built: wordless landing by browser, first run, Home with grouped tiles and arranging, the Khabri deck, Me with lists and
-settings. 24 tests pass. Everything is saved on the phone (localStorage).
+settings. Reach me and the hand-off links are in a second pull request on top of it. 27 tests pass. Everything is saved on the phone (localStorage).
 
 Not built:
 - The backend, and the server check of the passkey.
 - Translation: app names and khabars are English; only dates follow the language. Spoken lines exist in English and Hindi only.
+- Hand-off is built only as far as the phone can go alone: Reach me, and call and message buttons on a person's row. Other people's numbers arrive only when code scanning and the backend exist. A teen's Reach me in child control is not built.
 - The ten apps, the mic, code scanning, place by location, family profiles, child control, the class, remove ads.
 - Offline mode, night colours, sending khabar alerts.
 - The khabar pipeline. Four hand-written khabars with Wikipedia sources stand in.

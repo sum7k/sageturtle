@@ -7,6 +7,7 @@ import { browserKind, micSpan } from "../lib/browser.js";
 import { LANGS, langById } from "../lib/langs.js";
 import { LINES } from "../lib/lines.js";
 import { KHABARS } from "../lib/khabars.js";
+import { cleanNumber, reachLinks, normaliseReach, REACH_APPS, TEEN_REACH_APPS } from "../lib/reach.js";
 import { homeTiles, togglePin, toggleHide, move, GROUP_NAME, blankTiles } from "../lib/home.js";
 
 test("there are eleven variants and nine of them are for adults", () => {
@@ -190,4 +191,30 @@ test("a tile can be kept on top, hidden and brought back, and moved", () => {
 test("the store keeps how Home is arranged, and repairs a broken arrangement", () => {
   assert.deepEqual(normalise({ v: 1, tiles: { pinned: ["earn", "earn", 3], hidden: "x" } }).tiles, { order: [], pinned: ["earn"], hidden: [] });
   assert.deepEqual(blank().tiles, blankTiles());
+});
+
+test("a mobile number is kept as ten digits, however it was entered", () => {
+  assert.equal(cleanNumber("98765 43210"), "9876543210");
+  assert.equal(cleanNumber("+91 98765-43210"), "9876543210");
+  assert.equal(cleanNumber("09876543210"), "9876543210");
+  assert.equal(cleanNumber("12345"), "");
+  assert.equal(cleanNumber("1234567890"), "");
+  assert.deepEqual(normaliseReach({ phone: "9876543210", app: "fax" }), { phone: "", app: "" });
+  assert.deepEqual(blank().reach, { phone: "", app: "" });
+  assert.deepEqual(normalise({ v: 1, reach: { phone: "+919876543210", app: "sms" } }).reach, { phone: "9876543210", app: "sms" });
+});
+
+test("a person is handed off by link to the dialer and to the app they chose", () => {
+  const who = (app) => ({ name: "Asha", reach: { phone: "9876543210", app } });
+  assert.deepEqual(reachLinks(who("whatsapp")), { app: "whatsapp", call: "tel:+919876543210", message: "https://wa.me/919876543210" });
+  assert.equal(reachLinks(who("telegram")).message, "https://t.me/+919876543210");
+  assert.equal(reachLinks(who("sms")).message, "sms:+919876543210");
+  for (const a of REACH_APPS) assert.equal(reachLinks(who(a)).call, "tel:+919876543210");
+  assert.equal(reachLinks({ name: "Ravi" }), null);
+});
+
+test("a kid is never handed off, and a teen never to Telegram", () => {
+  assert.equal(reachLinks({ name: "Chintu", kid: true, reach: { phone: "9876543210", app: "whatsapp" } }), null);
+  assert.ok(!TEEN_REACH_APPS.includes("telegram"));
+  for (const a of TEEN_REACH_APPS) assert.ok(REACH_APPS.includes(a));
 });

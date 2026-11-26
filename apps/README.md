@@ -17,6 +17,9 @@ This is the first slice: first run, Home, the Khabri deck and Me. Everything is 
   carries the app's own name and opens into those versions (Earnings opens into Mandi and Leads). A long press arranges a
   tile: keep it on top, move it, or hide it. Hidden tiles wait behind the last tile. There are no folders.
 - **The lock is the account**: a passkey opened by fingerprint, face or the phone's PIN. No phone number, no OTP.
+- **Calls and messages are handed off** (`lib/reach.js`). A person's row opens the phone's dialer (`tel:`) or their chat in
+  the app they chose in Reach me: WhatsApp (`wa.me`), Telegram (`t.me`) or SMS. Plain links, no APIs, no fees. The number
+  in Reach me is not the account. Kids are never handed off.
 - **Khabri**: one khabar at a time, read whole on its card, easiest part first. Swipe left to like, right for not for me.
   Say khabar, not "news". No em dashes. True, with sources shown.
 
@@ -38,4 +41,6 @@ In a browser that cannot install, the landing button simply goes on to first run
 - The passkey is made and asked for on the phone only; the server check comes with the backend.
 - The ten app tiles, the mic, scanning a code, finding the place by location, family profiles, child control and
   remove ads say "coming soon".
+- Other people's Reach me details arrive only with code scanning and the backend, so the row buttons show for nobody yet.
+  A teen's Reach me in child control is not built.
 - No offline mode, no night colours, no khabar alerts being sent.

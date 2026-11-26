@@ -18,6 +18,8 @@ h1, h2, p { margin: 0; }
 .round { width: 48px; height: 48px; flex: none; border-radius: 999px; background: var(--sky); display: inline-flex; align-items: center; justify-content: center; }
 .round.white { background: var(--white); }
 .round.gold { background: var(--gold); }
+.round.whatsapp { background: #25d366; }
+.round.telegram { background: #8fd0f5; }
 .round.navy { background: var(--navy); color: var(--white); }
 .round.big { width: 72px; height: 72px; }
 .round.huge { width: 144px; height: 144px; }
@@ -37,6 +39,7 @@ h1, h2, p { margin: 0; }
 /* PIN code */
 .digits { display: flex; justify-content: center; gap: 8px; }
 .digits span { width: 44px; height: 56px; border-radius: 14px; background: var(--white); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 700; }
+.number { min-height: 56px; border-radius: 18px; background: var(--white); display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 26px; font-weight: 700; letter-spacing: 1px; }
 .keys { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .keys button { height: 64px; border-radius: 20px; background: var(--white); font-size: 26px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 

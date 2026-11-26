@@ -11,6 +11,8 @@ import { langById } from "@/lib/langs";
 import { listsFor, variantById } from "@/lib/variants";
 import { sayLine } from "@/lib/speak";
 
+const REACH_NAME = { whatsapp: "WhatsApp", telegram: "Telegram", sms: "SMS" };
+
 /** Everything about the person in one place: their people on top, their settings below. Each tile shows its present value. */
 export default function Me() {
   const router = useRouter();
@@ -46,6 +48,7 @@ export default function Me() {
         {settings.map((s) => (
           <Link key={s.label} href={s.href} className="block" aria-label={s.label}><Icon d={s.icon} size={28} sw={1.8} />{s.value}</Link>
         ))}
+        <Link href="/me/reach" className="block" aria-label="Reach me"><Icon d={P.phone} size={28} sw={1.8} />{me.reach.phone ? REACH_NAME[me.reach.app] : <Icon d={P.cross} size={18} sw={3} />}</Link>
         <button type="button" className="block" aria-label="Remove ads" onClick={() => sayLine("soon", lang)}><Icon d={P.noads} size={28} sw={1.8} />₹1,200</button>
       </div>
     </main>

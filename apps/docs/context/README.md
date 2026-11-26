@@ -21,7 +21,7 @@ The old company name Broadvale is being removed (root `backlog.md`).
 | What | Where |
 | :--- | :--- |
 | Design map (variants, names, rules), living | https://claude.ai/artifact/KBQ1Cuj8GjVKK5e9nT5A6G, source `apps/docs/variant-map.html` |
-| Drawn screens (canvas, 29 phone screens), living | https://claude.ai/artifact/Jgem7AE3dhZSPvVkV6bqS1, source `apps/shell/docs/canvas/` |
+| Drawn screens (canvas, 30 phone screens), living | https://claude.ai/artifact/Jgem7AE3dhZSPvVkV6bqS1, source `apps/shell/docs/canvas/` |
 | Screens in words | `apps/shell/docs/screens.md` |
 | Choices and their cost | `apps/tradeoffs.md`, `apps/shell/tradeoffs.md` |
 | Parked work | `apps/backlog.md`, `apps/shell/backlog.md`, root `backlog.md` |
