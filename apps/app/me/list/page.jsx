@@ -1,0 +1,39 @@
+"use client";
+
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import Bar from "@/components/Bar";
+import Icon, { P } from "@/components/Icon";
+import { useMe } from "@/components/useMe";
+import { LISTS } from "@/lib/variants";
+import { sayLine } from "@/lib/speak";
+
+/** One list of people. People join only by scanning each other's code, so strangers cannot find anyone. */
+function List() {
+  const id = useSearchParams().get("l");
+  const { me } = useMe();
+  const list = LISTS[id];
+  if (!me || !list) return <main className="screen"><Bar back="/me" /></main>;
+  const people = me.people[id] ?? [];
+  return (
+    <main className="screen">
+      <Bar back="/me" speakKey="list" lang={me.lang} />
+      <div className="code">
+        <span className="round huge"><Icon d={list.icon} size={72} sw={1.4} label={list.name} /></span>
+        <span>@{me.username}</span>
+      </div>
+      <button type="button" className="wide" style={{ minHeight: 64, gap: 10 }} aria-label="Scan someone's code" onClick={() => sayLine("soon", me.lang)}>
+        <Icon d={P.camera} size={28} /><Icon d={P.plus} size={22} sw={2.5} />
+      </button>
+      {people.map((p) => (
+        <div key={p.username} className="row" style={{ background: "#fff", borderRadius: 24, padding: "10px 14px" }}>
+          <span className="round"><Icon d={P.person} size={26} /></span><b className="grow">{p.name}</b>
+        </div>
+      ))}
+    </main>
+  );
+}
+
+export default function Page() {
+  return <Suspense fallback={<main className="screen" />}><List /></Suspense>;
+}

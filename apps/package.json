@@ -1,0 +1,19 @@
+{
+  "name": "sageturtle",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SageTurtle: twelve apps in one, shaped to who you are.",
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "node --test \"test/**/*.test.js\""
+  },
+  "dependencies": {
+    "next": "^16.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  }
+}
