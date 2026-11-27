@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SageTurtle</title>
+  <meta name="description" content="SageTurtle is coming soon.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐢</text></svg>">
+  <style>
+    :root { --bg:#f6f4ee; --fg:#1f2a24; --muted:#5d6b62; --accent:#2f6f4f; --card:#ffffff; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg:#121815; --fg:#e8eee9; --muted:#9fb0a5; --accent:#6fc59a; --card:#1a221e; }
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; min-height:100vh; display:flex; flex-direction:column; background:var(--bg); color:var(--fg);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height:1.6; }
+    main { flex:1; display:flex; align-items:center; justify-content:center; padding:48px 16px; }
+    .wrap { max-width:640px; text-align:center; }
+    .logo { font-size:64px; line-height:1; }
+    h1 { font-size:clamp(2.2rem, 6vw, 3.4rem); margin:16px 0 8px; letter-spacing:-0.02em; }
+    .tag { color:var(--accent); font-weight:600; margin:0 0 24px; }
+    p { color:var(--muted); margin:0 0 16px; }
+    .cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px; margin-top:32px; text-align:left; }
+    .card { background:var(--card); border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+    .card h2 { font-size:1rem; margin:0 0 4px; color:var(--fg); }
+    .card p { font-size:.9rem; margin:0; }
+    footer { text-align:center; padding:24px 16px; color:var(--muted); font-size:.85rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="wrap">
+      <div class="logo" aria-hidden="true">🐢</div>
+      <h1>SageTurtle</h1>
+      <p class="tag">Slow and steady. Coming soon.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+      <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+      <div class="cards">
+        <div class="card"><h2>Lorem</h2><p>Excepteur sint occaecat cupidatat non proident.</p></div>
+        <div class="card"><h2>Ipsum</h2><p>Sunt in culpa qui officia deserunt mollit anim.</p></div>
+        <div class="card"><h2>Dolor</h2><p>Nemo enim ipsam voluptatem quia voluptas sit.</p></div>
+      </div>
+    </div>
+  </main>
+  <footer>© 2026 SageTurtle · sageturtle.me</footer>
+</body>
+</html>
