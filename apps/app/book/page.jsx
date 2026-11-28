@@ -88,7 +88,7 @@ export default function Book() {
   const other = page === "words" ? "letters" : "words";
   return (
     <main className="screen">
-      <Bar back="/word" title={nameOf(WORD_HOUSES.find((h) => h.open === "/book"), lang)} right={
+      <Bar back="/stage?n=3" title={nameOf(WORD_HOUSES.find((h) => h.open === "/book"), lang)} right={
         <button type="button" className="round white" aria-label={other} onClick={() => setPage(other)}>
           {page === "words" ? <b className="abc" lang={lang}>{lettersFor(lang)[0]}</b> : <Icon d={P.picture} size={24} />}
         </button>

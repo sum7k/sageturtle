@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { BOOK, WORD, LIFE, TRACKED, tapName } from "../lib/buttons.js";
 import { AROUND, CENTRE, SAY } from "../lib/grid.js";
 import { WORD_HOUSES } from "../lib/word.js";
+import { stageHouses, subjectsAt, doorOf, cleanStage } from "../lib/stages.js";
 import { TOP } from "../lib/top.js";
 import { mark, report } from "../lib/learn.js";
 import { shouldLook, afterLook } from "../lib/ask.js";
@@ -152,7 +153,7 @@ test("the Open the app button uses an Android intent, with the start page in the
 test("Home holds twelve subjects, turned by the rising sign", () => {
   assert.equal(SUBJECTS.length, 12);
   assert.equal(SUBJECTS[11].id, "lives"); // Meena, the twelfth sign
-  assert.deepEqual(SUBJECTS.filter((x) => x.open).map((x) => [x.id, x.open]), [["word", "/word"], ["number", "/number"], ["nature", "/nature"], ["lives", "/life"]]);
+  assert.ok(SUBJECTS.every((x) => !x.open), "what a subject opens depends on the stage");
   assert.equal(new Set(SUBJECTS.map((x) => x.id)).size, 12);
   for (const x of SUBJECTS) for (const l of LANG_ORDER) assert.ok(x.name[l], `${x.id} ${l}`);
   assert.deepEqual([...LANG_ORDER].sort(), LANGS.map((l) => l.id).sort());
@@ -161,8 +162,8 @@ test("Home holds twelve subjects, turned by the rising sign", () => {
   // Vrishchika (7) rising: Nature is in house 1, People in house 2, and Art comes last.
   assert.deepEqual(ring(7).map((x) => x.id), ["nature", "people", "hand", "money", "lives", "body", "music", "word", "earth", "rule", "number", "art"]);
   assert.equal(ring(0)[0].id, "body");
-  for (const x of SUBJECTS) assert.ok(TRACKED.includes(tapName("gyan", x)), x.id);
-  assert.deepEqual([tapName("gyan", SUBJECTS[2]), tapName("gyan", SUBJECTS[11]), tapName("gyan", SUBJECTS[0])], [WORD.id, LIFE.id, "subject:body"]);
+  for (const x of SUBJECTS) assert.ok(TRACKED.includes(tapName("stage", x)), x.id);
+  assert.deepEqual([tapName("stage", SUBJECTS[2]), tapName("stage", SUBJECTS[11]), tapName("stage", SUBJECTS[0])], [WORD.id, LIFE.id, "subject:body"]);
 });
 
 test("every level is a grid of sixteen: twelve houses around and the same four in the middle", () => {
@@ -186,12 +187,34 @@ test("every level is a grid of sixteen: twelve houses around and the same four i
   assert.deepEqual([TOP[0].name.en, TOP[1].name.en, TOP[0].name.ta], ["Knowledge", "Present", "ஞானம்"]);
   const latin = /[A-Za-z]{3}/;
   for (const l of LANGS.filter((x) => x.id !== "en")) for (const box of [...TOP.slice(0, 2), ...SUBJECTS, ...WORD_HOUSES, ...CENTRE]) assert.ok(!latin.test(box.name[l.id]), `${box.id} ${l.id}`);
-  // Inside Word: twelve houses in order, only Letters open, and it is the word game.
+  // Word's twelve houses are what Word holds at each stage; only Letters (stage 3) is built.
   assert.equal(WORD_HOUSES.length, 12);
-  assert.equal(new Set(WORD_HOUSES.map((h) => h.id)).size, 12);
-  assert.deepEqual(WORD_HOUSES.filter((h) => h.open).map((h) => [h.id, h.open]), [["letters", BOOK.href]]);
-  for (const h of WORD_HOUSES) { assert.ok(TRACKED.includes(tapName("word", h)), h.id); for (const l of LANG_ORDER) assert.ok(h.name[l], `${h.id} ${l}`); }
-  assert.deepEqual([tapName("word", WORD_HOUSES[2]), tapName("word", WORD_HOUSES[0])], [BOOK.id, "word:names"]);
+  assert.deepEqual(WORD_HOUSES.map((h, i) => (h.open ? i + 1 : 0)).filter(Boolean), [3]);
+  for (const h of WORD_HOUSES) for (const l of LANG_ORDER) assert.ok(h.name[l], `${h.id} ${l}`);
+});
+
+test("Gyan is walked by stage: only the learner's stage and those behind it open, and a stage shows only its own lessons", async () => {
+  const { lessonsOf } = await import("../lib/lessons.js");
+  // A new learner: stage 1 is open, the other eleven are closed, and every press is counted.
+  const fresh = stageHouses(1);
+  assert.equal(fresh.length, 12);
+  assert.deepEqual(fresh.filter((h) => h.open).map((h) => [h.id, h.open]), [["stage:1", "/stage?n=1"]]);
+  assert.deepEqual(stageHouses(3).filter((h) => h.open).map((h) => h.n), [1, 2, 3]);
+  assert.equal(stageHouses(1, true).filter((h) => h.open).length, 12, "for review every stage can be opened");
+  for (const h of fresh) assert.ok(TRACKED.includes(tapName("gyan", h)), h.id);
+  assert.deepEqual([cleanStage("6"), cleanStage("0"), cleanStage("13"), cleanStage("x"), cleanStage(null)], [6, 1, 1, 1, 1]);
+  // Stage 1: nothing is read. Nature has its picture lessons, a life can be heard, and nothing else is open.
+  const open = (stage) => subjectsAt(stage, 0).filter((x) => x.open).map((x) => [x.id, x.open]);
+  assert.deepEqual(open(1), [["nature", "/nature?stage=1"], ["lives", "/life?stage=1"]]);
+  assert.deepEqual(open(2), [["lives", "/life?stage=2"]]);
+  assert.deepEqual(open(3), [["word", "/book"], ["lives", "/life?stage=3"]]); // written words begin here
+  assert.deepEqual(open(6), [["number", "/number?stage=6"], ["lives", "/life?stage=6"]]); // the chapter on zero
+  assert.equal(doorOf("number", 1), null, "a child at stage 1 never meets the written chapter of stage 6");
+  assert.equal(doorOf("nature", 6), null);
+  // No lesson of stage 1 or 2 shows a written line, and every lesson belongs to one stage.
+  for (const stage of [1, 2]) for (const x of SUBJECTS) for (const l of lessonsOf(x.id, stage)) assert.ok(!l.chapter, l.id);
+  assert.deepEqual(subjectsAt(1, 7).map((x) => x.id), ring(7).map((x) => x.id)); // still turned by the rising sign
+  assert.deepEqual([tapName("stage", subjectsAt(3, 0)[2]), tapName("stage", subjectsAt(1, 0)[2])], [BOOK.id, WORD.id]);
 });
 
 test("the phone remembers which words go well and which need practice", () => {
@@ -266,7 +289,7 @@ test("taps wait on the phone and are taken off only when sent", () => {
 test("the admin panel shows which subjects are pressed, which lives are shown and how many are heard", async () => {
   const e = env();
   const a = await signUp(e), b = await signUp(e);
-  await post(e, "/api/tap", { user: a, taps: { "subject:number": 3, lives: 2, "life:einstein": 2, heard: 1, "centre:now": 1, word: 1, "word:names": 2 } });
+  await post(e, "/api/tap", { user: a, taps: { "subject:number": 3, lives: 2, "life:einstein": 2, heard: 1, "centre:now": 1, word: 1, "stage:1": 2 } });
   await post(e, "/api/tap", { user: b, taps: { "subject:number": 1, book: 1, "life:leonardo": 1 } });
   const d = await adminData(e.DB, NOW);
   assert.equal(d.subjects.length, 12);
@@ -275,8 +298,8 @@ test("the admin panel shows which subjects are pressed, which lives are shown an
   assert.deepEqual(d.lives.map((l) => [l.id, l.taps]), [["einstein", 2], ["leonardo", 1], ["aryabhata", 0]]);
   assert.equal(d.heard.taps, 1);
   assert.deepEqual(d.centre.map((c) => [c.id, c.users]), [["past", 0], ["now", 1], ["next", 0], ["ask", 0]]);
-  assert.deepEqual(d.houses.slice(0, 3).map((h) => [h.n, h.id, h.taps]), [[1, "names", 2], [2, "sounds", 0], [3, "letters", 1]]);
-  assert.match(await adminPage(e.DB, NOW, "x"), /Inside Word/);
+  assert.deepEqual(d.stages.slice(0, 2).map((h) => [h.n, h.taps]), [[1, 2], [2, 0]]);
+  assert.match(await adminPage(e.DB, NOW, "x"), /Stages of Gyan/);
   assert.deepEqual(d.top.slice(0, 3).map((x) => [x.n, x.id, x.name]), [[1, "gyan", "Knowledge"], [2, "vartaman", "Present"], [3, "top:3", "Empty box"]]);
   const html = await adminPage(e.DB, NOW, "owner@example.com");
   assert.match(html, /Subjects pressed/);
@@ -416,8 +439,8 @@ test("where people come from and how far they get", async () => {
   const d = await adminData(e.DB, NOW);
   assert.deepEqual(d.states.map((r) => [r.state, r.users]), [["UP", 2], ["US", 1]]);
   assert.deepEqual(d.refs.map((r) => [r.ref, r.users]), [["", 2], ["whatsapp", 1]]);
-  assert.deepEqual(d.funnel.map((f) => f.total), [3, 1, 3, 1, 1, 1, 1, 1]);
-  assert.deepEqual(d.funnel.map((f) => f.today), [3, 1, 3, 1, 1, 1, 1, 1]);
+  assert.deepEqual(d.funnel.map((f) => f.total), [3, 1, 3, 1, 1, 1, 1]);
+  assert.deepEqual(d.funnel.map((f) => f.today), [3, 1, 3, 1, 1, 1, 1]);
   assert.match(await adminPage(e.DB, NOW, "x"), /How far people get/);
 });
 

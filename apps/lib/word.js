@@ -1,7 +1,7 @@
 // Inside Word (शब्द): its own twelve houses, from hearing names to being a writer (gyan/docs/shabd.md).
 // Houses 1 to 11 are the Word part of the eleven stages of the Gyan path; house 12 is the writer.
-// Only house 3, Letters, can be entered yet: it holds the game that is built (see a picture, pick the written word,
-// and the letters). The plan moves that game's first form to house 1; until then a press on another house is only counted.
+// House n is what Word holds at stage n of Gyan (lib/stages.js). Only house 3, Letters, is built: the game of
+// seeing a picture and picking the written word, and the letters. So Word opens at stage 3 only.
 import { names } from "./subjects.js";
 
 export const WORD_HOUSES = [

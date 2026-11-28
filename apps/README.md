@@ -12,10 +12,12 @@ Until 2026-11-28 the product was called SageTurtle.
   (`firstGuess` in `lib/langs.js`). The drawings are placeholders, with no religious symbols.
 - **Every level is a 4 by 4 grid** (`components/Grid.jsx`, `lib/grid.js`). The twelve outer boxes are the level's
   twelve houses, house 1 top left and then round with the clock. On Home (`app/home`, `lib/top.js`) house 1 is Gyan,
-  house 2 is Vartaman (not built, only counted) and ten are empty. Inside Gyan (`app/gyan`) they are the eleven subjects
-  and Lives (`lib/subjects.js`), turned by the rising sign (`lib/lagna.js`), whose subject is in house 1. Inside
-  Word (`app/word`, `lib/word.js`) they are Word's own twelve houses in order; only Letters is open, and it is the
-  word game. A press on a closed box is only counted. The language button is in the top corner of Home.
+  house 2 is Vartaman (not built, only counted) and ten are empty. Inside Gyan (`app/gyan`, `lib/stages.js`) they are
+  the twelve stages of the path: the learner's stage and those behind it are open, the rest closed. Inside a stage
+  (`app/stage?n=`) they are the eleven subjects and Lives (`lib/subjects.js`), turned by the rising sign
+  (`lib/lagna.js`); a subject opens only what was made for that stage (Nature's picture lessons at stage 1, the word
+  game at stage 3, the chapter on zero at stage 6), so a learner who cannot read never meets written lessons.
+  For review, "Open all stages" in the admin panel, or `/gyan?all=1`, opens every stage on that phone.
 - **The four boxes in the middle are the same on every level**: Learned (`app/past`), Now (`app/now`, what goes well
   and what needs practice), Next (`app/next`) and Ask (`app/ask`). The first three read what the phone remembers of
   the word game (`lib/learn.js`, kept on the phone). Ask takes a question said aloud (the browser's speech recognition) or typed, and first looks for
@@ -77,7 +79,7 @@ The pages are static files (`next build` writes `out/`). Cloudflare serves them 
 | Table | One row per | Used for |
 | :--- | :--- | :--- |
 | `users` | phone that chose a language | users, new and active users; language; place and work once registered |
-| `taps` | person, thing and day | taps (sum of `count`) and distinct users (count of people). The thing is `gyan`, `vartaman`, `top:<house>`, `word`, `book` (the word game), `subject:<id>`, `word:<house>`, `lives`, `life:<id>` (a life shown), `lesson:<id>` and `watched:<id>` (a lesson opened, and seen to its end), `heard`, `centre:<box>`, `ask:found`, `ask:near` and `ask:none` (a question the lessons answered, half answered, or could not), `answer` or `right` |
+| `taps` | person, thing and day | taps (sum of `count`) and distinct users (count of people). The thing is `gyan`, `vartaman`, `top:<house>`, `word`, `book` (the word game), `subject:<id>`, `stage:<n>`, `lives`, `life:<id>` (a life shown), `lesson:<id>` and `watched:<id>` (a lesson opened, and seen to its end), `heard`, `centre:<box>`, `ask:found`, `ask:near` and `ask:none` (a question the lessons answered, half answered, or could not), `answer` or `right` |
 | `questions` | question from the Ask box | waiting and answered questions |
 | `wishes` | (unused) | answers to a question that was removed on 2026-11-28 |
 
