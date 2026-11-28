@@ -27,11 +27,9 @@
     "ACCESS_TEAM_DOMAIN": "",
     "ACCESS_AUD": ""
   },
-  // Cloudflare creates the DNS records and certificates for these automatically. cubegullak.com is the name now
-  // (sumeet, 2026-11-28); bodhilabs.org stays attached and sends people on to cubegullak.com.
+  // Cloudflare creates the DNS records and certificates for these automatically. This old Worker keeps
+  // bodhilabs.org only; cubegullak.com belongs to the new Worker `cubegullak`, built from the repo sum7k/cubegullak.
   "routes": [
-    { "pattern": "cubegullak.com", "custom_domain": true },
-    { "pattern": "www.cubegullak.com", "custom_domain": true },
     { "pattern": "bodhilabs.org", "custom_domain": true },
     { "pattern": "www.bodhilabs.org", "custom_domain": true }
   ],
