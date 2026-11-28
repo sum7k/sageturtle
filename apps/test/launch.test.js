@@ -218,14 +218,14 @@ test("Gyan is walked by stage: only the learner's stage and those behind it open
   assert.deepEqual(open(2), [["lives", "/life?stage=2"]]);
   assert.deepEqual(open(3), [["word", "/book"], ["lives", "/life?stage=3"]]); // written words begin here
   assert.deepEqual(open(6), [["number", "/subject?s=number&stage=6"], ["lives", "/life?stage=6"]]); // the chapter on zero
-  // A cube of twelves: inside a subject at a stage, twelve lesson houses; stage 1 Nature has seven made.
+  // A cube of twelves: inside a subject at a stage, twelve lesson houses; stage 1 Nature has all twelve made.
   const houses = lessonHouses("nature", 1, ["body"]);
   assert.equal(houses.length, 12);
-  assert.equal(houses.filter((h) => h.open).length, 7);
-  assert.deepEqual([houses[0].open, houses[0].done, houses[1].done, houses[7].open], ["/lesson?s=nature&stage=1&h=1", true, false, undefined]);
+  assert.equal(houses.filter((h) => h.open).length, 12);
+  assert.deepEqual([houses[0].open, houses[0].done, houses[1].done, houses[11].open], ["/lesson?s=nature&stage=1&h=1", true, false, "/lesson?s=nature&stage=1&h=12"]);
   assert.ok(houses.every((h) => !h.name.en), "nothing written at stage 1");
   assert.equal(lessonHouses("number", 6)[0].name.en, "Zero is a number");
-  assert.deepEqual([tapName("subject", houses[0]), tapName("subject", houses[9])], ["lesson:body", "unit:empty"]);
+  assert.deepEqual([tapName("subject", houses[0]), tapName("subject", { id: "unit:nature:1:13" })], ["lesson:body", "unit:empty"]);
   assert.ok(TRACKED.includes("unit:empty"));
   // A house can hold several parts: lessons that name the same house.
   const L = (id, house) => ({ id, subject: "x", stage: 2, house });
@@ -518,7 +518,7 @@ test("a lesson is scenes: a drawing and a spoken line, recorded once under the l
   const { mark } = await import("../lib/voice.js");
   const fs = await import("node:fs");
   const art = ["../components/LessonArt.jsx", "../components/art/zero.jsx"].map((f) => fs.readFileSync(new URL(f, import.meta.url), "utf8")).join("\n");
-  assert.equal(lessonsOf("nature", 1).length, 7);
+  assert.equal(lessonsOf("nature", 1).length, 12);
   for (const l of LESSONS) {
     assert.ok(l.by.hi && l.by.en && ["man", "woman"].includes(l.who) && l.scenes[0].art === "teller" && l.scenes[0].say.hi.startsWith(`मैं ${l.by.hi} हूँ`), `${l.id}: told by a named person, who says so first`);
     assert.ok(TRACKED.includes(`lesson:${l.id}`) && TRACKED.includes(`watched:${l.id}`));

@@ -43,8 +43,8 @@ Until 2026-11-28 the product was called SageTurtle.
   nothing is read. A lesson is not a video file: it is a list of scenes, each a small SVG drawing that the phone moves
   itself (CSS, no animation library) and one spoken line (a recording made beforehand, or the phone's voice). One
   drawing serves every language. Inside a stage, a subject (`app/subject?s=&stage=`) is again a grid of twelve lesson houses (`lib/stages.js`
-  `unitsOf`); a house opens `app/lesson`, which plays its parts one after another, and an empty house is greyed. Nature is open at stage 1 with the first seven: my body, the five senses,
-  fire, animals, birds, plants and what we eat, in Hindi and English; other languages hear English until their lines are written.
+  `unitsOf`); a house opens `app/lesson`, which plays its parts one after another, and an empty house is greyed. Nature is open at stage 1 with all twelve houses: my body, the five senses,
+  fire, animals, birds, plants, what we eat, water, weather, small creatures, mothers and young, and caring for living things, in Hindi and English; other languages hear English until their lines are written.
 - **Chapters, for learners who read** (`lib/chapters/`, `lib/narrators.js`, `components/art/`, `components/Practice.jsx`):
   the same lesson player, with the spoken line also written under the drawing, the narrator named ("told in the voice
   of X", see CLAUDE.md), one voice from start to end, and a few unmarked sums after the last scene. Number

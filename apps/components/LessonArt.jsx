@@ -154,6 +154,49 @@ Object.assign(ART, {
   drink: () => (<Day><path d="M0 220q45-14 90 0t90 0 90 0 90 0v80H0z" fill={WATER} className="mv sway" /><Kid x={110} y={236} s={0.8} /><E x="230" y="150" s={84} move="bob">💧</E></Day>),
 });
 
+// Stage 1 Nature, houses 8 to 12: water, weather, small creatures, mothers and young, caring.
+const Cloud = ({ x, y, s = 1, c = "#fff", move = "" }) => (<g transform={`translate(${x} ${y}) scale(${s})`}><g className={`mv ${move}`}><ellipse cx="0" cy="0" rx="56" ry="24" fill={c} /><circle cx="-22" cy="-14" r="24" fill={c} /><circle cx="16" cy="-20" r="30" fill={c} /></g></g>);
+const Rain = ({ x0 = 40, x1 = 320, y = 70, n = 10 }) => Array.from({ length: n }, (_, i) => (
+  <path key={i} d={`M${x0 + (i * (x1 - x0)) / (n - 1)} ${y + (i % 3) * 14}l-6 18`} stroke={WATER} strokeWidth="4" strokeLinecap="round" className="mv fall" style={{ animationDelay: `${(i % 4) * 0.3}s` }} />
+));
+const River = ({ y = 230 }) => (<path d={`M0 ${y}q60-24 120 0t120 0 120 0v${300 - y}H0z`} fill={WATER} className="mv sway" />);
+const Grass = ({ y = 236 }) => [30, 90, 270, 330].map((x) => <path key={x} d={`M${x} ${y}l-6-18M${x} ${y}l0-22M${x} ${y}l6-18`} stroke={LEAF} strokeWidth="4" strokeLinecap="round" className="mv sway" />);
+const Bowl = ({ x, y }) => (<g><path d={`M${x - 40} ${y}a40 22 0 0 0 80 0z`} fill="#c97b4a" /><ellipse cx={x} cy={y} rx="40" ry="7" fill={WATER} /></g>);
+const Web = ({ x, y }) => (<g stroke="#ffffff" strokeWidth="2" fill="none" opacity="0.9">{[0, 45, 90, 135].map((a) => <path key={a} d={`M${x} ${y - 90}v180`} transform={`rotate(${a} ${x} ${y})`} />)}{[30, 55, 80].map((r) => <circle key={r} cx={x} cy={y} r={r} className="mv grow" />)}</g>);
+
+Object.assign(ART, {
+  // Water
+  rain: () => (<><rect width="360" height="300" fill="#b9cbe0" /><Cloud x={110} y={60} c="#8d99b3" move="sway" /><Cloud x={250} y={50} s={1.2} c="#7c88a3" /><Rain /><Ground /><Grass /></>),
+  river: () => (<Day><path d="M0 180Q80 120 170 166T360 146V300H0z" fill={HILL} /><River y={214} /><E x="80" y="200" s={36}>🪨</E><E x="290" y="176" s={40}>🌾</E><E x="180" y="250" s={44} move="swim">🐟</E></Day>),
+  well: () => (<Day><ellipse cx="180" cy="208" rx="74" ry="18" fill="#6f4630" /><path d="M106 208v40a74 18 0 0 0 148 0v-40" fill={STONE} /><path d="M120 208v-100M240 208v-100M110 108h140" stroke={WOOD} strokeWidth="9" strokeLinecap="round" /><path d="M180 108v40" stroke="#6f4630" strokeWidth="3" /><g className="mv bob"><path d="M164 148h32l-4 30h-24z" fill="#c97b4a" /></g></Day>),
+  thirsty: () => (<Day><Tree x="56" y="236" /><Drops x={40} y={70} n={2} /><E x="170" y="200" s={80} move="graze">🐄</E><Bowl x={270} y={238} /><E x="270" y="200" s={46} move="dip">🐦</E><Kid x={330} y={262} s={0.5} /></Day>),
+  save: () => (<Room c="#eaf4ff"><path d="M150 40h60v26h-18v20h-24v-20h-18z" fill={STONE} /><path d="M180 86v80" stroke={WATER} strokeWidth="10" strokeLinecap="round" className="mv shrink" /><path d="M140 250v-64h80v64z" fill="#c97b4a" /><ellipse cx="180" cy="186" rx="40" ry="8" fill={WATER} className="mv glow" /><Kid x={290} y={262} s={0.7} wave /></Room>),
+  // Weather
+  hot: () => (<><rect width="360" height="300" fill="#ffe7a8" /><circle cx="180" cy="80" r="50" fill={SUN} className="mv glow" />{Array.from({ length: 8 }, (_, i) => <path key={i} d="M180 14v-12" stroke={SUN} strokeWidth="8" strokeLinecap="round" transform={`rotate(${i * 45} 180 80)`} />)}<Ground c="#d9c27a" /><g transform="translate(250 246) scale(1.1)"><Tree x={0} y={0} /></g><Person x="240" y="252" s={0.8} c="#6f8fd6" /><E x="300" y="230" s={36}>🫙</E><Waves x="70" y="200" c="#ff8a3d" /></>),
+  rainy: () => (<><rect width="360" height="300" fill="#8d99b3" /><Cloud x={100} y={56} c="#4f5a78" move="sway" /><Cloud x={250} y={48} s={1.2} c="#454f6b" /><Rain n={12} /><Ground c="#5fae7a" /><E x="120" y="246" s={54} move="hop">🐸</E><E x="250" y="250" s={40}>🌱</E></>),
+  windy: () => (<Day>{[0, 1, 2].map((i) => <path key={i} d={`M20 ${90 + i * 36}q60-20 120 0t120 0`} fill="none" stroke="#fff" strokeWidth="5" strokeLinecap="round" className="mv fly" style={{ animationDelay: `${i * 0.8}s` }} />)}<g className="mv sway"><Tree x="270" y="236" /></g>{[0, 1, 2].map((i) => <E key={i} x={100 + i * 50} y={150 + i * 20} s={28} move="fly" delay={i * 0.6}>🍃</E>)}</Day>),
+  cold: () => (<><rect width="360" height="300" fill="#dfe6ef" /><circle cx="290" cy="60" r="26" fill="#fff3c4" opacity="0.8" /><Ground c="#b9c9b8" />{[60, 130, 200, 270].map((y, i) => <rect key={y} x="0" y={y - 60} width="360" height="22" fill="#fff" opacity="0.35" className="mv sway" style={{ animationDelay: `${i * 0.5}s` }} />)}<Kid x={180} c="#c94f4f" /><E x="180" y="122" s={36}>🧣</E></>),
+  rainbow: () => (<Day>{["#e5484d", "#ff8a3d", "#ffc531", "#5fae7a", "#4f8ed6", "#3d4ab0", "#8a5fb8"].map((c, i) => <path key={c} d={`M${40 + i * 10} 220a${140 - i * 10} ${140 - i * 10} 0 0 1 ${280 - i * 20} 0`} fill="none" stroke={c} strokeWidth="10" className="mv appear" style={{ animationDelay: `${i * 0.3}s` }} />)}<Cloud x={70} y={70} s={0.7} /><Rain x0={200} x1={330} n={6} /></Day>),
+  // Small creatures
+  ants: () => (<Soil>{Array.from({ length: 6 }, (_, i) => <E key={i} x={40 + i * 50} y={236 - (i % 2) * 6} s={34} move="walk" delay={i * 0.2}>🐜</E>)}<E x="330" y="214" s={36}>🍞</E></Soil>),
+  bee: () => (<Day>{[[90, 200], [180, 220], [270, 196]].map(([x, y], i) => <E key={x} x={x} y={y} s={54}>{["🌼", "🌸", "🌻"][i]}</E>)}<E x="180" y="140" s={58} move="fly">🐝</E><E x="300" y="90" s={44}>🍯</E></Day>),
+  change: () => (<Day><path d="M30 170q80-30 160 0" stroke={LEAF} strokeWidth="10" fill="none" strokeLinecap="round" /><E x="80" y="168" s={44} move="walk">🐛</E><ellipse cx="190" cy="186" rx="14" ry="26" fill="#9ab07a" className="mv glow" /><g className="mv appear" style={{ animationDelay: "2.5s" }}><E x="280" y="120" s={80} move="flap">🦋</E></g></Day>),
+  spider: () => (<><rect width="360" height="300" fill="#2b2f5e" /><Stars /><Web x={180} y={140} /><E x="200" y="120" s={44} move="bob">🕷️</E><Ground c="#22264f" /></>),
+  worm: () => (<Soil>{[[60, 250], [140, 270], [250, 260], [310, 236]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="6" fill="#a37f5a" />)}<path d="M120 240q20-16 40 0t40 0 40 0" fill="none" stroke="#d98c8c" strokeWidth="14" strokeLinecap="round" className="mv walk" /><E x="300" y="170" s={40}>🌱</E></Soil>),
+  // Mothers and young
+  hen: () => (<Day><E x="120" y="196" s={110} move="graze">🐔</E>{[0, 1, 2].map((i) => <E key={i} x={210 + i * 46} y={232} s={40} move="walk" delay={i * 0.3}>🐤</E>)}</Day>),
+  calf: () => (<Day><E x="130" y="184" s={130}>🐄</E><g transform="translate(250 220) scale(-1 1)"><E x={0} y={0} s={70} move="graze">🐄</E></g></Day>),
+  carry: () => (<Day><rect x="238" y="60" width="24" height="190" rx="8" fill={WOOD} /><circle cx="250" cy="70" r="62" fill={LEAF} /><g className="mv climb"><E x="200" y="190" s={96}>🐒</E><E x="230" y="214" s={44}>🐒</E></g></Day>),
+  herd: () => (<Day><E x="80" y="196" s={90} move="walk">🐘</E><E x="180" y="214" s={54} move="walk" delay={0.3}>🐘</E><E x="280" y="196" s={90} move="walk" delay={0.6}>🐘</E></Day>),
+  grow: () => (<Day><E x="70" y="226" s={36} move="pop">🐣</E><E x="160" y="212" s={56} move="pop" delay={1}>🐥</E><E x="270" y="190" s={96} move="pop" delay={2}>🐓</E></Day>),
+  // Caring
+  plant: () => (<Soil><Kid x={110} y={232} s={0.8} /><g className="mv grow"><E x="230" y="164" s={66}>🌱</E></g><Drops x={210} y={70} /></Soil>),
+  birdwater: () => (<><rect width="360" height="300" fill="#ffe7a8" /><circle cx="300" cy="56" r="34" fill={SUN} className="mv glow" /><Ground c="#d9c27a" /><Bowl x={180} y={230} /><E x="150" y="196" s={50} move="dip">🐦</E><E x="214" y="190" s={44} move="dip" delay={0.6}>🐦</E></>),
+  gentle: () => (<Day><Kid x={130} y={258} s={0.85} /><E x="230" y="216" s={84} move="bob">🐕</E><E x="190" y="110" s={40} move="pop">❤️</E></Day>),
+  nobreak: () => (<Day><g transform="translate(200 244) scale(1.3)"><Tree x={0} y={0} /></g>{[[170, 110], [230, 120], [200, 80]].map(([x, y], i) => <E key={i} x={x} y={y} s={28}>🌸</E>)}<Kid x={80} y={262} s={0.7} /><E x="150" y="190" s={40} move="pop" delay={1}>✋</E></Day>),
+  together: () => (<Day><Tree x="60" y="236" /><Kid x={150} y={262} s={0.6} c="#e58fb0" /><Person x="200" y="256" s={0.9} c="#6f8fd6" /><E x="270" y="216" s={56} move="bob">🐄</E><E x="56" y="110" s={36} move="bob">🐦</E><E x="320" y="240" s={40} move="walk">🐕</E><E x="200" y="90" s={40} move="fly">🦋</E></Day>),
+});
+
 // Chapters for older learners keep their drawings in their own files (components/art).
 Object.assign(ART, ZERO_ART);
 

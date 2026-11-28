@@ -126,6 +126,71 @@ export const LESSONS = [
     ],
   },
   ...inChapter,
+  // Stage 1, Nature: "Water: rain, rivers, wells; water for every living thing".
+  {
+    id: "water", subject: "nature", stage: 1, picture: "💧", name: { en: "Water", hi: "पानी" },
+    by: { id: "varahamihira", en: "Varahamihira", hi: "वराहमिहिर" }, who: "man",
+    scenes: [
+      { art: "teller", prop: "🪔", say: { hi: "मैं वराहमिहिर हूँ। मैं उज्जैन में रहता था। मैंने लिखा कि धरती के नीचे पानी कहाँ मिलता है।", en: "I am Varahamihira. I lived in Ujjain. I wrote about where water is found under the ground." } },
+      { art: "rain", say: { hi: "आसमान में बादल हैं। बादलों से पानी गिरता है। यह बारिश है।", en: "There are clouds in the sky. Water falls from the clouds. This is rain." } },
+      { art: "river", say: { hi: "बारिश का पानी बहकर नदी बनता है। नदी बहती रहती है।", en: "Rain water flows and becomes a river. The river keeps flowing." } },
+      { art: "well", say: { hi: "कुछ पानी ज़मीन के अंदर चला जाता है। हम कुआँ खोदकर उसे निकालते हैं।", en: "Some water goes into the ground. We dig a well and draw it up." } },
+      { art: "thirsty", say: { hi: "पेड़ को पानी चाहिए। गाय को पानी चाहिए। पक्षी को पानी चाहिए। हमें भी पानी चाहिए।", en: "A tree needs water. A cow needs water. A bird needs water. We need water too." } },
+      { art: "save", say: { hi: "पानी कीमती है। हम पानी बहाते नहीं। जितना चाहिए, उतना ही लेते हैं।", en: "Water is precious. We do not waste it. We take only as much as we need." } },
+    ],
+  },
+  // Stage 1, Nature: "Weather and seasons".
+  {
+    id: "weather", subject: "nature", stage: 1, picture: "🌦️", name: { en: "Sun, rain and wind", hi: "धूप, बारिश, हवा" },
+    by: { id: "varahamihira", en: "Varahamihira", hi: "वराहमिहिर" }, who: "man",
+    scenes: [
+      { art: "teller", prop: "🔭", say: { hi: "मैं वराहमिहिर हूँ। मैं फिर आया हूँ। मैं रोज़ आसमान देखता था, ताकि जान सकूँ कि बारिश कब आएगी।", en: "I am Varahamihira. I am here again. I watched the sky every day, to know when the rain would come." } },
+      { art: "hot", say: { hi: "कभी तेज़ धूप होती है। बहुत गर्मी लगती है। तब हम छाया में बैठते हैं और पानी पीते हैं।", en: "Sometimes the sun is strong. It is very hot. Then we sit in the shade and drink water." } },
+      { art: "rainy", say: { hi: "कभी काले बादल आते हैं और बारिश होती है। मेंढक बोलते हैं। धरती हरी हो जाती है।", en: "Sometimes dark clouds come and it rains. The frogs call. The earth turns green." } },
+      { art: "windy", say: { hi: "कभी हवा चलती है। हवा दिखती नहीं, पर पत्ते हिलते हैं, तो हम जान जाते हैं कि हवा है।", en: "Sometimes the wind blows. We cannot see the wind, but the leaves move, so we know it is there." } },
+      { art: "cold", say: { hi: "कभी ठंड आती है। सुबह कोहरा होता है। तब हम गरम कपड़े पहनते हैं।", en: "Sometimes the cold comes. In the morning there is fog. Then we wear warm clothes." } },
+      { art: "rainbow", say: { hi: "धूप और बारिश साथ हों, तो आसमान में इंद्रधनुष बनता है। उसमें सात रंग होते हैं।", en: "When sun and rain come together, a rainbow forms in the sky. It has seven colours." } },
+    ],
+  },
+  // Stage 1, Nature: "Animals by name: the small ones".
+  {
+    id: "small", subject: "nature", stage: 1, picture: "🐜", name: { en: "Small creatures", hi: "छोटे जीव" },
+    by: { id: "merian", en: "Maria Sibylla Merian", hi: "मारिया सिबिला मेरियन" }, who: "woman",
+    scenes: [
+      { art: "teller", prop: "🖌️", say: { hi: "मैं मारिया सिबिला मेरियन हूँ। बचपन से मुझे इल्लियाँ और तितलियाँ देखना अच्छा लगता था। मैं उनके चित्र बनाती थी।", en: "I am Maria Sibylla Merian. Since I was a child I loved to watch caterpillars and butterflies. I used to draw them." } },
+      { art: "ants", say: { hi: "ये चींटियाँ हैं। चींटियाँ एक कतार में चलती हैं और मिलकर खाना ले जाती हैं।", en: "These are ants. Ants walk in a line and carry food together." } },
+      { art: "bee", say: { hi: "यह मधुमक्खी है। मधुमक्खी फूल से फूल पर जाती है और शहद बनाती है।", en: "This is a bee. A bee goes from flower to flower and makes honey." } },
+      { art: "change", say: { hi: "एक छोटी इल्ली पत्ते खाती है। फिर वह सो जाती है। जब जागती है, तो तितली बन जाती है।", en: "A little caterpillar eats leaves. Then it goes to sleep. When it wakes, it has become a butterfly." } },
+      { art: "spider", say: { hi: "यह मकड़ी है। मकड़ी अपने धागे से सुंदर जाला बुनती है।", en: "This is a spider. A spider weaves a beautiful web from its own thread." } },
+      { art: "worm", say: { hi: "यह केंचुआ है। केंचुआ मिट्टी में रहता है और मिट्टी को नरम बनाता है।", en: "This is an earthworm. An earthworm lives in the soil and makes the soil soft." } },
+    ],
+  },
+  // Stage 1, Nature: "Animals by name: how they live and grow".
+  {
+    id: "young", subject: "nature", stage: 1, picture: "🐣", name: { en: "Mothers and young ones", hi: "माँ और बच्चे" },
+    by: { id: "goodall", en: "Jane Goodall", hi: "जेन गुडॉल" }, who: "woman",
+    scenes: [
+      { art: "teller", prop: "🌳", say: { hi: "मैं जेन गुडॉल हूँ। मैं बहुत साल जंगल में चिम्पैंज़ी के पास चुपचाप बैठी। मैंने देखा कि माँ अपने बच्चे का कैसे ध्यान रखती है।", en: "I am Jane Goodall. For many years I sat quietly near chimpanzees in the forest. I saw how a mother looks after her baby." } },
+      { art: "hen", say: { hi: "यह मुर्गी है, और ये उसके चूज़े। चूज़े माँ के पीछे-पीछे चलते हैं।", en: "This is a hen, and these are her chicks. The chicks follow their mother." } },
+      { art: "calf", say: { hi: "यह गाय है, और यह उसका बछड़ा। बछड़ा माँ का दूध पीता है।", en: "This is a cow, and this is her calf. The calf drinks its mother's milk." } },
+      { art: "carry", say: { hi: "बंदर का बच्चा माँ से चिपका रहता है। माँ उसे लेकर पेड़ों पर चढ़ती है।", en: "A baby monkey holds on to its mother. She carries it up the trees." } },
+      { art: "herd", say: { hi: "हाथी झुंड में रहते हैं। छोटा हाथी बीच में चलता है, सब उसका ध्यान रखते हैं।", en: "Elephants live in a herd. The little elephant walks in the middle, and everyone looks after it." } },
+      { art: "grow", say: { hi: "हर बच्चा धीरे-धीरे बड़ा होता है, अपनी रफ़्तार से।", en: "Every young one grows up slowly, at its own pace." } },
+    ],
+  },
+  // Stage 1, Nature: "Living in a band: sharing; caring for plants and animals".
+  {
+    id: "care", subject: "nature", stage: 1, picture: "🌱", name: { en: "Caring for living things", hi: "जीवों का ध्यान" },
+    by: { id: "maathai", en: "Wangari Maathai", hi: "वंगारी मथाई" }, who: "woman",
+    scenes: [
+      { art: "teller", prop: "🌳", say: { hi: "मैं वंगारी मथाई हूँ। मैंने और मेरे साथियों ने मिलकर बहुत सारे पेड़ लगाए।", en: "I am Wangari Maathai. My friends and I planted a great many trees together." } },
+      { art: "plant", say: { hi: "हम एक छोटा पौधा लगाते हैं, और रोज़ उसे पानी देते हैं।", en: "We plant a little sapling, and give it water every day." } },
+      { art: "birdwater", say: { hi: "गर्मी में हम पक्षियों के लिए पानी का बर्तन रखते हैं।", en: "In the hot days, we put out a bowl of water for the birds." } },
+      { art: "gentle", say: { hi: "जानवर भी दर्द महसूस करते हैं। हम उन्हें मारते नहीं, सताते नहीं। प्यार से रहते हैं।", en: "Animals feel pain too. We do not hit them or tease them. We are gentle with them." } },
+      { art: "nobreak", say: { hi: "हम बेवजह डाल नहीं तोड़ते, और फूल नहीं नोचते।", en: "We do not break branches for no reason, and we do not pull off flowers." } },
+      { art: "together", say: { hi: "पेड़, पक्षी, जानवर और हम, सब एक ही धरती पर साथ रहते हैं।", en: "Trees, birds, animals and we all live together on one Earth." } },
+    ],
+  },
 ];
 
 // A lesson may carry `house: n` (1 to 12): lessons with the same house are parts of one unit (lib/stages.js unitsOf).
