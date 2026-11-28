@@ -8,7 +8,7 @@ Written on 2026-11-26 at the end of the design chat, so that a new chat can star
 
 ## What SageTurtle is
 
-One installable web app (a PWA) that holds twelve apps for people in India: Khabri (khabar), Learn, Earn, Reminders,
+One installable web app (a PWA) that holds thirteen apps for people in India: Wisdom, Khabri (khabar), Learn, Earn, Reminders,
 Hobbies, Meetings, Messages, Discussions, Events, Yellow Pages (directory), Advertise, and Me. Who the person is decides
 what each app is called and what it does. There are 11 variants: Kids, Teens, and nine adult ones (Student, Looking for a
 job, Office job, Shop or business, Daily work, Farming, Home, Teacher, Retired).
@@ -21,10 +21,14 @@ The old company name Broadvale is being removed (root `backlog.md`).
 | What | Where |
 | :--- | :--- |
 | Design map (variants, names, rules), living | https://claude.ai/artifact/KBQ1Cuj8GjVKK5e9nT5A6G, source `apps/docs/variant-map.html` |
-| Drawn screens (canvas, 30 phone screens), living | https://claude.ai/artifact/Jgem7AE3dhZSPvVkV6bqS1, source `apps/shell/docs/canvas/` |
+| Drawn screens (canvas, 40 phone screens), living | https://claude.ai/artifact/Jgem7AE3dhZSPvVkV6bqS1, source `apps/shell/docs/canvas/` |
 | Screens in words | `apps/shell/docs/screens.md` |
-| Choices and their cost | `apps/tradeoffs.md`, `apps/shell/tradeoffs.md` |
-| Parked work | `apps/backlog.md`, `apps/shell/backlog.md`, root `backlog.md` |
+| How work moves from idea to launch (SDLC) | root `docs/sdlc.md` |
+| Every item and its status | root `work/sdlc-plan.md` |
+| Wisdom (designed only, built last) | `apps/wisdom/` |
+| Messages (idea, six screens, data and flows; not built) | `apps/messages/` |
+| Choices and their cost | `apps/tradeoffs.md`, `apps/shell/tradeoffs.md`, `apps/wisdom/tradeoffs.md`, `apps/messages/tradeoffs.md` |
+| Parked work | `apps/backlog.md`, `apps/shell/backlog.md`, `apps/wisdom/backlog.md`, `apps/messages/backlog.md`, root `backlog.md` |
 | Code | github.com/sum7k/sageturtle, folder `apps/` (Next.js). First slice is pull request 2, branch `claude/project-thread-cb35su` |
 | Old Khabri site (reference only) | github.com/sum7k/Khabri |
 

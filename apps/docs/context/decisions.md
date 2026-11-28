@@ -1,6 +1,6 @@
 # Decisions so far
 
-As of 2026-11-26. (S) = decided by sumeet. (C) = chosen by Claude under the "decide when clear" rule, open to change.
+As of 2026-11-28. (S) = decided by sumeet. (C) = chosen by Claude under the "decide when clear" rule, open to change.
 
 ## Platform
 
@@ -35,9 +35,10 @@ As of 2026-11-26. (S) = decided by sumeet. (C) = chosen by Claude under the "dec
 ## Home
 
 - (C) Order of first run: landing, language, lock, PIN code, what you do, khabar alerts, Home.
-- (C) Home: date and place, the Khabri card, app tiles three in a row, a wide gold mic. No bottom bar. Me opens from the round picture.
+- (C) Home: date and place, the Khabri card, app tiles three in a row, a gold mic as the bottom centre cell. No bottom bar. Me opens from the round picture.
 - (S) One tile per app. Where the person's variants call the app by different names, the tile opens into those versions (Earnings opens into Mandi and Leads). With one name it opens straight away.
 - (C) Closed group tiles are named Learning, Earnings, Reminders, Hobbies, Meetings, Messages, Discussions, Events, Directory, Adverts.
+- (S) Default tile order, by Cheiro's numbers on a phone keypad (2026-11-27): Earnings, Wisdom, Meetings; Discussions, Learning, Hobbies; Messages, Reminders, Events; Directory, the mic, Adverts. Learning is the centre. People can still rearrange.
 - (S) People can keep a favourite on top, hide (archive) a tile and reorder. (C) By long press; moving by arrows in the first build; no folders, because grouping does that job.
 
 ## Khabri
@@ -49,17 +50,38 @@ As of 2026-11-26. (S) = decided by sumeet. (C) = chosen by Claude under the "dec
 - Voice of a khabar: very simple English, short sentences, time and place first, calm and joyful, say khabar not "news", no em dashes, true with sources shown.
 - (S) Sources: no crawling. Topics from chosen X handles (about 50 USD a month approved), shown as X's own embeds. Written khabars from government sources. PB-SHABD is in the backlog.
 
+## Wisdom
+
+- (S) A new app called Wisdom, the tab "of god", is the first tab. It was first named Religion; sumeet renamed it on 2026-11-27 because Religion sounded a little scary, and Wisdom is calmer and more neutral. It holds a list of quotations, each rewritten as a moral science short story. The stories differ by variant. It is built last. Details are still to be talked through.
+- (C) Same name in every variant. An oil lamp is its picture. (S) Its tile is top centre on Home (position 2).
+- (C) The quotation is shown word for word with its source and is never rewritten. Only the story is new. Every variant's story ends in the same one-line moral.
+- (C) A person with several variants changes between their stories. A kid's story is three pictures, heard first, with no share.
+- (C) One new quotation a day. No ads, no comments, no scores. Stories are written ahead per variant and language and served as saved files.
+- Not decided: which traditions, the sources, who checks, whether a person picks a tradition. All in `apps/wisdom/backlog.md`.
+
 ## Calls and messages
 
 - (S) One-to-one calls and messages are handed off by link: the phone's dialer (`tel:`), SMS (`sms:`), WhatsApp (`wa.me/<number>`) or Telegram (`t.me`), whichever that person uses. No APIs, no fees.
 - (S) Kids are never handed off. They keep in-app calls and messages with guardians. Voice in the app can later use Cloudflare Realtime.
 - (S) Build nothing that cannot scale easily to 100 crore users. Hosting is Cloudflare only.
-- Not decided: where the other person's number comes from. Claude proposed Reach me in Me (one optional mobile number, never checked by OTP, and one app for messages; not the account). sumeet is not sure; it is parked in `apps/shell/backlog.md`.
-- (C) A row has a handset (dialer) and the chosen app's mark (message). Telegram opens by number. If Reach me stays, a teen's is filled by the guardian, without Telegram. Groups (class chat, speak to all, class call) stay in the app.
+- (S) The other person's number comes from Reach me in Me: one optional mobile number, never checked by OTP, and one app for messages. It is not the account (2026-11-28).
+- (C) A row has a handset (dialer) and the chosen app's mark (message). Telegram opens by number. A teen's Reach me is filled by the guardian, without Telegram. Groups (class chat, speak to all, class call) stay in the app.
+
+## Messages
+
+Designed on 2026-11-28 (`apps/messages/`). Screens are not approved yet.
+
+- (C) Messages is the door to people: the lists from Me with hand-off buttons, one screen for every adult variant. The variant sets the tile's name and which list comes first.
+- (C) No inbox and no unread count for adults, because SageTurtle cannot see outside apps. People are ordered by who was last reached.
+- (C) Only two kinds of chat live inside the app: a child with a guardian, and a class. Open groups belong to Discussions.
+- (C) An in-app message is a voice note, a sticker or typed text. No photos, files or transcripts yet.
+- (C) The owner of a child's account hears all the child's chats. A kid's flag tells the owner.
+- (C) A class of kids talks as parents and teachers; older classes as students and teachers. A teen's parent does not hear the class chat. Office hours hold back alerts to the teacher.
+- (C) Until the backend exists, only hand-off is real; in-app chats are a demo on one phone.
 
 ## Me, people and the class
 
-- (S) Me is the twelfth app: profile, username, family, child control, the lists of people, settings.
+- (S) Me is an app of its own (the thirteenth, now that Wisdom is added): profile, username, family, child control, the lists of people, settings.
 - (S) A person keeps separate lists of people. (C) The set is Family, Friends, Work, Trade, Neighbours, Class. A variant shows only the lists that fit. One person can be in several lists. People join only by scanning each other's code.
 - (S) The class is one shared group seen through each role. The teacher makes it and people join by the class code. Teacher: students, speak to all, homework, call, office hours. Parent: the class sits under the child, a fingerprint lets a teacher in, other parents are visible. Kid: manages nothing, the teacher is a guardian. Teen: classmates and a class chat the teacher can see.
 - (C) Child control has four things: time each day, sleep time, guardians, which apps are on.
