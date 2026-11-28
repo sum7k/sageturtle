@@ -22,6 +22,11 @@ Until 2026-11-28 the product was called SageTurtle.
 - **Lives (जीवनी) opens one great life** (`lib/lives.js`, `app/life/page.jsx`): a short biography about how the person
   learned and grew, never the same one twice in a row, to read or to hear in a Sarvam voice (`/api/voice?life=<id>`).
   Three placeholder lives, in English and Hindi; the set of 121 is being written. Shown and heard are counted.
+- **Lessons** (`lib/lessons.js`, `components/Lesson.jsx`, `components/LessonArt.jsx`): for stages 1 and 2, where
+  nothing is read. A lesson is not a video file: it is a list of scenes, each a small SVG drawing that the phone moves
+  itself (CSS, no animation library) and one spoken line (a Sarvam recording made once, `/api/voice?line=fire.2`). One
+  drawing serves every language. Nature (`app/nature`) is open on Home with the first three: fire, the five senses
+  and animals, in Hindi and English; other languages hear English until their lines are written.
 - **Gyan** (the reading app; `book` in the code, `lib/book.js`). Everything spoken is heard twice, in a man's and a
   woman's voice (`lib/speak.js`): a Sarvam recording made once and kept in Cloudflare KV (`worker/voice.js`), or the
   phone's own voice when there is none. The Sarvam key is the Worker secret `SARVAM_API_KEY`.
@@ -57,7 +62,7 @@ The pages are static files (`next build` writes `out/`). Cloudflare serves them 
 | Table | One row per | Used for |
 | :--- | :--- | :--- |
 | `users` | phone that chose a language | users, new and active users; language; place and work once registered |
-| `taps` | person, thing and day | taps (sum of `count`) and distinct users (count of people). The thing is `word`, `book` (the word game), `subject:<id>`, `word:<house>`, `lives`, `life:<id>` (a life shown), `heard`, `centre:<box>`, `answer` or `right` |
+| `taps` | person, thing and day | taps (sum of `count`) and distinct users (count of people). The thing is `word`, `book` (the word game), `subject:<id>`, `word:<house>`, `lives`, `life:<id>` (a life shown), `lesson:<id>` and `watched:<id>` (a lesson opened, and seen to its end), `heard`, `centre:<box>`, `answer` or `right` |
 | `questions` | question from the Ask box | waiting and answered questions |
 | `wishes` | (unused) | answers to a question that was removed on 2026-11-28 |
 

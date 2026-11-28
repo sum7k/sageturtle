@@ -151,7 +151,7 @@ test("the Open the app button uses an Android intent, with the start page in the
 test("Home holds twelve subjects, turned by the rising sign", () => {
   assert.equal(SUBJECTS.length, 12);
   assert.equal(SUBJECTS[11].id, "lives"); // Meena, the twelfth sign
-  assert.deepEqual(SUBJECTS.filter((x) => x.open).map((x) => [x.id, x.open]), [["word", "/word"], ["lives", "/life"]]);
+  assert.deepEqual(SUBJECTS.filter((x) => x.open).map((x) => [x.id, x.open]), [["word", "/word"], ["nature", "/nature"], ["lives", "/life"]]);
   assert.equal(new Set(SUBJECTS.map((x) => x.id)).size, 12);
   for (const x of SUBJECTS) for (const l of LANG_ORDER) assert.ok(x.name[l], `${x.id} ${l}`);
   assert.deepEqual([...LANG_ORDER].sort(), LANGS.map((l) => l.id).sort());
@@ -458,4 +458,34 @@ test("a place guesses the language, and a phone that says no changes nothing", a
   assert.equal(await askPlace({ getCurrentPosition: (ok, no) => no(new Error("denied")) }), null);
   const p = await askPlace({ getCurrentPosition: (ok) => ok({ coords: { latitude: 12.9716, longitude: 77.5946 } }) });
   assert.deepEqual(p, { lat: 13, lon: 77.6 });
+});
+
+test("a lesson is scenes: a drawing and a spoken line, recorded once under the line's name", async () => {
+  const { LESSONS, lessonsOf, lessonLang, lineId, lineText } = await import("../lib/lessons.js");
+  const { lineUrl } = await import("../lib/voice.js");
+  const { voice } = await import("../worker/voice.js");
+  const art = (await import("node:fs")).readFileSync(new URL("../components/LessonArt.jsx", import.meta.url), "utf8");
+  assert.equal(lessonsOf("nature", 1).length, 3);
+  for (const l of LESSONS) {
+    assert.ok(TRACKED.includes(`lesson:${l.id}`) && TRACKED.includes(`watched:${l.id}`));
+    for (const s of l.scenes) {
+      assert.ok(s.say.hi && s.say.en, `${l.id}: every line in Hindi and English`);
+      assert.ok(new RegExp(`\\n  ${s.art}: \\(`).test(art), `${l.id}: the drawing "${s.art}" exists`);
+    }
+  }
+  const fire = LESSONS[0];
+  assert.equal(lessonLang(fire, "hi"), "hi");
+  assert.equal(lessonLang(fire, "ta"), "en"); // not written yet: heard in English
+  assert.equal(lineText(lineId(fire, 2), "hi"), fire.scenes[2].say.hi);
+  assert.equal(lineText("fire.99", "hi"), "");
+  const store = new Map(), calls = [];
+  const env = { SARVAM_API_KEY: "k", VOICE: { get: async (k) => store.get(k) ?? null, put: async (k, v) => { store.set(k, v.buffer ?? v); } } };
+  const sarvam = async (url, init) => { calls.push(JSON.parse(init.body)); return Response.json({ audios: [btoa("mp3!")] }); };
+  const ask = (path) => voice(new Request(`https://bodhilabs.org${path}`), env, sarvam);
+  assert.equal((await ask(lineUrl("hi", "man", "fire.2"))).status, 200);
+  assert.equal(calls[0].text, fire.scenes[2].say.hi);
+  assert.equal((await ask(lineUrl("hi", "man", "fire.2"))).status, 200);
+  assert.equal(calls.length, 1, "made once, then read");
+  assert.equal((await ask(lineUrl("hi", "man", "fire.99"))).status, 404);
+  assert.equal((await ask(lineUrl("ta", "man", "fire.2"))).status, 404);
 });

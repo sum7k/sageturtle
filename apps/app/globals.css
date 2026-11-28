@@ -177,3 +177,66 @@ h1, h2, p { margin: 0; }
 .sub.strong { font-size: 18px; font-weight: 700; color: var(--navy); }
 .pulse { animation: pulse 1s ease-in-out infinite; }
 @keyframes pulse { 50% { transform: scale(0.92); opacity: 0.6; } }
+
+/* lessons: drawings that move, with a spoken line (components/Lesson.jsx, components/LessonArt.jsx) */
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tile { aspect-ratio: 1; border-radius: 28px; display: flex; align-items: center; justify-content: center; font-size: clamp(56px, 22vw, 96px); }
+.lesson { display: flex; flex-direction: column; gap: 16px; flex: 1 1 auto; }
+.lesson .stage { position: relative; display: block; width: 100%; border-radius: 28px; overflow: hidden; background: var(--white); }
+.lesson .art { display: block; width: 100%; height: auto; animation: scene-in 0.5s ease both; }
+.lesson .held { position: absolute; inset: 0; margin: auto; opacity: 0.92; }
+.dots { display: flex; justify-content: center; gap: 8px; }
+.dots i { width: 12px; height: 12px; border-radius: 999px; background: var(--white); }
+.dots i.seen { background: var(--back); } .dots i.on { background: var(--navy); }
+.art .mv { transform-box: fill-box; transform-origin: center; }
+.art.still, .art.still .mv { animation-play-state: paused !important; }
+@keyframes scene-in { from { opacity: 0; } }
+.art .flick { transform-origin: 50% 100%; animation: flick 0.7s ease-in-out infinite alternate; }
+@keyframes flick { from { transform: scale(1, 1) skewX(-3deg); } to { transform: scale(0.94, 1.1) skewX(3deg); } }
+.art .shrink { transform-origin: 50% 100%; animation: shrink 4s ease-in 1s both; }
+@keyframes shrink { to { transform: scale(0.05); opacity: 0; } }
+.art .twinkle { animation: twinkle 2s ease-in-out infinite; }
+@keyframes twinkle { 50% { opacity: 0.2; } }
+.art .glow { animation: glow 2.4s ease-in-out infinite; }
+@keyframes glow { 50% { transform: scale(1.08); opacity: 0.7; } }
+.art .shiver { animation: shiver 0.25s linear infinite; }
+@keyframes shiver { 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
+.art .sway { animation: sway 3s ease-in-out infinite; }
+@keyframes sway { 50% { transform: translateX(6px); } }
+.art .flash { animation: flash 2.6s linear infinite; }
+@keyframes flash { 0%, 8%, 16%, 100% { opacity: 0; } 4%, 12% { opacity: 1; } }
+.art .appear { animation: appear 1s ease 1.2s both; }
+@keyframes appear { from { opacity: 0; transform: scale(0.2); } }
+.art .rise { animation: rise 2.4s ease-in infinite; }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } 30% { opacity: 1; } to { opacity: 0; transform: translateY(-26px); } }
+.art .fall { animation: fall 1.4s ease-in infinite; }
+@keyframes fall { from { opacity: 0; transform: translateY(-20px); } 20% { opacity: 1; } to { opacity: 0; transform: translateY(110px); } }
+.art .turn { animation: turn 3s ease-in-out infinite; }
+@keyframes turn { 50% { transform: rotate(8deg); } }
+.art .back { animation: back 2.5s ease 0.8s both; }
+@keyframes back { from { transform: translateX(-70px); } }
+.art .blink { animation: blink 3.6s linear infinite; }
+@keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
+.art .ringing { animation: ringing 1.4s ease-in-out infinite; }
+@keyframes ringing { 50% { transform: scale(1.18); opacity: 0.5; } }
+.art .lick { animation: lick 1.2s ease-in-out infinite; }
+@keyframes lick { 50% { transform: translateY(5px) scaleY(1.2); } }
+.art .bob { animation: bob 2s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(-8px); } }
+.art .dip { animation: dip 2.4s ease-in-out infinite; }
+@keyframes dip { 50% { transform: translateY(26px); } }
+.art .pop { animation: pop 0.6s ease both; }
+@keyframes pop { from { opacity: 0; transform: scale(0.2); } 70% { transform: scale(1.15); } }
+.art .fly { animation: fly 6s linear infinite; }
+@keyframes fly { from { transform: translate(-220px, 10px); } 50% { transform: translate(0, -14px); } to { transform: translate(220px, 10px); } }
+.art .walk { animation: walk 4s ease-in-out infinite; }
+@keyframes walk { 0%, 100% { transform: translateX(-26px) rotate(-2deg); } 50% { transform: translateX(26px) rotate(2deg); } }
+.art .graze { animation: graze 3s ease-in-out infinite; }
+@keyframes graze { 50% { transform: rotate(-7deg) translateY(8px); } }
+.art .proud { animation: proud 3s ease-in-out infinite; }
+@keyframes proud { 50% { transform: scale(1.12); } }
+.art .swim { animation: swim 5s ease-in-out infinite; }
+@keyframes swim { 0%, 100% { transform: translate(60px, 0); } 50% { transform: translate(-60px, 24px); } }
+.art .climb { animation: climb 4s ease-in-out infinite; }
+@keyframes climb { 0%, 100% { transform: translateY(20px); } 50% { transform: translateY(-90px); } }
+@media (prefers-reduced-motion: reduce) { .art .mv { animation-duration: 0.01s !important; animation-iteration-count: 1 !important; } }
