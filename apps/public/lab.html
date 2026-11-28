@@ -29,9 +29,13 @@
   <div id="own"></div>
   <label><input type="checkbox" id="on"> Use the model in Ask, in the app on this phone</label>
 </section>
+<section>
+  <b>This phone</b>
+  <pre id="power" style="white-space:pre-wrap;font-size:14px;margin:6px 0"></pre>
+</section>
 <script type="module">
   import { answer } from "/labjs/find.js";
-  import { capable, compose, load, mindOn, setMind, SIZE_MB } from "/labjs/mind.js";
+  import { capable, compose, load, mayFetch, mindOn, power, setMind, SIZE_MB } from "/labjs/mind.js";
   const $ = (id) => document.getElementById(id);
   let ready = false;
   $("can").textContent = capable() ? "This phone can run it." : "This phone cannot run it (no WebGPU, little memory, or data saver is on).";
@@ -39,6 +43,7 @@
   $("on").checked = mindOn();
   $("on").disabled = !capable();
   $("on").onchange = () => setMind($("on").checked);
+  power().then((p) => { const why = mayFetch(p); $("power").textContent = JSON.stringify(p, null, 1) + "\n\nBackground download now: " + (why ? "no (" + why + ")" : "yes"); });
   $("get").onclick = async () => {
     $("get").disabled = true;
     const began = performance.now();

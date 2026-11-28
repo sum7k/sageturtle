@@ -5,6 +5,7 @@
 //   POST /api/count     a visit or an install, counted without knowing who
 //   GET  /api/voice     one recorded word, letter or greeting (worker/voice.js)
 //   POST /api/ask       a learner's question; GET /api/ask gives that phone's questions and answers (worker/ask.js)
+//   POST /api/answer    an answer written from lines of our lessons by a model on Cloudflare (worker/answer.js)
 //   GET  /admin         the admin panel, behind a passcode or Cloudflare Access (POST /admin signs in)
 //   POST /admin/reply   the owner answers a question
 import { TRACKED, COUNTED } from "../lib/buttons.js";
@@ -14,6 +15,7 @@ import { accessEmail, passOk, passLogin } from "./access.js";
 import { adminPage } from "./admin.js";
 import { voice } from "./voice.js";
 import { ask, mine, reply } from "./ask.js";
+import { answer } from "./answer.js";
 
 const MAX_BODY = 4096;
 const MAX_TAPS = 500; // the most taps on one button that one message may carry
@@ -96,7 +98,7 @@ async function admin(req, env, now) {
 /** Cloudflare knows roughly where a request comes from. Only the state code is passed on, and nothing is saved. */
 const where = (req) => json({ state: req.cf?.country === "IN" ? String(req.cf.regionCode ?? "") : "" });
 
-const POSTS = { "/api/register": register, "/api/tap": tap, "/api/count": count, "/api/ask": ask };
+const POSTS = { "/api/register": register, "/api/tap": tap, "/api/count": count, "/api/ask": ask, "/api/answer": answer };
 
 export async function handle(req, env, now = Date.now()) {
   const { pathname } = new URL(req.url);

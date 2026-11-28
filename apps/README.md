@@ -23,8 +23,12 @@ Until 2026-11-28 the product was called SageTurtle.
   download, nothing sent). The line that fits is shown with its drawing and said in its recorded voice. When the
   lessons hold no sure answer, or the learner presses the talk button, the question goes to a person (`/api/ask`,
   table `questions`, five a day); it shows in the admin panel under Questions, and the answer written there shows in
-  the app under the question. A small language model on the phone that rewords the found lines (`lib/mind.js`, Gemma 3 270M
-  on WebGPU) is built but off: it is tried at `/lab` (`public/lab.html`), where a switch turns it on for that phone.
+  the app under the question. The found lines are then put into one or two sentences that answer
+  the question as asked: by a model on Cloudflare (`worker/answer.js`, `/api/answer`, Workers AI Gemma 3 12B), which is
+  sent only the names of our own lines, keeps each answer so it is written once, and writes at most 20 new ones per
+  phone a day. The phone's own voice reads it. A small model on the phone itself (`lib/mind.js`, Gemma 3 270M on
+  WebGPU) is to take over once it has come in quietly on Wi-Fi on a strong enough phone (`power`, `mayFetch`, `warm`);
+  it is built but off, tried at `/lab` (`public/lab.html`), where a switch turns it on for that phone.
 - **Lives (जीवनी) opens one great life** (`lib/lives.js`, `app/life/page.jsx`): a short biography about how the person
   learned and grew, never the same one twice in a row, to read or to hear in a Sarvam voice (`/api/voice?life=<id>`).
   Three placeholder lives, in English and Hindi; the set of 121 is being written. Shown and heard are counted.
