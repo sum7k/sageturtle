@@ -33,8 +33,7 @@ The old company name Broadvale is being removed (root `backlog.md`).
 | Code | github.com/sum7k/sageturtle, branch `dev`, folder `apps/` (Next.js pages, a Cloudflare Worker in `apps/worker/`) |
 | Old Khabri site (reference only) | github.com/sum7k/Khabri |
 
-The folder `/Users/sumeet/SageTurtle` on sumeet's computer holds the docs and is not a git repository. The code is only
-in the GitHub repository. This context folder is kept in both.
+Docs and code are in one git repository, in the folder `~/cubegullak` on sumeet's computer (since 2026-11-28).
 
 ## Folder rules
 
