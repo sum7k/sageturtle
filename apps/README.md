@@ -93,7 +93,8 @@ cp .dev.vars.example .dev.vars   # opens /admin on localhost only
 npm run preview                  # builds, makes a local database, serves http://localhost:8787
 ```
 
-`npm run dev` runs the pages alone, without the Worker: taps then fail quietly.
+`npm run dev` is for working on the app: it serves http://localhost:3000 with live reload (pages from Next's dev
+server, `/api` and `/admin` from the Worker beside it on 8787; `scripts/dev.mjs`). A saved file or a `git pull` shows at once.
 
 ## Deploy
 
