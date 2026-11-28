@@ -1,5 +1,5 @@
-// Every word the screens show, in the eleven languages. English is the base: a missing word falls back to it.
-// The ten Indian languages were written by Claude and are not yet checked by a native speaker.
+// Every word the screens show, in the twelve languages. English is the base: a missing word falls back to it.
+// The eleven Indian languages were written by Claude and are not yet checked by a native speaker.
 // Short lists are kept as one line split on "|", in the order of the keys named beside them.
 
 // The first row: Gyan (knowledge; the reading app, "book" in the code), Bhavishya (the future; horoscope) and
@@ -253,6 +253,30 @@ export const STR = {
     open: "ଆପ୍ ଖୋଲନ୍ତୁ",
     ios: "Share ଦବାନ୍ତୁ, ତାପରେ Add to Home Screen ବାଛନ୍ତୁ।",
     inapp: "ମେନୁ ଖୋଲନ୍ତୁ, ତାପରେ ଆପଣଙ୍କ ବ୍ରାଉଜରରେ ଖୋଲନ୍ତୁ।",
+  }),
+  pa: lang({
+    apps: "ਗਿਆਨ|ਭਵਿੱਖ|ਵਰਤਮਾਨ|ਕਮਾਈ|ਰਿਮਾਈਂਡਰ|ਸ਼ੌਕ|ਮੀਟਿੰਗਾਂ|ਸੁਨੇਹੇ|ਚਰਚਾ|ਸਮਾਗਮ|ਡਾਇਰੈਕਟਰੀ",
+    work: "ਵਿਦਿਆਰਥੀ|ਨੌਕਰੀ ਦੀ ਭਾਲ|ਦਫ਼ਤਰ ਦੀ ਨੌਕਰੀ|ਦੁਕਾਨ ਜਾਂ ਕਾਰੋਬਾਰ|ਰੋਜ਼ ਦਾ ਕੰਮ|ਖੇਤੀ|ਘਰ|ਅਧਿਆਪਕ|ਸੇਵਾਮੁਕਤ",
+    lists: "ਪਰਿਵਾਰ|ਦੋਸਤ|ਕੰਮ|ਵਪਾਰ|ਗੁਆਂਢੀ|ਜਮਾਤ|ਸਰਪ੍ਰਸਤ",
+    me: "ਮੇਰਾ ਨਾਮ|ਭਾਸ਼ਾ|ਮੇਰਾ ਕੰਮ|ਮੇਰੀ ਥਾਂ|ਖ਼ਬਰ ਦੀ ਸੂਚਨਾ|ਮੇਰਾ ਤਾਲਾ|ਮੇਰਾ ਸੰਪਰਕ|ਇਸ਼ਤਿਹਾਰ ਹਟਾਓ",
+    signs: "ਮੇਖ|ਬ੍ਰਿਖ|ਮਿਥੁਨ|ਕਰਕ|ਸਿੰਘ|ਕੰਨਿਆ|ਤੁਲਾ|ਬ੍ਰਿਸ਼ਚਕ|ਧਨੁ|ਮਕਰ|ਕੁੰਭ|ਮੀਨ",
+    soon: "ਜਲਦੀ ਆ ਰਿਹਾ ਹੈ",
+    lock_t: "ਆਪਣਾ ਤਾਲਾ ਲਗਾਓ",
+    lock_d: "ਤੁਹਾਡੀ ਉਂਗਲ, ਚਿਹਰਾ ਜਾਂ ਫ਼ੋਨ ਦਾ ਪਿੰਨ ਹੀ ਤੁਹਾਡਾ ਖਾਤਾ ਹੈ।",
+    place_t: "ਤੁਹਾਡਾ ਪਿੰਨ ਕੋਡ",
+    variant_t: "ਤੁਸੀਂ ਕੀ ਕਰਦੇ ਹੋ?",
+    variant_d: "ਤਿੰਨ ਤੱਕ ਚੁਣੋ।",
+    alerts_t: "ਰੋਜ਼ ਸਵੇਰੇ ਚੰਗੀ ਖ਼ਬਰ ਚਾਹੀਦੀ ਹੈ?",
+    reach_t: "ਤੁਹਾਡਾ ਮੋਬਾਈਲ ਨੰਬਰ",
+    list_t: "ਕਿਸੇ ਨੂੰ ਜੋੜਨ ਲਈ ਇਹ ਕੋਡ ਦਿਖਾਓ।",
+    sign_t: "ਆਪਣੀ ਰਾਸ਼ੀ ਚੁਣੋ",
+    today: "ਅੱਜ",
+    sources: "ਸਰੋਤ",
+    swipe: "ਪਸੰਦ ਹੋਵੇ ਤਾਂ ਖੱਬੇ ਖਿਸਕਾਓ। ਨਾ ਹੋਵੇ ਤਾਂ ਸੱਜੇ।",
+    install: "ਇੰਸਟਾਲ ਕਰੋ",
+    open: "ਐਪ ਖੋਲ੍ਹੋ",
+    ios: "Share ਦਬਾਓ, ਫਿਰ Add to Home Screen ਚੁਣੋ।",
+    inapp: "ਮੀਨੂ ਖੋਲ੍ਹੋ, ਫਿਰ ਆਪਣੇ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਖੋਲ੍ਹੋ।",
   }),
   ml: lang({
     apps: "ജ്ഞാനം|ഭാവി|വർത്തമാനം|വരുമാനം|ഓർമ്മപ്പെടുത്തലുകൾ|ഹോബികൾ|യോഗങ്ങൾ|സന്ദേശങ്ങൾ|ചർച്ചകൾ|പരിപാടികൾ|ഡയറക്ടറി",

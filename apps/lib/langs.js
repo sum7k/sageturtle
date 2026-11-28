@@ -1,9 +1,9 @@
-// The eleven languages of the app, English among them. Each is shown by its own name in its own script.
+// The twelve languages of the app, English among them. Each is shown by its own name in its own script.
 // `locale` is used for dates and for the phone's own voice. `rtl` is set for scripts written right to left.
 // `hello` is what a language tile says when tapped on the first screen, so a person who cannot read can find theirs by ear.
 // `states` are the Indian states (ISO 3166-2 codes, old and new spellings) where the language is the usual first guess.
 export const LANGS = [
-  { id: "hi", name: "हिन्दी", locale: "hi-IN", hello: "नमस्ते। आइए पढ़ें।", states: ["UP", "BR", "MP", "RJ", "HR", "DL", "UT", "UK", "HP", "JH", "CT", "CG", "PB", "CH"] },
+  { id: "hi", name: "हिन्दी", locale: "hi-IN", hello: "नमस्ते। आइए पढ़ें।", states: ["UP", "BR", "MP", "RJ", "HR", "DL", "UT", "UK", "HP", "JH", "CT", "CG"] },
   { id: "en", name: "English", locale: "en-IN", hello: "Hello. Let us read.", states: [] },
   { id: "bn", name: "বাংলা", locale: "bn-IN", hello: "নমস্কার। আসুন পড়ি।", states: ["WB", "TR"] },
   { id: "mr", name: "मराठी", locale: "mr-IN", hello: "नमस्कार। चला वाचूया।", states: ["MH"] },
@@ -13,6 +13,7 @@ export const LANGS = [
   { id: "ur", name: "اردو", locale: "ur-IN", rtl: true, hello: "آداب۔ آئیے پڑھیں۔", states: ["JK"] },
   { id: "kn", name: "ಕನ್ನಡ", locale: "kn-IN", hello: "ನಮಸ್ಕಾರ. ಬನ್ನಿ ಓದೋಣ.", states: ["KA"] },
   { id: "or", name: "ଓଡ଼ିଆ", locale: "or-IN", hello: "ନମସ୍କାର। ଆସନ୍ତୁ ପଢ଼ିବା।", states: ["OD", "OR"] },
+  { id: "pa", name: "ਪੰਜਾਬੀ", locale: "pa-IN", hello: "ਨਮਸਕਾਰ। ਆਓ ਪੜ੍ਹੀਏ।", states: ["PB", "CH"] },
   { id: "ml", name: "മലയാളം", locale: "ml-IN", hello: "നമസ്കാരം. വരൂ വായിക്കാം.", states: ["KL", "LD"] },
 ];
 export const langById = (id) => LANGS.find((l) => l.id === id) ?? LANGS[1];

@@ -20,8 +20,10 @@ import { accessEmail } from "../worker/access.js";
 import { adminData, adminPage } from "../worker/admin.js";
 import { testDb } from "./d1.js";
 
-test("eleven languages, English among them, and every word exists in every language", () => {
-  assert.equal(LANGS.length, 11);
+test("twelve languages, English among them, and every word exists in every language", () => {
+  assert.equal(LANGS.length, 12);
+  assert.equal(stateLang("PB"), "pa"); // Punjabi, the twelfth
+  assert.equal(t("pa", "today"), "ਅੱਜ");
   assert.equal(langById("en").name, "English");
   assert.equal(langById("xx").id, "en");
   assert.equal(guessLang("ta-IN"), "ta");
@@ -68,7 +70,7 @@ test("Book shows a picture and three words, one of them right, and has every wor
   }
   assert.deepEqual(round(5), round(5));
   assert.ok(place.every((c) => c >= 30), "the right word is not always in the same place");
-  assert.equal(Object.keys(WORDS).length, 11);
+  assert.equal(Object.keys(WORDS).length, 12);
 });
 
 test("a sign gets one line a day, and two signs do not share it", () => {

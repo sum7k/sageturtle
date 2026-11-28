@@ -1,12 +1,12 @@
 # BodhiLabs apps
 
-One installable web app (bodhilabs.org) that will hold eleven apps, released one by one.
+One installable web app (bodhilabs.org) for learning: twelve subjects, opened one by one.
 Until 2026-11-28 the product was called SageTurtle.
 
 ## What is live in this build
 
 - **No login at the start.** A person who cannot read yet must be able to get in.
-- **The first screen is the language**, chosen without reading (`app/start/page.jsx`, `components/Region.jsx`): eleven
+- **The first screen is the language**, chosen without reading (`app/start/page.jsx`, `components/Region.jsx`): twelve
   picture tiles, one per language. A tap makes the tile say hello in that language; a second tap, or the gold tick,
   chooses it. One tile is picked in advance from the phone's language, or from the state the person is in
   (`firstGuess` in `lib/langs.js`). The drawings are placeholders, with no religious symbols.
@@ -28,7 +28,7 @@ Until 2026-11-28 the product was called SageTurtle.
 - **Book** (`lib/book.js`): a picture, a gold button that says the word, and three written words to choose from. A wrong
   word shakes and says itself; the right one turns green and the next picture comes. Twelve words per language. The
   letters are on a second page.
-- **Words in eleven languages** (`lib/strings.js`): Hindi, English, Bengali, Marathi, Telugu, Tamil, Gujarati, Urdu,
+- **Words in twelve languages** (`lib/strings.js`): Hindi, English, Bengali, Marathi, Telugu, Tamil, Gujarati, Urdu, Punjabi,
   Kannada, Odia, Malayalam. The app does not speak, except the hello on a language tile and the words in Book, which
   use the phone's own voice.
 - **Used only as the installed app.** Any app page opened in a browser tab is sent to the install page `/`

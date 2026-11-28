@@ -11,9 +11,9 @@ const Chips = ({ keys, lang }) => (
   <div className="chips">{keys.map((k) => <span key={k} className="chip" lang={lang}><span aria-hidden="true">{PICTURE[k]}</span> {wordFor(lang, k)}</span>)}</div>
 );
 
-const YEARS = 11; // the time before school, then a first year and ten more
+const YEARS = 12; // the path has twelve steps, like everything else here (sumeet, 2026-11-28)
 
-/** Now: where the learner stands. The eleven years on top, then what goes well and what needs more practice. */
+/** Now: where the learner stands. The twelve steps of the path on top, then what goes well and what needs more practice. */
 export default function Now() {
   const { ready, lang, stats, back } = useLearner();
   if (!ready) return <main className="screen" />;
