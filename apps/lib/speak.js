@@ -3,12 +3,12 @@
 //
 // The rule (sumeet, 2026-11-28): everything spoken is heard twice, once in a man's voice and once in a woman's,
 // in an Indian accent, because hearing both pitches makes a word easier to catch. Which goes first is random.
-// First choice: a recording made once by Sarvam (lib/voice.js). If there is none (no network, Urdu, not set up),
+// First choice: a recording made once by ElevenLabs (lib/voice.js). If there is none (no network, not set up),
 // the phone's own voice speaks instead. A phone does not say whether a voice is a man's or a woman's: where the
 // voice's name tells, that voice is used; otherwise the same voice is played lower for the man and higher for the woman.
 import { langById } from "./langs.js";
 import { loadPrefs, sidesFor } from "./prefs.js";
-import { SARVAM_LANG, clipUrl, lifeUrl, lineUrl } from "./voice.js";
+import { VOICE_LANG, clipUrl, lifeUrl, lineUrl } from "./voice.js";
 
 const MAN = /\b(male|man|rishi|hemant|ravi|prabhat|madhur|valluvar|mohan|niranjan|manohar|gagan|sukant|midhun|salman|asad|bashkar)\b|-x-(hi[ce]|en[ce]|bn[b]|ta[d]|te[m]|gu[m]|kn[m]|ml[m]|mr[m]|ur[m])-/i;
 const WOMAN = /\b(female|woman|lekha|veena|heera|kalpana|swara|neerja|pallavi|tanishaa|aarohi|shruti|dhwani|sapna|sobhana|subhasini|uzma|gul|sangeeta|kanya|isha)\b|-x-(hi[ad]|en[ad]|bn[a]|ta[c]|te[f]|gu[f]|kn[f]|ml[f]|mr[f]|ur[f])-/i;
@@ -81,7 +81,7 @@ export function say(text, lang = "en", done = () => {}) {
     for (const side of sides) {
       if (mine !== turn) return;
       try {
-        if (!SARVAM_LANG[lang] || typeof Audio === "undefined") throw new Error("no recording");
+        if (!VOICE_LANG[lang] || typeof Audio === "undefined") throw new Error("no recording");
         await playClip(clipUrl(lang, side.who, text));
       } catch {
         if (mine === turn) await speakPhone(text, locale, side);
@@ -112,7 +112,7 @@ export function sayLife(life, lang, done = () => {}) {
   const side = sidesFor(pair(globalThis.speechSynthesis?.getVoices?.() ?? [], locale), loadPrefs().voice)[0];
   (async () => {
     try {
-      if (!SARVAM_LANG[lang] || typeof Audio === "undefined") throw new Error("no recording");
+      if (!VOICE_LANG[lang] || typeof Audio === "undefined") throw new Error("no recording");
       await playClip(lifeUrl(lang, side.who, life.id));
     } catch {
       if (mine === turn) await speakPhone(text, locale, { ...side, pitch: 1 });
@@ -135,7 +135,7 @@ export function sayLine(id, text, lang, who, done = () => {}) {
   const side = pair(globalThis.speechSynthesis?.getVoices?.() ?? [], locale, 0).find((s) => s.who === who);
   (async () => {
     try {
-      if (!SARVAM_LANG[lang] || typeof Audio === "undefined") throw new Error("no recording");
+      if (!VOICE_LANG[lang] || typeof Audio === "undefined") throw new Error("no recording");
       await playClip(lineUrl(lang, who, id));
     } catch {
       if (mine === turn) await speakPhone(text, locale, side);

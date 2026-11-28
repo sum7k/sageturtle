@@ -1,14 +1,20 @@
-// Recorded voices. The words, letters and greetings the app speaks are fixed, so each is made once by Sarvam AI's
-// Bulbul voices (an Indian company, Indian accents), saved on Cloudflare, and played from there ever after.
+// Recorded voices. The words, letters, greetings, lesson lines and lives the app speaks are fixed, so each is made
+// once by ElevenLabs (model Eleven v3, which speaks all twelve of our languages), saved on Cloudflare, and played
+// from there ever after. Sarvam was used before; sumeet found its voice too poor (2026-11-28).
 // The rule (sumeet, 2026-11-28): everything is heard in a man's voice and in a woman's.
 // This file is read by the app and by the Worker.
 import { WORDS, lettersFor } from "./book.js";
 import { LANGS } from "./langs.js";
 
-/** Sarvam's name for each of our languages. Urdu is missing: Sarvam does not speak it, so the phone's voice does. */
-export const SARVAM_LANG = { hi: "hi-IN", en: "en-IN", bn: "bn-IN", mr: "mr-IN", te: "te-IN", ta: "ta-IN", gu: "gu-IN", kn: "kn-IN", or: "od-IN", ml: "ml-IN", pa: "pa-IN" };
-/** The speakers. These two are the ones Sarvam shows in all of its languages. More can be added to a list. */
-export const SPEAKERS = { man: ["shubh"], woman: ["ishita"] };
+/** The model, and its code for each of our languages (ISO 639-1). Eleven v3 lists all twelve. */
+export const MODEL = "eleven_v3";
+export const VOICE_LANG = { hi: "hi", en: "en", bn: "bn", mr: "mr", te: "te", ta: "ta", gu: "gu", ur: "ur", kn: "kn", or: "or", ml: "ml", pa: "pa" };
+/**
+ * The two voices, from the ElevenLabs voice library: calm Indian teachers, used for every language (the model
+ * carries a voice into each language). Prashant, "warm, clear Hindi explainer", and Anjali, "friendly EdTech
+ * teacher". The Worker secrets ELEVENLABS_VOICE_MAN and ELEVENLABS_VOICE_WOMAN, when set, replace them.
+ */
+export const SPEAKERS = { man: ["j7yQHuKNC1hdt1LBPAks"], woman: ["Kfn3fYy8XcPyUvbTxn1H"] };
 export const WHO = Object.keys(SPEAKERS);
 
 /** Everything the app may speak in a language. The Worker makes a recording only for these, never for other text. */

@@ -15,8 +15,8 @@
   "d1_databases": [
     { "binding": "DB", "database_name": "bodhilabs", "database_id": "ed3d9f94-b443-44dc-8275-a27a384a19b6", "migrations_dir": "migrations" }
   ],
-  // Recorded voices, made once by Sarvam and kept here (worker/voice.js). The Sarvam key is a secret named
-  // SARVAM_API_KEY, set in the Cloudflare dashboard, never in this file.
+  // Recorded voices, made once by ElevenLabs and kept here (worker/voice.js). The key is a secret named
+  // ELEVENLABS_API_KEY, set in the Cloudflare dashboard (and in .dev.vars on a laptop), never in this file.
   "kv_namespaces": [{ "binding": "VOICE", "id": "0c946f0199fc41249268f30fc7468815" }],
   // Workers AI: writes an answer from lines of our own lessons, until the phone has its own model (worker/answer.js).
   "ai": { "binding": "AI" },

@@ -1,1 +1,4 @@
 ADMIN_DEV=yes
+# The ElevenLabs key, so that voices are made on this laptop too. Without it, localhost plays the voices
+# already made on bodhilabs.org, and the phone's own voice for anything new.
+ELEVENLABS_API_KEY=

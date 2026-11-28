@@ -37,11 +37,11 @@ Until 2026-11-28 the product was called SageTurtle.
   WebGPU) is to take over once it has come in quietly on Wi-Fi on a strong enough phone (`power`, `mayFetch`, `warm`);
   it is built but off, tried at `/lab` (`public/lab.html`), where a switch turns it on for that phone.
 - **Lives (जीवनी) opens one great life** (`lib/lives.js`, `app/life/page.jsx`): a short biography about how the person
-  learned and grew, never the same one twice in a row, to read or to hear in a Sarvam voice (`/api/voice?life=<id>`).
+  learned and grew, never the same one twice in a row, to read or to hear in a recorded voice (`/api/voice?life=<id>`).
   Three placeholder lives, in English and Hindi; the set of 121 is being written. Shown and heard are counted.
 - **Lessons** (`lib/lessons.js`, `components/Lesson.jsx`, `components/LessonArt.jsx`): for stages 1 and 2, where
   nothing is read. A lesson is not a video file: it is a list of scenes, each a small SVG drawing that the phone moves
-  itself (CSS, no animation library) and one spoken line (a Sarvam recording made once, `/api/voice?line=fire.2`). One
+  itself (CSS, no animation library) and one spoken line (an ElevenLabs recording made once, `/api/voice?line=fire.2`). One
   drawing serves every language. Nature (`app/nature`) is open inside Gyan with the first seven: my body, the five senses,
   fire, animals, birds, plants and what we eat, in Hindi and English; other languages hear English until their lines are written.
 - **Chapters, for learners who read** (`lib/chapters/`, `lib/narrators.js`, `components/art/`, `components/Practice.jsx`):
@@ -50,8 +50,9 @@ Until 2026-11-28 the product was called SageTurtle.
   (`app/number`) is open inside Gyan with one sample chapter of stage 6, "Zero, fortune and debt", told in the voice of
   Brahmagupta: six lessons, 44 scenes, in Hindi and English.
 - **Gyan** (the reading app; `book` in the code, `lib/book.js`). Everything spoken is heard twice, in a man's and a
-  woman's voice (`lib/speak.js`): a Sarvam recording made once and kept in Cloudflare KV (`worker/voice.js`), or the
-  phone's own voice when there is none. The Sarvam key is the Worker secret `SARVAM_API_KEY`.
+  woman's voice (`lib/speak.js`): an ElevenLabs recording (model Eleven v3, all twelve languages) made once and kept in Cloudflare KV
+  (`worker/voice.js`), or the phone's own voice when there is none. The key is the Worker secret `ELEVENLABS_API_KEY`
+  (also `apps/.dev.vars` on a laptop; without it, `npm run dev` plays the voices already made on bodhilabs.org).
 - **Book** (`lib/book.js`): a picture, a gold button that says the word, and three written words to choose from. A wrong
   word shakes and says itself; the right one turns green and the next picture comes. Twelve words per language. The
   letters are on a second page.
