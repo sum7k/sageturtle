@@ -1,7 +1,6 @@
 // The admin panel: one page of numbers, made on the server from the database. English only; it is for the owner.
-import { BOOK, WORD, tapName } from "../lib/buttons.js";
+import { BOOK, tapName } from "../lib/buttons.js";
 import { CENTRE } from "../lib/grid.js";
-import { WORD_HOUSES } from "../lib/word.js";
 import { TOP } from "../lib/top.js";
 import { SUBJECTS } from "../lib/subjects.js";
 import { LIVES } from "../lib/lives.js";
@@ -47,7 +46,6 @@ export async function adminData(db, now = Date.now()) {
       { step: "Installed the app", ...counted("install") },
       { step: "Chose a language", today: u.new_today, week: u.new_week, total: u.total },
       { step: "Opened Gyan", ...people("gyan") },
-      { step: "Opened Word", ...people(WORD.id) },
       { step: "Opened the word game", ...people(BOOK.id) },
       { step: "Picked a word", ...people("answer") },
       { step: "Got a word right", ...people("right") },
@@ -55,13 +53,13 @@ export async function adminData(db, now = Date.now()) {
     book: { ...zero, ...by[BOOK.id] },
     // Home, the top level: Gyan, Vartaman and the ten empty boxes.
     top: TOP.map((x, i) => ({ n: i + 1, id: x.id, picture: x.picture, name: x.name.en || "Empty box", open: !!x.open, ...zero, ...by[tapName("top", x)] })),
-    // Inside Gyan: for each subject, how many people pressed it and how often.
-    subjects: SUBJECTS.map((x) => ({ id: x.id, picture: x.picture, name: x.name.en, open: !!x.open, ...zero, ...by[tapName("gyan", x)] }))
+    // Inside Gyan: the twelve stages.
+    stages: Array.from({ length: 12 }, (_, i) => ({ n: i + 1, ...zero, ...by[`stage:${i + 1}`] })),
+    // Inside a stage: for each subject, how many people pressed it and how often.
+    subjects: SUBJECTS.map((x) => ({ id: x.id, picture: x.picture, name: x.name.en, ...zero, ...by[tapName("stage", x)] }))
       .sort((a, b) => b.users - a.users || b.taps - a.taps),
-    // Inside Word: its twelve houses, in order.
-    houses: WORD_HOUSES.map((x, i) => ({ n: i + 1, id: x.id, picture: x.picture, name: x.name.en, open: !!x.open, ...zero, ...by[tapName("word", x)] })),
     // The four in the middle of every grid.
-    centre: CENTRE.map((c) => ({ id: c.id, picture: c.picture, name: c.name.en, ...zero, ...by[`centre:${c.id}`] })),
+    centre: CENTRE.map((c) => ({ id: c.id, picture: c.picture, name: c.name.en || "Joker (empty)", ...zero, ...by[`centre:${c.id}`] })),
     // Questions from the "?" box: those waiting for an answer, and the last ones answered.
     questions: { open: asked, done: answered },
     // Lives: which lives were shown, and how many people listened.
@@ -116,12 +114,14 @@ ${d.questions.done.length ? `<details><summary>Answered</summary>${d.questions.d
 <section><h2>Home</h2><div class="card">${table(["House", "People", "Presses", "Today"],
     d.top.map((x) => [`${x.n}. <span class="pic">${x.picture}</span>${esc(x.name)}${x.open ? "" : ' <span class="tag">closed</span>'}`, num(x.users), num(x.taps), num(x.taps_today)]))}</div></section>
 <section><h2>Subjects pressed</h2><div class="card">${table(["Subject", "People", "Presses", "Today"], [
-    ...d.subjects.map((x) => [`<span class="pic">${x.picture}</span>${esc(x.name)}${x.open ? "" : ' <span class="tag">closed</span>'}`, num(x.users), num(x.taps), num(x.taps_today)]),
+    ...d.subjects.map((x) => [`<span class="pic">${x.picture}</span>${esc(x.name)}`, num(x.users), num(x.taps), num(x.taps_today)]),
     ...d.centre.map((x) => [`<span class="pic">${x.picture}</span>${esc(x.name)} <span class="tag">middle</span>`, num(x.users), num(x.taps), num(x.taps_today)]),
   ])}</div>
-<p class="muted">Closed subjects only count the press. The four marked "middle" are the boxes in the middle of every grid.</p></section>
-<section><h2>Inside Word</h2><div class="card">${table(["House", "People", "Presses", "Today"],
-    d.houses.map((x) => [`${x.n}. <span class="pic">${x.picture}</span>${esc(x.name)}${x.open ? "" : ' <span class="tag">closed</span>'}`, num(x.users), num(x.taps), num(x.taps_today)]))}</div></section>
+<p class="muted">A subject with nothing made for the stage only counts the press. Word here is a press where it was closed; the word game is counted in the steps above. The four marked "middle" are the boxes in the middle of every grid: Me, Ask, Settings and the empty joker.</p></section>
+<section><h2>Stages of Gyan</h2><div class="card">${table(["Stage", "People", "Presses", "Today"], d.stages.map((x) => [`Stage ${x.n}`, num(x.users), num(x.taps), num(x.taps_today)]))}</div>
+<p class="muted">A new learner has only stage 1 open. To look at any stage on this phone:
+<button type="button" onclick="localStorage.setItem('bodhilabs.allstages.v1','1');this.textContent='All stages are open on this phone'">Open all stages</button>
+<button type="button" onclick="localStorage.removeItem('bodhilabs.allstages.v1');this.textContent='Closed again'">Close them again</button></p></section>
 <section><h2>Where people are</h2><div class="card">${table(["State", "People"], d.states.map((r) => [esc(r.state || "Not known"), num(r.users)]))}</div></section>
 <section><h2>Who sent them</h2><div class="card">${table(["From", "People"], d.refs.map((r) => [esc(r.ref || "Direct or not known"), num(r.users)]))}</div>
 <p class="muted">To tell links apart, share them as bodhilabs.org/?from=whatsapp (any short name).</p></section>

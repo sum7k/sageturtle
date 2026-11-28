@@ -3,7 +3,6 @@
 //   POST /api/register  a phone chooses its language (or later adds its place and work)
 //   POST /api/tap       taps on Home's buttons, and which pictures were shown
 //   POST /api/count     a visit or an install, counted without knowing who
-//   GET  /api/voice     one recorded word, letter or greeting (worker/voice.js)
 //   POST /api/ask       a learner's question; GET /api/ask gives that phone's questions and answers (worker/ask.js)
 //   POST /api/answer    an answer written from lines of our lessons by a model on Cloudflare (worker/answer.js)
 //   GET  /admin         the admin panel, behind a passcode or Cloudflare Access (POST /admin signs in)
@@ -13,7 +12,6 @@ import { LANGS } from "../lib/langs.js";
 import { VARIANTS, validCombo } from "../lib/variants.js";
 import { accessEmail, passOk, passLogin } from "./access.js";
 import { adminPage } from "./admin.js";
-import { voice } from "./voice.js";
 import { ask, mine, reply } from "./ask.js";
 import { answer } from "./answer.js";
 
@@ -109,7 +107,6 @@ export async function handle(req, env, now = Date.now()) {
   }
   if (pathname === "/api/where") return where(req);
   if (pathname === "/api/ask" && req.method === "GET") return mine(req, env);
-  if (pathname === "/api/voice") return req.method === "GET" ? voice(req, env) : bad("not allowed", 405);
   if (POSTS[pathname]) return req.method === "POST" ? POSTS[pathname](req, env, now) : bad("not allowed", 405);
   if (pathname.startsWith("/api/") || pathname.startsWith("/admin/")) return bad("not found", 404);
   return env.ASSETS.fetch(req);

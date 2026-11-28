@@ -1,8 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { BOOK, WORD, LIFE, TRACKED, tapName } from "../lib/buttons.js";
-import { AROUND, CENTRE, SAY } from "../lib/grid.js";
+import { AROUND, CENTRE, SAY, whereOf } from "../lib/grid.js";
+import { cleanPrefs, sidesFor } from "../lib/prefs.js";
 import { WORD_HOUSES } from "../lib/word.js";
+import { stageHouses, subjectsAt, doorOf, cleanStage, partsOf, stageAfter, unitsOf, lessonHouses } from "../lib/stages.js";
 import { TOP } from "../lib/top.js";
 import { mark, report } from "../lib/learn.js";
 import { shouldLook, afterLook } from "../lib/ask.js";
@@ -152,7 +154,7 @@ test("the Open the app button uses an Android intent, with the start page in the
 test("Home holds twelve subjects, turned by the rising sign", () => {
   assert.equal(SUBJECTS.length, 12);
   assert.equal(SUBJECTS[11].id, "lives"); // Meena, the twelfth sign
-  assert.deepEqual(SUBJECTS.filter((x) => x.open).map((x) => [x.id, x.open]), [["word", "/word"], ["number", "/number"], ["nature", "/nature"], ["lives", "/life"]]);
+  assert.ok(SUBJECTS.every((x) => !x.open), "what a subject opens depends on the stage");
   assert.equal(new Set(SUBJECTS.map((x) => x.id)).size, 12);
   for (const x of SUBJECTS) for (const l of LANG_ORDER) assert.ok(x.name[l], `${x.id} ${l}`);
   assert.deepEqual([...LANG_ORDER].sort(), LANGS.map((l) => l.id).sort());
@@ -161,19 +163,27 @@ test("Home holds twelve subjects, turned by the rising sign", () => {
   // Vrishchika (7) rising: Nature is in house 1, People in house 2, and Art comes last.
   assert.deepEqual(ring(7).map((x) => x.id), ["nature", "people", "hand", "money", "lives", "body", "music", "word", "earth", "rule", "number", "art"]);
   assert.equal(ring(0)[0].id, "body");
-  for (const x of SUBJECTS) assert.ok(TRACKED.includes(tapName("gyan", x)), x.id);
-  assert.deepEqual([tapName("gyan", SUBJECTS[2]), tapName("gyan", SUBJECTS[11]), tapName("gyan", SUBJECTS[0])], [WORD.id, LIFE.id, "subject:body"]);
+  for (const x of SUBJECTS) assert.ok(TRACKED.includes(tapName("stage", x)), x.id);
+  assert.deepEqual([tapName("stage", SUBJECTS[2]), tapName("stage", SUBJECTS[11]), tapName("stage", SUBJECTS[0])], [WORD.id, LIFE.id, "subject:body"]);
 });
 
 test("every level is a grid of sixteen: twelve houses around and the same four in the middle", () => {
   const boxes = [...AROUND, ...CENTRE.map((c) => c.at)].map(([r, c]) => `${r},${c}`);
   assert.equal(new Set(boxes).size, 16);
   for (const [r, c] of AROUND) assert.ok(r === 1 || r === 4 || c === 1 || c === 4);
-  assert.deepEqual(AROUND[0], [1, 1]); // house 1 is top left
-  assert.deepEqual(AROUND[3], [1, 4]); // and they go round with the clock
+  assert.deepEqual(AROUND[11], [4, 4]); // the twelfth house is always bottom right
+  assert.deepEqual(AROUND[0], [4, 3]); // house 1 is just left of it
+  assert.deepEqual([AROUND[2], AROUND[5], AROUND[8]], [[4, 1], [1, 1], [1, 4]]); // left along the bottom, up, across the top, down
   for (let i = 0; i < 12; i++) { const [a, b] = [AROUND[i], AROUND[(i + 1) % 12]]; assert.equal(Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]), 1); }
-  assert.deepEqual(CENTRE.map((c) => c.id), ["past", "now", "next", "ask"]);
-  for (const c of CENTRE) { assert.ok(TRACKED.includes(`centre:${c.id}`)); for (const l of LANG_ORDER) assert.ok(c.name[l], `${c.id} ${l}`); }
+  assert.deepEqual(CENTRE.map((c) => [c.id, c.at.join()]), [["self", "2,2"], ["ask", "2,3"], ["settings", "3,2"], ["joker", "3,3"]]);
+  for (const c of CENTRE) { assert.ok(TRACKED.includes(`centre:${c.id}`)); if (!c.empty) for (const l of LANG_ORDER) assert.ok(c.name[l], `${c.id} ${l}`); }
+  assert.deepEqual(CENTRE.filter((c) => c.empty).map((c) => c.id), ["joker"]); // the fourth is kept empty
+  assert.deepEqual(["top", "gyan", "stage"].map(whereOf), ["top", "gyan", "gyan"]); // a middle page knows where it was opened
+  // Settings: both voices unless the learner kept one; a broken store gives the defaults.
+  assert.deepEqual(cleanPrefs({ voice: "x", speed: 3 }), { voice: "both", speed: 1 });
+  assert.deepEqual(cleanPrefs({ voice: "woman", speed: 0.8 }), { voice: "woman", speed: 0.8 });
+  const two = [{ who: "man" }, { who: "woman" }];
+  assert.deepEqual([sidesFor(two, "both").length, sidesFor(two, "woman")], [2, [{ who: "woman" }]]);
   for (const [k, v] of Object.entries(SAY)) for (const l of LANG_ORDER) assert.ok(v[l], `${k} ${l}`);
   // Home, the top level: Gyan is open, Vartaman waits, ten boxes are empty; every press is counted.
   assert.equal(TOP.length, 12);
@@ -182,12 +192,62 @@ test("every level is a grid of sixteen: twelve houses around and the same four i
   assert.equal(new Set(TOP.map((x) => x.id)).size, 12);
   for (const x of TOP) assert.ok(TRACKED.includes(tapName("top", x)), x.id);
   for (const l of LANGS) assert.ok(TOP[0].name[l.id] && TOP[1].name[l.id], l.id);
-  // Inside Word: twelve houses in order, only Letters open, and it is the word game.
+  // Every name is in the chosen language: English says Knowledge, not the Hindi word in English letters.
+  assert.deepEqual([TOP[0].name.en, TOP[1].name.en, TOP[0].name.ta], ["Knowledge", "Present", "ஞானம்"]);
+  const latin = /[A-Za-z]{3}/;
+  for (const l of LANGS.filter((x) => x.id !== "en")) for (const box of [...TOP.slice(0, 2), ...SUBJECTS, ...WORD_HOUSES, ...CENTRE.filter((c) => !c.empty)]) assert.ok(!latin.test(box.name[l.id]), `${box.id} ${l.id}`);
+  // Word's twelve houses are what Word holds at each stage; only Letters (stage 3) is built.
   assert.equal(WORD_HOUSES.length, 12);
-  assert.equal(new Set(WORD_HOUSES.map((h) => h.id)).size, 12);
-  assert.deepEqual(WORD_HOUSES.filter((h) => h.open).map((h) => [h.id, h.open]), [["letters", BOOK.href]]);
-  for (const h of WORD_HOUSES) { assert.ok(TRACKED.includes(tapName("word", h)), h.id); for (const l of LANG_ORDER) assert.ok(h.name[l], `${h.id} ${l}`); }
-  assert.deepEqual([tapName("word", WORD_HOUSES[2]), tapName("word", WORD_HOUSES[0])], [BOOK.id, "word:names"]);
+  assert.deepEqual(WORD_HOUSES.map((h, i) => (h.open ? i + 1 : 0)).filter(Boolean), [3]);
+  for (const h of WORD_HOUSES) for (const l of LANG_ORDER) assert.ok(h.name[l], `${h.id} ${l}`);
+});
+
+test("Gyan is walked by stage: only the learner's stage and those behind it open, and a stage shows only its own lessons", async () => {
+  const { lessonsOf } = await import("../lib/lessons.js");
+  // A new learner: stage 1 is open, the other eleven are closed, and every press is counted.
+  const fresh = stageHouses(1);
+  assert.equal(fresh.length, 12);
+  assert.deepEqual(fresh.filter((h) => h.open).map((h) => [h.id, h.open]), [["stage:1", "/stage?n=1"]]);
+  assert.deepEqual(stageHouses(3).filter((h) => h.open).map((h) => h.n), [1, 2, 3]);
+  assert.equal(stageHouses(1, true).filter((h) => h.open).length, 12, "for review every stage can be opened");
+  for (const h of fresh) assert.ok(TRACKED.includes(tapName("gyan", h)), h.id);
+  assert.deepEqual([cleanStage("6"), cleanStage("0"), cleanStage("13"), cleanStage("x"), cleanStage(null)], [6, 1, 1, 1, 1]);
+  // Stage 1: nothing is read. Nature has its picture lessons, a life can be heard, and nothing else is open.
+  const open = (stage) => subjectsAt(stage, 0).filter((x) => x.open).map((x) => [x.id, x.open]);
+  assert.deepEqual(open(1), [["nature", "/subject?s=nature&stage=1"], ["lives", "/life?stage=1"]]);
+  assert.deepEqual(open(2), [["lives", "/life?stage=2"]]);
+  assert.deepEqual(open(3), [["word", "/book"], ["lives", "/life?stage=3"]]); // written words begin here
+  assert.deepEqual(open(6), [["number", "/subject?s=number&stage=6"], ["lives", "/life?stage=6"]]); // the chapter on zero
+  // A cube of twelves: inside a subject at a stage, twelve lesson houses; stage 1 Nature has seven made.
+  const houses = lessonHouses("nature", 1, ["body"]);
+  assert.equal(houses.length, 12);
+  assert.equal(houses.filter((h) => h.open).length, 7);
+  assert.deepEqual([houses[0].open, houses[0].done, houses[1].done, houses[7].open], ["/lesson?s=nature&stage=1&h=1", true, false, undefined]);
+  assert.ok(houses.every((h) => !h.name.en), "nothing written at stage 1");
+  assert.equal(lessonHouses("number", 6)[0].name.en, "Zero is a number");
+  assert.deepEqual([tapName("subject", houses[0]), tapName("subject", houses[9])], ["lesson:body", "unit:empty"]);
+  assert.ok(TRACKED.includes("unit:empty"));
+  // A house can hold several parts: lessons that name the same house.
+  const L = (id, house) => ({ id, subject: "x", stage: 2, house });
+  assert.deepEqual(unitsOf("x", 2, [L("a"), L("b", 4), L("c", 4), L("d")]).slice(0, 5).map((h) => h.map((l) => l.id)), [["a"], [], [], ["b", "c"], ["d"]]);
+  assert.equal(doorOf("number", 1), null, "a child at stage 1 never meets the written chapter of stage 6");
+  assert.equal(doorOf("nature", 6), null);
+  // No lesson of stage 1 or 2 shows a written line, and every lesson belongs to one stage.
+  for (const stage of [1, 2]) for (const x of SUBJECTS) for (const l of lessonsOf(x.id, stage)) assert.ok(!l.chapter, l.id);
+  assert.deepEqual(subjectsAt(1, 7).map((x) => x.id), ring(7).map((x) => x.id)); // still turned by the rising sign
+  assert.deepEqual([tapName("stage", subjectsAt(3, 0)[2]), tapName("stage", subjectsAt(1, 0)[2])], [BOOK.id, WORD.id]);
+  // Moving up: a stage is finished when all that is made for it is done; then the next one opens.
+  const one = partsOf(1);
+  assert.ok(one.length >= 5 && one.every((p) => p.startsWith("lesson:")));
+  assert.equal(stageAfter(1, []), 1);
+  assert.equal(stageAfter(1, one.slice(1)), 1, "one lesson is still unseen");
+  assert.equal(stageAfter(1, one), 2);
+  assert.equal(stageAfter(2, one), 2, "nothing is made for stage 2 yet, so the learner waits there");
+  assert.equal(partsOf(3).filter((p) => p.startsWith("word:")).length, 12);
+  assert.equal(stageAfter(3, partsOf(3)), 4);
+  const made = [{ id: "a", stage: 1 }, { id: "b", stage: 2 }];
+  assert.equal(stageAfter(1, ["lesson:a", "lesson:b"], made), 3, "two finished stages are passed at once");
+  assert.equal(stageAfter(12, partsOf(12)), 12);
 });
 
 test("the phone remembers which words go well and which need practice", () => {
@@ -262,7 +322,7 @@ test("taps wait on the phone and are taken off only when sent", () => {
 test("the admin panel shows which subjects are pressed, which lives are shown and how many are heard", async () => {
   const e = env();
   const a = await signUp(e), b = await signUp(e);
-  await post(e, "/api/tap", { user: a, taps: { "subject:number": 3, lives: 2, "life:einstein": 2, heard: 1, "centre:now": 1, word: 1, "word:names": 2 } });
+  await post(e, "/api/tap", { user: a, taps: { "subject:number": 3, lives: 2, "life:einstein": 2, heard: 1, "centre:self": 1, word: 1, "stage:1": 2 } });
   await post(e, "/api/tap", { user: b, taps: { "subject:number": 1, book: 1, "life:leonardo": 1 } });
   const d = await adminData(e.DB, NOW);
   assert.equal(d.subjects.length, 12);
@@ -270,10 +330,10 @@ test("the admin panel shows which subjects are pressed, which lives are shown an
   assert.deepEqual(d.subjects.filter((x) => x.taps).map((x) => x.id).sort(), ["lives", "number", "word"]);
   assert.deepEqual(d.lives.map((l) => [l.id, l.taps]), [["einstein", 2], ["leonardo", 1], ["aryabhata", 0]]);
   assert.equal(d.heard.taps, 1);
-  assert.deepEqual(d.centre.map((c) => [c.id, c.users]), [["past", 0], ["now", 1], ["next", 0], ["ask", 0]]);
-  assert.deepEqual(d.houses.slice(0, 3).map((h) => [h.n, h.id, h.taps]), [[1, "names", 2], [2, "sounds", 0], [3, "letters", 1]]);
-  assert.match(await adminPage(e.DB, NOW, "x"), /Inside Word/);
-  assert.deepEqual(d.top.slice(0, 3).map((x) => [x.n, x.id, x.name]), [[1, "gyan", "Gyan"], [2, "vartaman", "Vartaman"], [3, "top:3", "Empty box"]]);
+  assert.deepEqual(d.centre.map((c) => [c.id, c.users]), [["self", 1], ["ask", 0], ["settings", 0], ["joker", 0]]);
+  assert.deepEqual(d.stages.slice(0, 2).map((h) => [h.n, h.taps]), [[1, 2], [2, 0]]);
+  assert.match(await adminPage(e.DB, NOW, "x"), /Stages of Gyan/);
+  assert.deepEqual(d.top.slice(0, 3).map((x) => [x.n, x.id, x.name]), [[1, "gyan", "Knowledge"], [2, "vartaman", "Present"], [3, "top:3", "Empty box"]]);
   const html = await adminPage(e.DB, NOW, "owner@example.com");
   assert.match(html, /Subjects pressed/);
   assert.match(html, /Lives shown/);
@@ -354,44 +414,20 @@ test("every spoken text gets a man's voice and a woman's, Indian first", async (
   delete globalThis.speechSynthesis; delete globalThis.SpeechSynthesisUtterance;
 });
 
-test("a recording is made once by Sarvam, saved, and only for the app's own words", async () => {
-  const { voice } = await import("../worker/voice.js");
-  const { spoken, clipUrl, SARVAM_LANG } = await import("../lib/voice.js");
+test("a recording is played only when one was made beforehand; else the phone speaks", async () => {
+  const { spoken, mark, recordingPath, recordingOf } = await import("../lib/voice.js");
   assert.ok(spoken("hi").includes("गाय") && spoken("hi").includes("नमस्ते। आइए पढ़ें।") && spoken("hi").includes("क"));
-  assert.equal(SARVAM_LANG.or, "od-IN");
-  assert.equal(SARVAM_LANG.ur, undefined);
-  const store = new Map();
-  const VOICE = { get: async (k) => store.get(k) ?? null, put: async (k, v) => { store.set(k, v.buffer ?? v); } };
-  const calls = [];
-  const sarvam = async (url, init) => { calls.push([url, init]); return Response.json({ audios: [btoa("mp3!")] }); };
-  const ask = (path, env) => voice(new Request(`https://bodhilabs.org${path}`), env, sarvam);
-  const env = { VOICE, SARVAM_API_KEY: "k" };
-  const url = clipUrl("hi", "woman", "गाय");
-  const first = await ask(url, env);
-  assert.equal(first.status, 200);
-  assert.equal(first.headers.get("content-type"), "audio/mpeg");
-  assert.equal(await first.text(), "mp3!");
-  const sent = JSON.parse(calls[0][1].body);
-  assert.deepEqual([calls[0][0], sent.text, sent.language_code, sent.speaker, sent.output_audio_codec], ["https://api.sarvam.ai/text-to-speech", "गाय", "hi-IN", "ishita", "mp3"]);
-  assert.equal(calls[0][1].headers["api-subscription-key"], "k");
-  assert.equal(await (await ask(url, env)).text(), "mp3!");
-  assert.equal(calls.length, 1, "the second time it is read, not made");
-  assert.equal(JSON.parse((await ask(clipUrl("or", "man", spoken("or")[0]), env), calls[1][1].body)).language_code, "od-IN");
-  assert.equal((await ask(clipUrl("hi", "woman", "anything else"), env)).status, 404);
-  assert.equal((await ask(clipUrl("ur", "woman", spoken("ur")[0]), env)).status, 404);
-  assert.equal((await ask(clipUrl("hi", "robot", "गाय"), env)).status, 404);
-  assert.equal((await ask(clipUrl("hi", "man", "गाय"), { VOICE })).status, 503, "no key: the phone speaks instead");
-  assert.equal(calls.length, 2);
-  // A whole life is read the same way, by its id.
-  const { lifeUrl } = await import("../lib/voice.js");
-  const life = await ask(lifeUrl("hi", "man", "einstein"), env);
-  assert.equal(life.status, 200);
-  const read = JSON.parse(calls[2][1].body);
-  assert.ok(read.text.startsWith("अल्बर्ट आइंस्टीन") && read.speaker === "shubh");
-  await ask(lifeUrl("hi", "man", "einstein"), env);
-  assert.equal(calls.length, 3);
-  assert.equal((await ask(lifeUrl("hi", "man", "nobody"), env)).status, 404);
-  assert.equal((await ask(lifeUrl("ta", "man", "einstein"), env)).status, 404, "no Tamil text yet");
+  assert.match(mark("गाय"), /^[0-9a-f]{8}$/);
+  assert.notEqual(mark("गाय"), mark("गाय।"), "a changed text gets a new recording");
+  assert.equal(recordingPath("hi", "woman", "word", "", "गाय"), `/voice/hi/word.woman.${mark("गाय")}.m4a`);
+  assert.equal(recordingPath("hi", "man", "life", "einstein", "x"), `/voice/hi/life-einstein.man.${mark("x")}.m4a`);
+  assert.equal(recordingOf("hi", "woman", "word", "", "गाय"), null, "nothing recorded yet: the phone speaks");
+  // The phone's best voice is used: premium, then enhanced, then the rest.
+  const { quality, pair } = await import("../lib/speak.js");
+  const v = (name, lang) => ({ name, lang, localService: true });
+  assert.deepEqual([quality(v("Lekha")), quality(v("Lekha (Enhanced)")), quality(v("Lekha (Premium)"))], [0, 2, 3]);
+  const best = pair([v("Lekha", "hi-IN"), v("Lekha (Premium)", "hi-IN")], "hi-IN", 0.1).find((s) => s.who === "woman");
+  assert.equal(best.voice.name, "Lekha (Premium)");
 });
 
 test("where people come from and how far they get", async () => {
@@ -412,8 +448,8 @@ test("where people come from and how far they get", async () => {
   const d = await adminData(e.DB, NOW);
   assert.deepEqual(d.states.map((r) => [r.state, r.users]), [["UP", 2], ["US", 1]]);
   assert.deepEqual(d.refs.map((r) => [r.ref, r.users]), [["", 2], ["whatsapp", 1]]);
-  assert.deepEqual(d.funnel.map((f) => f.total), [3, 1, 3, 1, 1, 1, 1, 1]);
-  assert.deepEqual(d.funnel.map((f) => f.today), [3, 1, 3, 1, 1, 1, 1, 1]);
+  assert.deepEqual(d.funnel.map((f) => f.total), [3, 1, 3, 1, 1, 1, 1]);
+  assert.deepEqual(d.funnel.map((f) => f.today), [3, 1, 3, 1, 1, 1, 1]);
   assert.match(await adminPage(e.DB, NOW, "x"), /How far people get/);
 });
 
@@ -479,8 +515,7 @@ test("a place guesses the language, and a phone that says no changes nothing", a
 
 test("a lesson is scenes: a drawing and a spoken line, recorded once under the line's name", async () => {
   const { LESSONS, lessonsOf, lessonLang, lineId, lineText } = await import("../lib/lessons.js");
-  const { lineUrl } = await import("../lib/voice.js");
-  const { voice } = await import("../worker/voice.js");
+  const { mark } = await import("../lib/voice.js");
   const fs = await import("node:fs");
   const art = ["../components/LessonArt.jsx", "../components/art/zero.jsx"].map((f) => fs.readFileSync(new URL(f, import.meta.url), "utf8")).join("\n");
   assert.equal(lessonsOf("nature", 1).length, 7);
@@ -497,16 +532,8 @@ test("a lesson is scenes: a drawing and a spoken line, recorded once under the l
   assert.equal(lessonLang(fire, "ta"), "en"); // not written yet: heard in English
   assert.equal(lineText(lineId(fire, 2), "hi"), fire.scenes[2].say.hi);
   assert.equal(lineText("fire.99", "hi"), "");
-  const store = new Map(), calls = [];
-  const env = { SARVAM_API_KEY: "k", VOICE: { get: async (k) => store.get(k) ?? null, put: async (k, v) => { store.set(k, v.buffer ?? v); } } };
-  const sarvam = async (url, init) => { calls.push(JSON.parse(init.body)); return Response.json({ audios: [btoa("mp3!")] }); };
-  const ask = (path) => voice(new Request(`https://bodhilabs.org${path}`), env, sarvam);
-  assert.equal((await ask(lineUrl("hi", "man", "fire.2"))).status, 200);
-  assert.equal(calls[0].text, fire.scenes[2].say.hi);
-  assert.equal((await ask(lineUrl("hi", "man", "fire.2"))).status, 200);
-  assert.equal(calls.length, 1, "made once, then read");
-  assert.equal((await ask(lineUrl("hi", "man", "fire.99"))).status, 404);
-  assert.equal((await ask(lineUrl("ta", "man", "fire.2"))).status, 404);
+  const { recordingPath } = await import("../lib/voice.js");
+  assert.equal(recordingPath("hi", "man", "line", "fire.2", fire.scenes[2].say.hi), `/voice/hi/line-fire.2.man.${mark(fire.scenes[2].say.hi)}.m4a`);
 });
 
 test("a chapter is told in one named voice, and its sums are right", async () => {

@@ -1,21 +1,18 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Grid from "@/components/Grid";
-import Icon, { P } from "@/components/Icon";
 import { useMe } from "@/components/useMe";
 import { nextStep } from "@/lib/store";
 import { langById } from "@/lib/langs";
-import { t } from "@/lib/strings";
 import { TOP } from "@/lib/top";
 import { sync } from "@/lib/track";
 
 /**
  * Home, the top level: the 4 by 4 grid. House 1 is Gyan, all of learning. House 2 is Vartaman, the present, which
  * is not built yet. The other ten are empty for now. The four in the middle are the learner's own, as on every
- * level. The small button in the corner is for settings (now: the language).
+ * level; the language is changed in Settings, one of the four.
  */
 export default function Home() {
   const router = useRouter();
@@ -33,7 +30,6 @@ export default function Home() {
     <main className="screen">
       <div className="head">
         <div className="when"><b>{date}</b></div>
-        <Link href="/start?step=language" className="round white" aria-label={t(lang, "language")}><Icon d={P.globe} size={26} /></Link>
       </div>
       <Grid level="top" houses={TOP} lang={lang} />
     </main>

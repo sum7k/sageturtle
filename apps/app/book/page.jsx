@@ -7,7 +7,9 @@ import { useMe } from "@/components/useMe";
 import { PICTURE, WORD_KEYS, round, wordFor, lettersFor } from "@/lib/book";
 import { loadLearn, mark, saveLearn } from "@/lib/learn";
 import { say } from "@/lib/speak";
-import { t } from "@/lib/strings";
+import { moveUp } from "@/lib/stages";
+import { nameOf } from "@/lib/subjects";
+import { WORD_HOUSES } from "@/lib/word";
 import { tap } from "@/lib/track";
 
 const KEY = "bodhilabs.book.v1"; // which round the person has reached
@@ -32,6 +34,7 @@ function Words({ lang }) {
     if (key !== r.answer) { say(wordFor(lang, key), lang); return setWrong((w) => [...w, key]); }
     tap("right");
     saveLearn(mark(loadLearn(), r.answer, wrong.length === 0)); // for the Learned, Now and Next pages
+    moveUp(); // all twelve words matched once finishes Word at this stage
     setRight(true);
     // The next picture comes only when both voices have said the word, and never sooner than a second.
     // If the sound never ends (a stalled network), it comes after ten seconds anyway.
@@ -87,7 +90,7 @@ export default function Book() {
   const other = page === "words" ? "letters" : "words";
   return (
     <main className="screen">
-      <Bar back="/word" title={t(lang, "book")} right={
+      <Bar back="/stage?n=3" title={nameOf(WORD_HOUSES.find((h) => h.open === "/book"), lang)} right={
         <button type="button" className="round white" aria-label={other} onClick={() => setPage(other)}>
           {page === "words" ? <b className="abc" lang={lang}>{lettersFor(lang)[0]}</b> : <Icon d={P.picture} size={24} />}
         </button>

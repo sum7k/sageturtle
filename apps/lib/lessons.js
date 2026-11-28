@@ -1,13 +1,13 @@
 // Lessons: short moving pictures with a spoken line, for stages 1 and 2 of the Gyan path, where nothing is read.
 // A lesson is not a video file. It is a list of scenes; each scene names a drawing (components/LessonArt.jsx, drawn
 // and moved by the phone itself) and the line that is spoken over it. The same drawing serves every language; only
-// the recording changes (a Sarvam voice, made once and kept: worker/voice.js). So a lesson weighs a few kilobytes.
+// the recording changes (a file made beforehand, lib/voice.js; the phone's own voice until it is made). So a lesson weighs a few kilobytes.
 // The steps come from gyan/docs/syllabus-map.md. The lines were written by Claude, in Hindi and English first;
 // the other ten languages follow once the lessons are approved. Until then they are heard in English.
 //
 // The teller (sumeet, 2026-11-28): every lesson is told by a great person of that field, in the first person and in
 // their manner (`by`), never in the voice of a machine. The words are written for the lesson in that person's manner;
-// they are not that person's own quotes. `who` is the Sarvam voice, a man's or a woman's, to match the teller.
+// they are not that person's own quotes. `who` is the recorded voice, a man's or a woman's, to match the teller.
 // The first scene is the teller saying who they are; what they say of themselves must be true to their life.
 //
 // The spirit (CLAUDE.md): a lesson shows and names. It never compares the learner with anyone and never hurries them.
@@ -128,6 +128,7 @@ export const LESSONS = [
   ...inChapter,
 ];
 
+// A lesson may carry `house: n` (1 to 12): lessons with the same house are parts of one unit (lib/stages.js unitsOf).
 export const LESSON_IDS = LESSONS.map((l) => l.id);
 export const lessonById = (id) => LESSONS.find((l) => l.id === id) ?? null;
 export const lessonsOf = (subject, stage) => LESSONS.filter((l) => l.subject === subject && (stage === undefined || l.stage === stage));

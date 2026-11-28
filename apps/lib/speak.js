@@ -3,14 +3,21 @@
 //
 // The rule (sumeet, 2026-11-28): everything spoken is heard twice, once in a man's voice and once in a woman's,
 // in an Indian accent, because hearing both pitches makes a word easier to catch. Which goes first is random.
-// First choice: a recording made once by Sarvam (lib/voice.js). If there is none (no network, Urdu, not set up),
-// the phone's own voice speaks instead. A phone does not say whether a voice is a man's or a woman's: where the
+// First choice: a recording made once beforehand and kept as a file (lib/voice.js). If there is none, the phone's
+// own voice speaks, the best one it has for the language (an "enhanced" or "premium" voice first). A phone does not say whether a voice is a man's or a woman's: where the
 // voice's name tells, that voice is used; otherwise the same voice is played lower for the man and higher for the woman.
 import { langById } from "./langs.js";
-import { SARVAM_LANG, clipUrl, lifeUrl, lineUrl } from "./voice.js";
+import { loadPrefs, sidesFor } from "./prefs.js";
+import { recordingOf } from "./voice.js";
 
-const MAN = /\b(male|man|rishi|hemant|ravi|prabhat|madhur|valluvar|mohan|niranjan|manohar|gagan|sukant|midhun|salman|asad|bashkar)\b|-x-(hi[ce]|en[ce]|bn[b]|ta[d]|te[m]|gu[m]|kn[m]|ml[m]|mr[m]|ur[m])-/i;
-const WOMAN = /\b(female|woman|lekha|veena|heera|kalpana|swara|neerja|pallavi|tanishaa|aarohi|shruti|dhwani|sapna|sobhana|subhasini|uzma|gul|sangeeta|kanya|isha)\b|-x-(hi[ad]|en[ad]|bn[a]|ta[c]|te[f]|gu[f]|kn[f]|ml[f]|mr[f]|ur[f])-/i;
+export const MAN = /\b(male|man|rishi|hemant|ravi|prabhat|madhur|valluvar|mohan|niranjan|manohar|gagan|sukant|midhun|salman|asad|bashkar)\b|-x-(hi[ce]|en[ce]|bn[b]|ta[d]|te[m]|gu[m]|kn[m]|ml[m]|mr[m]|ur[m])-/i;
+export const WOMAN = /\b(female|woman|lekha|veena|heera|kalpana|swara|neerja|pallavi|tanishaa|aarohi|shruti|dhwani|sapna|sobhana|subhasini|uzma|gul|sangeeta|kanya|isha)\b|-x-(hi[ad]|en[ad]|bn[a]|ta[c]|te[f]|gu[f]|kn[f]|ml[f]|mr[f]|ur[f])-/i;
+
+/** How good a phone voice sounds, judged by its name: 3 premium, 2 enhanced or natural, 1 from the network, 0 plain. */
+export const quality = (v) => {
+  const name = `${v.name ?? ""} ${v.voiceURI ?? ""}`;
+  return /premium/i.test(name) ? 3 : /enhanced|natural|neural|wavenet/i.test(name) ? 2 : v.localService === false ? 1 : 0;
+};
 
 /**
  * The two ways the phone's own voice speaks one text: a man's voice and a woman's. `voices` are the phone's voices;
@@ -22,7 +29,14 @@ export function pair(voices, locale, random = Math.random()) {
   const mine = voices.filter((v) => tag(v).startsWith(base));
   const indian = mine.filter((v) => tag(v).endsWith("-in"));
   const pool = indian.length ? indian : mine;
-  const pick = (list) => (list.length ? list[Math.min(list.length - 1, Math.floor(random * list.length))] : null);
+  // The best voices first: a phone's "premium" and "enhanced" (or "natural", "neural") voices sound far better
+  // than its compact ones. Among equally good ones, chance picks.
+  const pick = (list) => {
+    if (!list.length) return null;
+    const top = Math.max(...list.map(quality));
+    const best = list.filter((v) => quality(v) === top);
+    return best[Math.min(best.length - 1, Math.floor(random * best.length))];
+  };
   const man = pick(pool.filter((v) => MAN.test(v.name)));
   const woman = pick(pool.filter((v) => WOMAN.test(v.name) && !MAN.test(v.name)));
   const any = pick(pool);
@@ -42,6 +56,7 @@ function playClip(url) {
     player.onended = done;
     player.onerror = () => fail(new Error("no recording"));
     player.src = url;
+    player.playbackRate = loadPrefs().speed; // after src: a new source sets the rate back to 1
     player.play().catch(fail);
   });
 }
@@ -53,7 +68,7 @@ function speakPhone(text, locale, { voice, pitch }) {
     u.lang = locale;
     if (voice) u.voice = voice;
     u.pitch = pitch;
-    u.rate = 0.85;
+    u.rate = 0.85 * loadPrefs().speed;
     // Some phones never say that the voice has ended; then the length of the text decides.
     const late = setTimeout(done, 4000 + text.length * 160);
     late.unref?.();
@@ -73,13 +88,15 @@ export function say(text, lang = "en", done = () => {}) {
   const locale = langById(lang).locale;
   player?.pause();
   globalThis.speechSynthesis?.cancel();
-  const sides = pair(globalThis.speechSynthesis?.getVoices?.() ?? [], locale);
+  // Both voices, unless the learner kept one in Settings.
+  const sides = sidesFor(pair(globalThis.speechSynthesis?.getVoices?.() ?? [], locale), loadPrefs().voice);
   (async () => {
     for (const side of sides) {
       if (mine !== turn) return;
       try {
-        if (!SARVAM_LANG[lang] || typeof Audio === "undefined") throw new Error("no recording");
-        await playClip(clipUrl(lang, side.who, text));
+        const url = typeof Audio === "undefined" ? null : recordingOf(lang, side.who, "word", "", text);
+        if (!url) throw new Error("no recording");
+        await playClip(url);
       } catch {
         if (mine === turn) await speakPhone(text, locale, side);
       }
@@ -106,11 +123,12 @@ export function sayLife(life, lang, done = () => {}) {
   const text = life.text[lang];
   if (!text || (typeof Audio === "undefined" && !globalThis.speechSynthesis)) { done(); return false; }
   const locale = langById(lang).locale;
-  const side = pair(globalThis.speechSynthesis?.getVoices?.() ?? [], locale)[0];
+  const side = sidesFor(pair(globalThis.speechSynthesis?.getVoices?.() ?? [], locale), loadPrefs().voice)[0];
   (async () => {
     try {
-      if (!SARVAM_LANG[lang] || typeof Audio === "undefined") throw new Error("no recording");
-      await playClip(lifeUrl(lang, side.who, life.id));
+      const url = typeof Audio === "undefined" ? null : recordingOf(lang, side.who, "life", life.id, text);
+      if (!url) throw new Error("no recording");
+      await playClip(url);
     } catch {
       if (mine === turn) await speakPhone(text, locale, { ...side, pitch: 1 });
     }
@@ -121,7 +139,7 @@ export function sayLife(life, lang, done = () => {}) {
 
 /**
  * Speak one line of a lesson, once. `who` is "man" or "woman": a lesson keeps one voice from start to end.
- * `url` is the line's recording (lineUrl); the phone's own voice speaks `text` when there is none.
+ * Its recording plays when one is made; the phone's own voice speaks `text` when there is none.
  * `done` is called when the line ends; not when a newer call or hush() cut it short.
  */
 export function sayLine(id, text, lang, who, done = () => {}) {
@@ -132,8 +150,9 @@ export function sayLine(id, text, lang, who, done = () => {}) {
   const side = pair(globalThis.speechSynthesis?.getVoices?.() ?? [], locale, 0).find((s) => s.who === who);
   (async () => {
     try {
-      if (!SARVAM_LANG[lang] || typeof Audio === "undefined") throw new Error("no recording");
-      await playClip(lineUrl(lang, who, id));
+      const url = typeof Audio === "undefined" ? null : recordingOf(lang, who, "line", id, text);
+      if (!url) throw new Error("no recording");
+      await playClip(url);
     } catch {
       if (mine === turn) await speakPhone(text, locale, side);
     }

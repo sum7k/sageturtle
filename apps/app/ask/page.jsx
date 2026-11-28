@@ -11,6 +11,7 @@ import { nameOf } from "@/lib/subjects";
 import { answer } from "@/lib/find";
 import { langById } from "@/lib/langs";
 import { askCloud, compose, mindReady, warm } from "@/lib/mind";
+import { allOpen, loadStage } from "@/lib/stages";
 import { load } from "@/lib/store";
 import { hush, sayLine, sayOwn } from "@/lib/speak";
 import { tap } from "@/lib/track";
@@ -20,10 +21,12 @@ import { tap } from "@/lib/track";
  * the line that fits is shown with its drawing and said aloud, so a learner who cannot read yet is answered too.
  * When the lessons do not hold a sure answer, the question goes to a person: it is read in the admin panel, and
  * the answer written there shows here, under the question. The talk button sends it to a person in any case.
+ * Opened from Home (?in=top) it is the help of the app itself: nothing is looked up, the question goes to a person.
  * A sentence written from the found lines, by a model on Cloudflare or by the phone's own (lib/mind.js), is shown above them.
  */
 export default function Ask() {
-  const { ready, lang, back } = useLearner();
+  const { ready, lang, back, where } = useLearner();
+  const top = where === "top"; // from Home: a question about the app itself, which goes straight to a person
   const [text, setText] = useState("");
   const [state, setState] = useState(""); // "", "sending", "sent", "failed"
   const [list, setList] = useState([]);
@@ -33,7 +36,7 @@ export default function Ask() {
   const ear = useRef(null);
   const latest = useRef(0); // counts the questions, so a late answer to an old one is dropped
   const read = () => myQuestions(true).then((q) => q && setList(q));
-  useEffect(() => { if (ready) { read(); warm(); } }, [ready]);
+  useEffect(() => { if (ready) { read(); if (!top) warm(); } }, [ready, top]);
   useEffect(() => () => { hush(); ear.current?.abort(); }, []);
   if (!ready) return <main className="screen" />;
 
@@ -51,7 +54,9 @@ export default function Ask() {
   const ask = (asked = text) => {
     const mine = asked.trim();
     if (!mine) return;
-    const lines = answer(mine, lang);
+    if (top) { setText(""); setFound(null); return toPerson(mine); }
+    const upTo = allOpen() ? Infinity : loadStage(); // never a line from a stage ahead of the learner
+    const lines = answer(mine, lang, 3, { upTo });
     const sure = !!lines[0]?.sure;
     tap(sure ? "ask:found" : lines.length ? "ask:near" : "ask:none");
     setText("");
@@ -62,7 +67,7 @@ export default function Ask() {
       // when it is there (lib/mind.js), else by one on Cloudflare. When neither has an answer, the line itself is said.
       const stamp = ++latest.current;
       const heardIn = lines[0].passage.lang;
-      const wide = answer(mine, lang, 5); // a few more lines for the model to choose from
+      const wide = answer(mine, lang, 5, { upTo }); // a few more lines for the model to choose from
       const write = mindReady() ? compose(mine, wide.map((l) => l.passage.text), heardIn) : askCloud(load().uid, mine, wide.map((l) => l.passage.id), heardIn);
       write.then((own) => {
         if (latest.current !== stamp) return; // a newer question has been asked meanwhile

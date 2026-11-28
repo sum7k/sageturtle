@@ -8,9 +8,10 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/dev.mjs",
     "build": "next build && node scripts/lab.js",
     "start": "next start",
+    "voices": "node scripts/voices.mjs",
     "test": "node --test \"test/**/*.test.js\"",
     "preview": "npm run build && wrangler d1 migrations apply bodhilabs --local && wrangler dev --host localhost",
     "ship": "wrangler d1 migrations apply bodhilabs --remote && wrangler deploy",

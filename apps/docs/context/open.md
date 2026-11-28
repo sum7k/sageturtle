@@ -28,8 +28,10 @@ Messages leaves two things to others: open groups go to Discussions, and calls i
 ## The education pivot (2026-11-28), not settled
 
 - What the eleven buttons are: eleven subjects, or the pre-school time plus ten years. The Gyan path (`gyan/docs/syllabus-map.md`) has eleven stages and, separately, eleven labels (Word, Number, Nature, Earth, People, Rule, Money, Art, Music, Body, Hand).
-- What Learned, Now and Next should really show (v1: the word game's words, kept on the phone). Whether the corner button needs more than the language.
-- Inside Word, houses 1 and 2 (hearing, no print) are not built, so a beginner meets Letters first.
+- What Me inside Gyan should show beyond the stage and the word game's words. Which settings belong on Home and which inside Gyan (v1: language and place on Home; voice and speed inside). What the joker, the fourth box in the middle, becomes.
+- Moving up a stage is by finishing its lessons (`lib/stages.js`); the syllabus's entry and exit checks are not built. Stage 2 has nothing made, so a learner who finishes stage 1 waits there.
+- The Ask box may still answer from lines of a higher stage (`answer` in `lib/find.js` does not pass the learner's stage).
+- Stage 1 holds only Nature's lessons and Lives; Word at stages 1 and 2 (hearing, no print) is not built.
 - The 121 lives: the list and the texts in eleven languages (being written in another thread), and real pictures in place of emoji.
 
 ## Built and not built (branch `dev`)

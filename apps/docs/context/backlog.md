@@ -8,7 +8,7 @@ Ideas agreed as "later". Not open questions (those are in `open.md`).
 - Coming back: how many people return the next day, after 7 days, after 30 days.
 - Gyan: which words and letters are got wrong most, how many rounds a person does, time spent.
 - The funnel split by language, by state and by who sent the person.
-- Voices: how many recordings are made and played, and Sarvam's cost so far.
+- Voices: how many recordings are made and played, and ElevenLabs' cost so far.
 - City or district, not only state.
 - Download the numbers as a file.
 - A morning summary sent to sumeet (WhatsApp or email).

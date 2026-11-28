@@ -62,3 +62,34 @@ their own way of seeing and saying it. A voice may tell more than one chapter.
   lesson opens with the teller saying who they are (`apps/lib/lessons.js`).
 
 The first one is `apps/lib/chapters/zero.js`: Number, stage 6, told in the voice of Brahmagupta.
+
+## Why each app exists (sumeet, 2026-11-28)
+
+Every app (a house on Home) has a bhav (भाव, its purpose): why it is there, who it is for and what it wants to
+achieve. Read it before any design or writing for that app, and follow it. If a feature or a line of content goes against it, change it or leave it out. A house
+whose purpose is not written yet is not built until sumeet defines it.
+
+**ज्ञान, Gyan (Knowledge), house 1.** Learning for every child, from the year before school to class 11: a full
+school year at each of the twelve stages, as good as a parallel school, so a child needs no other book. Walked by
+stage, at the learner's own pace, following what they like. Each learner stays an individual: no comparison, no
+competition, progress only against their own past (the spirit above). Built as a cube of twelves: twelve stages,
+twelve subjects in each, twelve lesson houses in each subject.
+
+**वर्तमान, Vartaman (Present), house 2.** A person has learned to read and write and now must live in the world:
+work, play, enjoy, express themselves. So they need to know what is going on that matters to them. Vartaman is for
+every age, a child or an old person, and every occupation; they can read about many fields and understand them.
+- Only what matters. A killing in a far country is not our news; a war between countries can be, because it may
+  touch the reader's trade or life. No petty crime, and no crime or courts section.
+- Suitable for all. Plain language, with brutality, violence and sexuality removed. When something terrible
+  happens, say calmly that something very bad happened there; never sensational, never fear.
+- Few and fresh. Each box holds a small fixed set, eleven items. A new item enters only if it is better, replacing
+  the oldest or least important one; there is no forced item each day; a running story grows in place.
+- Arranged by twelve topics (the list is not final).
+- Still open, not settled: how much to say about accidents and disasters, the final twelve topics, and the twelve
+  houses inside each.
+
+**जीवनी, Lives, the twelfth subject of every stage.** The lives of people of every field and land, told as their
+road: their struggle, how they worked, what they valued, what was strong in them and how it grew. A life is never
+bait for greatness and never "become like X" (the spirit above); the learner takes what speaks to them.
+
+**Houses 3 to 12 on Home, and the joker in the middle.** To be defined by sumeet.

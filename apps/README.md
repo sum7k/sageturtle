@@ -11,14 +11,21 @@ Until 2026-11-28 the product was called SageTurtle.
   chooses it. One tile is picked in advance from the phone's language, or from the state the person is in
   (`firstGuess` in `lib/langs.js`). The drawings are placeholders, with no religious symbols.
 - **Every level is a 4 by 4 grid** (`components/Grid.jsx`, `lib/grid.js`). The twelve outer boxes are the level's
-  twelve houses, house 1 top left and then round with the clock. On Home (`app/home`, `lib/top.js`) house 1 is Gyan,
-  house 2 is Vartaman (not built, only counted) and ten are empty. Inside Gyan (`app/gyan`) they are the eleven subjects
-  and Lives (`lib/subjects.js`), turned by the rising sign (`lib/lagna.js`), whose subject is in house 1. Inside
-  Word (`app/word`, `lib/word.js`) they are Word's own twelve houses in order; only Letters is open, and it is the
-  word game. A press on a closed box is only counted. The language button is in the top corner of Home.
-- **The four boxes in the middle are the same on every level**: Learned (`app/past`), Now (`app/now`, what goes well
-  and what needs practice), Next (`app/next`) and Ask (`app/ask`). The first three read what the phone remembers of
-  the word game (`lib/learn.js`, kept on the phone). Ask takes a question said aloud (the browser's speech recognition) or typed, and first looks for
+  twelve houses: the twelfth is always bottom right, house 1 is just left of it, and the count runs left along the
+  bottom, up the left side, across the top and down the right side. On Home (`app/home`, `lib/top.js`) house 1 is Gyan,
+  house 2 is Vartaman (not built, only counted) and ten are empty. Inside Gyan (`app/gyan`, `lib/stages.js`) they are
+  the twelve stages of the path: the learner's stage and those behind it are open, the rest closed. Inside a stage
+  (`app/stage?n=`) they are the eleven subjects and Lives (`lib/subjects.js`), turned by the rising sign
+  (`lib/lagna.js`); a subject opens only what was made for that stage (Nature's picture lessons at stage 1, the word
+  game at stage 3, the chapter on zero at stage 6), so a learner who cannot read never meets written lessons.
+  For review, "Open all stages" in the admin panel, or `/gyan?all=1`, opens every stage on that phone.
+- **The four boxes in the middle are the same on every level** (`lib/grid.js`): Me (`app/self`), Ask (`app/ask`),
+  Settings (`app/settings`) and the joker, an empty box that is only counted. Each page is opened with `?in=top`
+  from Home and `?in=gyan` inside Gyan, and shows a different side. Me: on Home the person (their name, kept on the
+  phone; signing in, family and backup come later); inside Gyan their own learning (the stage they are at, and from
+  stage 3 the words that go well, the ones to practise and the ones to come, from `lib/learn.js`). Settings
+  (`lib/prefs.js`): on Home the language and the place; inside Gyan which voice speaks and how fast. Ask: on Home a
+  question about the app, which goes straight to a person; inside Gyan it takes a question said aloud (the browser's speech recognition) or typed, and first looks for
   the answer in our own lessons, on the phone (`lib/find.js`: word matching over the lines of `lib/lessons.js`, no
   download, nothing sent). The line that fits is shown with its drawing and said in its recorded voice. When the
   lessons hold no sure answer, or the learner presses the talk button, the question goes to a person (`/api/ask`,
@@ -30,21 +37,24 @@ Until 2026-11-28 the product was called SageTurtle.
   WebGPU) is to take over once it has come in quietly on Wi-Fi on a strong enough phone (`power`, `mayFetch`, `warm`);
   it is built but off, tried at `/lab` (`public/lab.html`), where a switch turns it on for that phone.
 - **Lives (जीवनी) opens one great life** (`lib/lives.js`, `app/life/page.jsx`): a short biography about how the person
-  learned and grew, never the same one twice in a row, to read or to hear in a Sarvam voice (`/api/voice?life=<id>`).
+  learned and grew, never the same one twice in a row, to read or to hear.
   Three placeholder lives, in English and Hindi; the set of 121 is being written. Shown and heard are counted.
 - **Lessons** (`lib/lessons.js`, `components/Lesson.jsx`, `components/LessonArt.jsx`): for stages 1 and 2, where
   nothing is read. A lesson is not a video file: it is a list of scenes, each a small SVG drawing that the phone moves
-  itself (CSS, no animation library) and one spoken line (a Sarvam recording made once, `/api/voice?line=fire.2`). One
-  drawing serves every language. Nature (`app/nature`) is open inside Gyan with the first seven: my body, the five senses,
+  itself (CSS, no animation library) and one spoken line (a recording made beforehand, or the phone's voice). One
+  drawing serves every language. Inside a stage, a subject (`app/subject?s=&stage=`) is again a grid of twelve lesson houses (`lib/stages.js`
+  `unitsOf`); a house opens `app/lesson`, which plays its parts one after another, and an empty house is greyed. Nature is open at stage 1 with the first seven: my body, the five senses,
   fire, animals, birds, plants and what we eat, in Hindi and English; other languages hear English until their lines are written.
 - **Chapters, for learners who read** (`lib/chapters/`, `lib/narrators.js`, `components/art/`, `components/Practice.jsx`):
   the same lesson player, with the spoken line also written under the drawing, the narrator named ("told in the voice
   of X", see CLAUDE.md), one voice from start to end, and a few unmarked sums after the last scene. Number
-  (`app/number`) is open inside Gyan with one sample chapter of stage 6, "Zero, fortune and debt", told in the voice of
+  is open inside Gyan with one sample chapter of stage 6, "Zero, fortune and debt", told in the voice of
   Brahmagupta: six lessons, 44 scenes, in Hindi and English.
 - **Gyan** (the reading app; `book` in the code, `lib/book.js`). Everything spoken is heard twice, in a man's and a
-  woman's voice (`lib/speak.js`): a Sarvam recording made once and kept in Cloudflare KV (`worker/voice.js`), or the
-  phone's own voice when there is none. The Sarvam key is the Worker secret `SARVAM_API_KEY`.
+  woman's voice (`lib/speak.js`): a recording made beforehand and kept as a small file in `public/voice` (`lib/voice.js`, listed in
+  `lib/recorded.js`), or else the phone's own voice, its best one for the language. The app calls no voice service
+  and holds no key. For testing the files are made on a Mac with its own voices: `npm run voices -- make hi --stage 1`
+  (macOS `say`, then AAC); ElevenLabs is for one final round. `npm run voices -- list hi` shows what is missing.
 - **Book** (`lib/book.js`): a picture, a gold button that says the word, and three written words to choose from. A wrong
   word shakes and says itself; the right one turns green and the next picture comes. Twelve words per language. The
   letters are on a second page.
@@ -77,7 +87,7 @@ The pages are static files (`next build` writes `out/`). Cloudflare serves them 
 | Table | One row per | Used for |
 | :--- | :--- | :--- |
 | `users` | phone that chose a language | users, new and active users; language; place and work once registered |
-| `taps` | person, thing and day | taps (sum of `count`) and distinct users (count of people). The thing is `gyan`, `vartaman`, `top:<house>`, `word`, `book` (the word game), `subject:<id>`, `word:<house>`, `lives`, `life:<id>` (a life shown), `lesson:<id>` and `watched:<id>` (a lesson opened, and seen to its end), `heard`, `centre:<box>`, `ask:found`, `ask:near` and `ask:none` (a question the lessons answered, half answered, or could not), `answer` or `right` |
+| `taps` | person, thing and day | taps (sum of `count`) and distinct users (count of people). The thing is `gyan`, `vartaman`, `top:<house>`, `word`, `book` (the word game), `subject:<id>`, `stage:<n>`, `lives`, `life:<id>` (a life shown), `lesson:<id>` and `watched:<id>` (a lesson opened, and seen to its end), `heard`, `centre:<box>`, `ask:found`, `ask:near` and `ask:none` (a question the lessons answered, half answered, or could not), `answer` or `right` |
 | `questions` | question from the Ask box | waiting and answered questions |
 | `wishes` | (unused) | answers to a question that was removed on 2026-11-28 |
 
@@ -93,7 +103,8 @@ cp .dev.vars.example .dev.vars   # opens /admin on localhost only
 npm run preview                  # builds, makes a local database, serves http://localhost:8787
 ```
 
-`npm run dev` runs the pages alone, without the Worker: taps then fail quietly.
+`npm run dev` is for working on the app: it serves http://localhost:3000 with live reload (pages from Next's dev
+server, `/api` and `/admin` from the Worker beside it on 8787; `scripts/dev.mjs`). A saved file or a `git pull` shows at once.
 
 ## Deploy
 
