@@ -12,6 +12,9 @@ import { t } from "@/lib/strings";
  * The landing page, seen only in a browser tab. Its job is to get the app installed, and then to send the person
  * into the installed app. A page is not allowed to start an installed app by itself, so once the app is installed
  * the page turns into one big "Open the app" button. The same button shows on any later visit in the browser.
+ * App pages opened in a browser tab are sent here (components/Offline.jsx), so there is no way on inside the browser.
+ * Chrome does not always offer its install prompt (for some time after the app was removed or the prompt was closed).
+ * Then the page shows the way by hand, in pictures: the browser's menu, then "Install app".
  */
 export default function Landing() {
   const router = useRouter();
@@ -20,24 +23,26 @@ export default function Landing() {
   const [lang, setLang] = useState("en");
   const [stage, setStage] = useState("install"); // install, installing, open
   const [canAsk, setCanAsk] = useState(false);
+  const [byHand, setByHand] = useState(false); // Chrome gave no prompt: show the menu steps
 
   useEffect(() => {
     // Inside the installed app this page is never shown.
     if (matchMedia("(display-mode: standalone)").matches || navigator.standalone === true) return router.replace("/app");
     setLang(guessLang(navigator.language));
     setKind(browserKind(navigator.userAgent));
-    const ask = (e) => { e.preventDefault(); prompt.current = e; setCanAsk(true); };
+    const ask = (e) => { e.preventDefault(); prompt.current = e; setCanAsk(true); setByHand(false); };
+    const wait = setTimeout(() => { if (!prompt.current) setByHand(true); }, 3000);
     const done = () => setStage("open");
     addEventListener("beforeinstallprompt", ask);
     addEventListener("appinstalled", done);
     // A phone that already has the app: say so at once (Chrome on Android can tell).
     navigator.getInstalledRelatedApps?.().then((apps) => { if (apps.length) setStage("open"); }).catch(() => {});
-    return () => { removeEventListener("beforeinstallprompt", ask); removeEventListener("appinstalled", done); };
+    return () => { clearTimeout(wait); removeEventListener("beforeinstallprompt", ask); removeEventListener("appinstalled", done); };
   }, [router]);
 
   const install = async () => {
-    // Where the browser cannot install, the person simply goes on inside the browser.
-    if (!prompt.current) return router.push("/app");
+    // No prompt from the browser: show the way through its menu.
+    if (!prompt.current) return setByHand(true);
     prompt.current.prompt();
     const choice = await prompt.current.userChoice.catch(() => null);
     prompt.current = null;
@@ -57,7 +62,18 @@ export default function Landing() {
         </>
       )}
       {stage === "installing" && <span className="round gold huge pulse" role="status" aria-label={t(lang, "install")}><Icon d={P.down} size={64} /></span>}
-      {stage === "install" && kind === "chrome" && (
+      {stage === "install" && kind === "chrome" && byHand && (
+        <>
+          <div className="steps" role="img" aria-label={t(lang, "install")}>
+            <span className="round gold big"><Icon d={P.dots} size={44} sw={3.5} style={{ transform: "rotate(90deg)" }} /></span>
+            <Icon d={P.next} size={32} sw={2.5} />
+            <span className="round gold big"><Icon d={P.addphone} size={44} /></span>
+          </div>
+          <p className="sub strong">{t(lang, "install")}</p>
+          <span className="hint top"><Icon d={P.down} size={56} sw={2.5} style={{ transform: "rotate(180deg)" }} /></span>
+        </>
+      )}
+      {stage === "install" && kind === "chrome" && !byHand && (
         <>
           <button type="button" className="round gold huge" aria-label={t(lang, "install")} onClick={install}><Icon d={P.down} size={64} /></button>
           <p className="sub strong">{t(lang, "install")}</p>
@@ -65,7 +81,11 @@ export default function Landing() {
       )}
       {stage === "install" && kind === "iphone" && (
         <>
-          <span className="round gold huge"><Icon d={P.share} size={64} /></span>
+          <div className="steps" role="img" aria-label={t(lang, "ios")}>
+            <span className="round gold big"><Icon d={P.share} size={44} /></span>
+            <Icon d={P.next} size={32} sw={2.5} />
+            <span className="round gold big"><Icon d={P.addbox} size={44} /></span>
+          </div>
           <p className="sub">{t(lang, "ios")}</p>
           <span className="hint bottom"><Icon d={P.down} size={56} sw={2.5} /></span>
         </>
@@ -76,10 +96,6 @@ export default function Landing() {
           <p className="sub">{t(lang, "inapp")}</p>
           <span className="hint top"><Icon d={P.down} size={56} sw={2.5} style={{ transform: "rotate(180deg)" }} /></span>
         </>
-      )}
-      {/* The small way on: use it here in the browser. Not offered while Chrome can still install. */}
-      {(stage === "open" || (stage === "install" && kind !== "chrome") || (stage === "install" && !canAsk)) && kind !== "inapp" && (
-        <button type="button" className="round white" aria-label="Continue in the browser" onClick={() => router.push("/app")}><Icon d={P.next} sw={2.5} /></button>
       )}
     </main>
   );

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { BOOK, ICONS, ICON_IDS, JOKER, LOCKED, SURPRISE_IDS, SURPRISES, TRACKED, iconsFor, surprise } from "../lib/buttons.js";
-import { openAppUrl } from "../lib/browser.js";
+import { mustInstall, openAppUrl } from "../lib/browser.js";
 import { LANGS, langById, guessLang, stateLang, firstGuess } from "../lib/langs.js";
 import { STR, t } from "../lib/strings.js";
 import { LETTERS, lettersFor, WORDS, WORD_KEYS, PICTURE, round, wordFor } from "../lib/book.js";
@@ -231,4 +231,12 @@ test("the joker shows a different surprise each time, and both are counted", () 
   assert.ok(TRACKED.includes(JOKER.id));
   for (const id of SURPRISE_IDS) assert.ok(TRACKED.includes(`joker:${id}`));
   assert.equal(addTap({}, "joker:speak")["joker:speak"], 1);
+});
+
+test("a browser tab is sent to the install page, the installed app never", () => {
+  assert.equal(mustInstall({ path: "/home", standalone: false, host: "bodhilabs.org" }), true);
+  assert.equal(mustInstall({ path: "/app", standalone: false, host: "www.bodhilabs.org" }), true);
+  assert.equal(mustInstall({ path: "/home", standalone: true, host: "bodhilabs.org" }), false);
+  assert.equal(mustInstall({ path: "/", standalone: false, host: "bodhilabs.org" }), false);
+  assert.equal(mustInstall({ path: "/book", standalone: false, host: "localhost" }), false);
 });

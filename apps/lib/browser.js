@@ -15,3 +15,12 @@ export function openAppUrl(ua = "", origin = "") {
   if (!/Android/i.test(ua) || !origin.startsWith("https://")) return "/app";
   return `intent://${host}/app#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=${encodeURIComponent(origin + "/app")};end`;
 }
+
+/**
+ * The app is used only as the installed app. Any app page opened in a browser tab goes to the install page ("/").
+ * The installed app is never sent away. A developer's own computer (localhost) is left alone, so the pages can be tried.
+ */
+export function mustInstall({ path = "/", standalone = false, host = "" }) {
+  if (standalone || path === "/" || path.startsWith("/admin")) return false;
+  return !/^(localhost|127\.0\.0\.1|\[::1\])$/.test(host);
+}

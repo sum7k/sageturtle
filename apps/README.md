@@ -22,6 +22,9 @@ Until 2026-11-28 the product was called SageTurtle.
 - **Words in eleven languages** (`lib/strings.js`): Hindi, English, Bengali, Marathi, Telugu, Tamil, Gujarati, Urdu,
   Kannada, Odia, Malayalam. The app does not speak, except the hello on a language tile and the words in Book, which
   use the phone's own voice.
+- **Used only as the installed app.** Any app page opened in a browser tab is sent to the install page `/`
+  (`components/Offline.jsx`, `mustInstall` in `lib/browser.js`); localhost is left alone. When Chrome gives no install
+  prompt, the install page shows the way in pictures: the menu, then Install app. On iPhone: Share, then Add to Home Screen.
 - **It installs as an app** (manifest, icons and `public/sw.js`) and opens without network once it has been opened.
   The installed app starts at `/app`. A page cannot start an installed app, so after install the landing page turns
   into one big "Open the app" button (an Android intent link, `openAppUrl` in `lib/browser.js`).
