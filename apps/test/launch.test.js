@@ -330,3 +330,40 @@ test("the passcode opens the admin panel and the phone stays signed in", async (
   assert.equal((await form("open-sesame-42")).status, 429, "too many wrong tries shuts the door for the day");
   assert.equal((await handle(new Request("https://bodhilabs.org/admin"), { ...env(), ADMIN_KEY: "short" }, NOW)).status, 403, "a short passcode is not accepted");
 });
+
+test("the lagna: the rising sign for a place and a moment", async () => {
+  const { lagna, houses, risingDegree, UJJAIN } = await import("../lib/lagna.js");
+  // At sunrise the rising sign is the Sun's own. On 28 November 2026 the Sun is in Vrishchika (7); sunrise at Ujjain is near 06:50.
+  const sunrise = Date.UTC(2026, 10, 28, 1, 20);
+  assert.equal(lagna(sunrise, UJJAIN), 7);
+  // At sunset the opposite sign rises: Vrishabha (1).
+  assert.equal(lagna(Date.UTC(2026, 10, 28, 12, 10), UJJAIN), 1);
+  // A day holds all twelve signs, and the sign changes about every two hours.
+  const seen = new Set();
+  let changes = 0, last = -1;
+  for (let m = 0; m < 1440; m += 5) { const s = lagna(sunrise + m * 60000, UJJAIN); seen.add(s); if (s !== last) changes++; last = s; }
+  assert.equal(seen.size, 12);
+  assert.ok(changes >= 12 && changes <= 13);
+  assert.deepEqual(houses(sunrise, UJJAIN), [7, 8, 9, 10, 11, 0, 1, 2, 3, 4, 5, 6]);
+  // Farther east the same sign rises earlier: Kolkata is ahead of Dwarka.
+  const at = Date.UTC(2026, 10, 28, 6, 0);
+  const ahead = (risingDegree(at, { lat: 22.57, lon: 88.36 }) - risingDegree(at, { lat: 22.24, lon: 68.97 }) + 360) % 360;
+  assert.ok(ahead > 5 && ahead < 40);
+  assert.equal(lagna(sunrise), lagna(sunrise, UJJAIN)); // no place given: Ujjain
+});
+
+test("a place guesses the language, and a phone that says no changes nothing", async () => {
+  const { placeLang, askPlace } = await import("../lib/place.js");
+  const at = (lat, lon) => placeLang({ lat, lon });
+  assert.deepEqual([at(12.97, 77.59), at(13.08, 80.27), at(19.08, 72.88), at(22.57, 88.36), at(26.85, 80.95), at(8.52, 76.94), at(20.3, 85.82), at(23.02, 72.57), at(17.39, 78.49)],
+    ["kn", "ta", "mr", "bn", "hi", "ml", "or", "gu", "te"]);
+  assert.equal(at(51.5, -0.12), ""); // London: no guess
+  assert.equal(placeLang(null), "");
+  assert.equal(firstGuess(["en-IN"], "UP", "kn"), "kn"); // the person's own place beats the network's state
+  assert.equal(firstGuess(["ta-IN", "en"], "UP", "kn"), "ta"); // the phone's own Indian language beats both
+  assert.equal(firstGuess(["en-IN"], "UP", ""), "hi");
+  assert.equal(await askPlace(null), null);
+  assert.equal(await askPlace({ getCurrentPosition: (ok, no) => no(new Error("denied")) }), null);
+  const p = await askPlace({ getCurrentPosition: (ok) => ok({ coords: { latitude: 12.9716, longitude: 77.5946 } }) });
+  assert.deepEqual(p, { lat: 13, lon: 77.6 });
+});

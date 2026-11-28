@@ -25,9 +25,10 @@ export const stateLang = (code) => LANGS.find((l) => l.states.includes(String(co
 
 /**
  * The tile to pre-select on the first screen, or "" for none. A phone set to an Indian language says the most.
- * Most phones in India are set to English, so for them the state the person is in decides.
+ * Most phones in India are set to English, so for them the place decides: the language of the person's own place
+ * (`here`, from lib/place.js) when the phone shared it, else the state the network sees.
  */
-export function firstGuess(tags = [], state = "") {
+export function firstGuess(tags = [], state = "", here = "") {
   const phone = tags.map(fromTag).filter(Boolean);
-  return phone.find((id) => id !== "en") ?? (stateLang(state) || phone[0] || "");
+  return phone.find((id) => id !== "en") ?? (here || stateLang(state) || phone[0] || "");
 }

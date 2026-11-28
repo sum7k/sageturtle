@@ -25,6 +25,12 @@ The inside of nine apps: Learn, Earn, Reminders, Hobbies, Meetings, Discussions,
 design map says what each does for each variant, but there are no screens. Messages is designed (`apps/messages/`).
 Messages leaves two things to others: open groups go to Discussions, and calls inside the app go to Meetings.
 
+## The education pivot (2026-11-28), not settled
+
+- What the eleven buttons are: eleven subjects, or the pre-school time plus ten years. The Gyan path (`gyan/docs/syllabus-map.md`) has eleven stages and, separately, eleven labels (Word, Number, Nature, Earth, People, Rule, Money, Art, Music, Body, Hand).
+- The shape of Home: the 4x3 grid, or eleven around one in the centre, and what the centre holds.
+- Which sign each button belongs to. Whether the joker stays.
+
 ## Built and not built (branch `dev`)
 
 Built for the first release: landing, the language screen with picture tiles and greetings, Home with Book, ten greyed

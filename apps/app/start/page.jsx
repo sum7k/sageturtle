@@ -7,6 +7,7 @@ import Icon, { P } from "@/components/Icon";
 import { useMe } from "@/components/useMe";
 import Region from "@/components/Region";
 import { LANGS, langById, firstGuess } from "@/lib/langs";
+import { askPlace, placeLang } from "@/lib/place";
 import { say } from "@/lib/speak";
 import { ADULT_VARIANTS, MAX_VARIANTS, togglePick } from "@/lib/variants";
 import { STEPS, nextStep, nextRegistrationStep } from "@/lib/store";
@@ -21,7 +22,8 @@ const Tick = ({ onClick, disabled }) => (
 /**
  * The first screen. Nobody is asked to read: each language is a picture, and a tap makes the tile say hello in that
  * language. A second tap on the same tile, or the gold tick, chooses it. One tile is picked in advance from the
- * phone's language and the state the person is in.
+ * phone's language and the state the person is in. The phone is also asked where it is: a yes makes the guess
+ * better and is kept for the lagna; a no changes nothing.
  */
 function Language({ me, done }) {
   const [pick, setPick] = useState(me.lang);
@@ -29,14 +31,16 @@ function Language({ me, done }) {
   useEffect(() => {
     if (me.lang) return;
     let live = true;
-    const guess = (state) => {
-      const id = firstGuess([...(navigator.languages ?? [navigator.language])], state);
-      if (!live || !id) return;
-      setPick((p) => p || id);
+    let state = "", here = "";
+    const guess = () => {
+      const id = firstGuess([...(navigator.languages ?? [navigator.language])], state, here);
+      if (!live || !id || heard.current) return; // once the person has tapped a tile, nothing moves
+      setPick(id);
       setOrder([langById(id), ...LANGS.filter((l) => l.id !== id)]); // the guess comes first
     };
-    guess("");
-    fetch("/api/where").then((r) => r.json()).then((w) => guess(w.state)).catch(() => {});
+    guess();
+    fetch("/api/where").then((r) => r.json()).then((w) => { state = w.state; guess(); }).catch(() => {});
+    askPlace().then((place) => { here = placeLang(place); guess(); });
     return () => { live = false; };
   }, [me.lang]);
   const choose = (id) => done((m) => { m.lang = id; });
