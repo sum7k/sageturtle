@@ -240,3 +240,17 @@ test("a browser tab is sent to the install page, the installed app never", () =>
   assert.equal(mustInstall({ path: "/", standalone: false, host: "bodhilabs.org" }), false);
   assert.equal(mustInstall({ path: "/book", standalone: false, host: "localhost" }), false);
 });
+
+test("every spoken text gets a man's voice and a woman's, Indian first", async () => {
+  const { pair } = await import("../lib/speak.js");
+  const v = (name, lang) => ({ name, lang });
+  const named = pair([v("Google US English", "en-US"), v("Rishi", "en-IN"), v("Veena", "en-IN")], "en-IN", 0.1);
+  assert.deepEqual(named.map((x) => [x.who, x.voice.name, x.pitch]), [["man", "Rishi", 1], ["woman", "Veena", 1]]);
+  assert.equal(pair([v("Rishi", "en-IN"), v("Veena", "en-IN")], "en-IN", 0.9)[0].who, "woman"); // the order is random
+  const one = pair([v("Google हिन्दी", "hi-IN")], "hi-IN", 0.1); // one voice: lower, then higher
+  assert.deepEqual(one.map((x) => [x.who, x.voice.name]), [["man", "Google हिन्दी"], ["woman", "Google हिन्दी"]]);
+  assert.ok(one[0].pitch < 1 && one[1].pitch > 1);
+  const none = pair([], "or-IN", 0.1);
+  assert.equal(none.length, 2);
+  assert.equal(none[0].voice, null);
+});

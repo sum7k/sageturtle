@@ -16,6 +16,8 @@ Until 2026-11-28 the product was called SageTurtle.
   people who tapped them. Nobody is asked anything.
 - **The joker** is the twelfth button: an empty app with a joker card on it. A tap shows one surprise over the whole
   screen (a mic, a dice, a balloon and so on), never the same one twice in a row. The tap and what was shown are counted.
+- **Gyan** (the reading app; `book` in the code, `lib/book.js`). Everything spoken is heard twice, in a man's and a
+  woman's voice (`lib/speak.js`).
 - **Book** (`lib/book.js`): a picture, a gold button that says the word, and three written words to choose from. A wrong
   word shakes and says itself; the right one turns green and the next picture comes. Twelve words per language. The
   letters are on a second page.
