@@ -28,14 +28,13 @@ Messages leaves two things to others: open groups go to Discussions, and calls i
 ## The education pivot (2026-11-28), not settled
 
 - What the eleven buttons are: eleven subjects, or the pre-school time plus ten years. The Gyan path (`gyan/docs/syllabus-map.md`) has eleven stages and, separately, eleven labels (Word, Number, Nature, Earth, People, Rule, Money, Art, Music, Body, Hand).
-- The shape of Home: the 4x3 grid, or eleven around one in the centre, and what the centre holds.
-- Which sign each button belongs to. Whether the joker stays.
+- What the centre opens (the profile is planned), and how the learner's progress is measured.
+- The 121 lives: the list and the texts in eleven languages (being written in another thread), and real pictures in place of emoji.
 
 ## Built and not built (branch `dev`)
 
-Built for the first release: landing, the language screen with picture tiles and greetings, Home with Book, ten greyed
-picture buttons and the joker, Book's word matching and letters, install as an app (no caching and no offline opening until the first version is released, sumeet 2026-11-28) and an "Open the app" button,
-counts of pictures shown and tapped, and the admin panel. Words in 11 languages. Horoscope, Khabri, Me and registration are built but not linked.
+Built for the first release: landing, the language screen with picture tiles and greetings, Home as a ring of twelve houses turned by the lagna (only Word and the joker open), the joker's lives with audio (three placeholders), Book's word matching and letters, install as an app (no caching and no offline opening until the first version is released, sumeet 2026-11-28) and an "Open the app" button,
+counts of subjects pressed and lives shown, and the admin panel. Words in 11 languages. Horoscope, Khabri, Me and registration are built but not linked.
 The server holds phones and taps (Cloudflare D1). 34 tests pass. A push to `dev` deploys through Cloudflare Workers Builds.
 
 Not done:

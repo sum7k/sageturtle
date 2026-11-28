@@ -20,3 +20,5 @@ export function spoken(lang) {
 
 /** The address of one recording. */
 export const clipUrl = (lang, who, text) => `/api/voice?lang=${lang}&who=${who}&text=${encodeURIComponent(text)}`;
+/** The address of a whole life read aloud (lib/lives.js). */
+export const lifeUrl = (lang, who, id) => `/api/voice?lang=${lang}&who=${who}&life=${id}`;

@@ -1,5 +1,7 @@
 // The admin panel: one page of numbers, made on the server from the database. English only; it is for the owner.
-import { BOOK, ICONS, ICON_IDS, JOKER, SURPRISES, SURPRISE_IDS } from "../lib/buttons.js";
+import { BOOK, JOKER } from "../lib/buttons.js";
+import { SUBJECTS } from "../lib/subjects.js";
+import { LIVES } from "../lib/lives.js";
 import { LANGS } from "../lib/langs.js";
 import { VARIANTS } from "../lib/variants.js";
 
@@ -39,21 +41,18 @@ export async function adminData(db, now = Date.now()) {
       { step: "Opened the first page", ...counted("visit") },
       { step: "Installed the app", ...counted("install") },
       { step: "Chose a language", today: u.new_today, week: u.new_week, total: u.total },
-      { step: "Opened Gyan", ...people(BOOK.id) },
+      { step: "Opened Word", ...people(BOOK.id) },
       { step: "Picked a word", ...people("answer") },
       { step: "Got a word right", ...people("right") },
     ],
     book: { ...zero, ...by[BOOK.id] },
-    // For each picture: how many people were shown it, how many of them tapped it, and the share who tapped.
-    icons: ICON_IDS.map((id) => {
-      const shown = { ...zero, ...by[`seen:${id}`] };
-      const tapped = { ...zero, ...by[`icon:${id}`] };
-      return { id, picture: ICONS[id], seen: shown.users, users: tapped.users, taps: tapped.taps, rate: shown.users ? tapped.users / shown.users : 0,
-        seen_week: shown.users_week, users_week: tapped.users_week, taps_today: tapped.taps_today };
-    }).sort((a, b) => b.rate - a.rate || b.users - a.users || b.taps - a.taps),
-    // The joker: how many people tapped it, and how often each surprise was shown.
-    joker: { ...zero, ...by[JOKER.id] },
-    surprises: SURPRISE_IDS.map((id) => ({ id, picture: SURPRISES[id], ...zero, ...by[`${JOKER.id}:${id}`] })),
+    // The ring on Home: for each subject, how many people pressed it and how often. Word is the open one ("book").
+    subjects: SUBJECTS.map((x) => ({ id: x.id, picture: x.picture, name: x.name.en, open: !!x.open, ...zero, ...by[x.id === "word" ? BOOK.id : x.id === JOKER.id ? JOKER.id : `subject:${x.id}`] }))
+      .sort((a, b) => b.users - a.users || b.taps - a.taps),
+    centre: { ...zero, ...by.centre },
+    // The joker: which lives were shown, and how many people listened.
+    lives: LIVES.map((l) => ({ id: l.id, picture: l.picture, name: l.name.en, ...zero, ...by[`life:${l.id}`] })).sort((a, b) => b.taps - a.taps),
+    heard: { ...zero, ...by.heard },
     langs, states, refs, variants, signups,
   };
 }
@@ -69,7 +68,6 @@ export async function adminPage(db, now = Date.now(), email = "") {
   const langName = (id) => LANGS.find((l) => l.id === id)?.name ?? id;
   const varName = (id) => VARIANTS.find((v) => v.id === id)?.label ?? id;
   const top = Math.max(1, ...d.funnel.map((f) => f.total));
-  const tapped = d.icons.filter((x) => x.taps > 0);
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
 <title>BodhiLabs admin</title>
@@ -84,6 +82,7 @@ header{display:flex;justify-content:space-between;align-items:baseline;flex-wrap
 table{width:100%;border-collapse:collapse;font-size:15px}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
 th{font-size:12px;color:var(--muted);font-weight:600}.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}tr:last-child td{border-bottom:0}.none{color:var(--muted);text-align:center}
 .bar{display:block;height:8px;border-radius:99px;background:var(--gold);margin-top:4px;min-width:2px}
+.tag{font-size:11px;padding:2px 7px;border-radius:99px;background:var(--bg);margin-left:6px;color:var(--muted)}
 .pic{font-size:22px;margin-right:8px;vertical-align:middle}summary{font-weight:700;font-size:18px;cursor:pointer;margin-bottom:8px}
 a{color:inherit}
 </style></head><body><main>
@@ -94,23 +93,18 @@ ${tile("People today", d.users.active_today)}${tile("People, 7 days", d.users.ac
 <section><h2>How far people get</h2><div class="card">${table(["Step", "Today", "7 days", "All"],
     d.funnel.map((f) => [`${esc(f.step)}<span class="bar" style="width:${Math.round((f.total / top) * 100)}%"></span>`, num(f.today), num(f.week), num(f.total)]))}</div>
 <p class="muted">The first two rows count browsers and installs, a browser at most once a day. The other rows count people, each once.</p></section>
-<section><h2>Buttons pressed</h2><div class="card">${table(["Button", "People", "Presses", "Today"], [
-    ["Gyan", num(d.book.users), num(d.book.taps), num(d.book.taps_today)],
-    [`<span class="pic">${JOKER.picture}</span>Joker`, num(d.joker.users), num(d.joker.taps), num(d.joker.taps_today)],
-    ...tapped.slice().sort((a, b) => b.taps - a.taps).slice(0, 10).map((x) => [`<span class="pic">${x.picture}</span>${esc(x.id)}`, num(x.users), num(x.taps), num(x.taps_today)]),
+<section><h2>Subjects pressed</h2><div class="card">${table(["Subject", "People", "Presses", "Today"], [
+    ...d.subjects.map((x) => [`<span class="pic">${x.picture}</span>${esc(x.name)}${x.open ? "" : ' <span class="tag">closed</span>'}`, num(x.users), num(x.taps), num(x.taps_today)]),
+    [`<span class="pic">🐢</span>The learner in the centre`, num(d.centre.users), num(d.centre.taps), num(d.centre.taps_today)],
   ])}</div>
-<p class="muted">Greyed pictures: the ten most pressed. The full list is at the bottom.</p></section>
+<p class="muted">Closed subjects only count the press. Lives is the joker.</p></section>
 <section><h2>Where people are</h2><div class="card">${table(["State", "People"], d.states.map((r) => [esc(r.state || "Not known"), num(r.users)]))}</div></section>
 <section><h2>Who sent them</h2><div class="card">${table(["From", "People"], d.refs.map((r) => [esc(r.ref || "Direct or not known"), num(r.users)]))}</div>
 <p class="muted">To tell links apart, share them as bodhilabs.org/?from=whatsapp (any short name).</p></section>
 <section><h2>Languages chosen</h2><div class="card">${table(["Language", "People"], d.langs.map((r) => [esc(langName(r.lang)), num(r.users)]))}</div></section>
 <section><h2>New people by day</h2><div class="card">${table(["Day", "People"], d.signups.map((r) => [esc(r.day), num(r.users)]))}</div></section>
-<details><summary>All pictures on the greyed buttons</summary><div class="card">${table(
-    ["Picture", "Pressed by", "Shown to", "Share", "Presses"],
-    d.icons.map((x) => [`<span class="pic">${x.picture}</span>${esc(x.id)}`, num(x.users), num(x.seen), pct(x.rate), num(x.taps)]))}</div>
-<p class="muted">Each phone is shown ten of these ${ICON_IDS.length} pictures, a different ten each day. The share is the fair way to compare pictures.</p></details>
-<details><summary>Joker surprises shown</summary><div class="card">${table(["Surprise", "People", "Times"],
-    d.surprises.map((x) => [`<span class="pic">${x.picture}</span>${esc(x.id)}`, num(x.users), num(x.taps)]))}</div></details>
+<details><summary>Lives shown</summary><div class="card">${table(["Life", "People", "Times"],
+    [...d.lives.map((x) => [`<span class="pic">${x.picture}</span>${esc(x.name)}`, num(x.users), num(x.taps)]), ["Listened to a life", num(d.heard.users), num(d.heard.taps)]])}</div></details>
 ${d.variants.length ? `<details><summary>People by work</summary><div class="card">${table(["Work", "People"], d.variants.map((r) => [esc(varName(r.variant)), num(r.users)]))}</div></details>` : ""}
 <p class="muted">Signed in as ${esc(email)}.</p>
 </main></body></html>`;

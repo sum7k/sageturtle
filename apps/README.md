@@ -10,12 +10,13 @@ Until 2026-11-28 the product was called SageTurtle.
   picture tiles, one per language. A tap makes the tile say hello in that language; a second tap, or the gold tick,
   chooses it. One tile is picked in advance from the phone's language, or from the state the person is in
   (`firstGuess` in `lib/langs.js`). The drawings are placeholders, with no religious symbols.
-- **Home has twelve buttons** (`lib/buttons.js`). Only Book is open. The other ten are lightly greyed out and carry
-  no name: each shows one picture out of a pool of 40, and each phone sees a different ten each day. A tap on one
-  only gets counted, together with which pictures were shown, so the admin panel can rank pictures by the share of
-  people who tapped them. Nobody is asked anything.
-- **The joker** is the twelfth button: an empty app with a joker card on it. A tap shows one surprise over the whole
-  screen (a mic, a dice, a balloon and so on), never the same one twice in a row. The tap and what was shown are counted.
+- **Home is a ring of twelve houses around the learner** (`lib/subjects.js`, `app/home/page.jsx`). Eleven subjects
+  and the joker, one per sign from Mesha to Meena; the sign rising now (`lib/lagna.js`) sits on top and the ring turns
+  with it. Only Word (opens Gyan) and the joker are open; a press on any other subject is only counted. The centre
+  shows the learner's eleven years and is only counted for now. The language button is in the top corner.
+- **The joker opens one great life** (`lib/lives.js`, `app/life/page.jsx`): a short biography about how the person
+  learned and grew, never the same one twice in a row, to read or to hear in a Sarvam voice (`/api/voice?life=<id>`).
+  Three placeholder lives, in English and Hindi; the set of 121 is being written. Shown and heard are counted.
 - **Gyan** (the reading app; `book` in the code, `lib/book.js`). Everything spoken is heard twice, in a man's and a
   woman's voice (`lib/speak.js`): a Sarvam recording made once and kept in Cloudflare KV (`worker/voice.js`), or the
   phone's own voice when there is none. The Sarvam key is the Worker secret `SARVAM_API_KEY`.
@@ -51,7 +52,7 @@ The pages are static files (`next build` writes `out/`). Cloudflare serves them 
 | Table | One row per | Used for |
 | :--- | :--- | :--- |
 | `users` | phone that chose a language | users, new and active users; language; place and work once registered |
-| `taps` | person, thing and day | taps (sum of `count`) and distinct users (count of people). The thing is `book`, `icon:<picture>` for a tap, or `seen:<picture>` for a showing |
+| `taps` | person, thing and day | taps (sum of `count`) and distinct users (count of people). The thing is `book`, `subject:<id>`, `joker`, `life:<id>` (a life shown), `heard`, `centre`, `answer` or `right` |
 | `wishes` | (unused) | answers to a question that was removed on 2026-11-28 |
 
 Taps wait on the phone until they reach the server, so none is lost without network (`lib/track.js`).

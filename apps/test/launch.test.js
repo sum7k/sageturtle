@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { BOOK, ICONS, ICON_IDS, JOKER, LOCKED, SURPRISE_IDS, SURPRISES, TRACKED, iconsFor, surprise } from "../lib/buttons.js";
+import { BOOK, JOKER, TRACKED } from "../lib/buttons.js";
+import { SUBJECTS, LANG_ORDER, ring, nameOf } from "../lib/subjects.js";
+import { LIVES, nextLife, lifeLang } from "../lib/lives.js";
 import { mustInstall, openAppUrl } from "../lib/browser.js";
 import { LANGS, langById, guessLang, stateLang, firstGuess } from "../lib/langs.js";
 import { STR, t } from "../lib/strings.js";
@@ -140,21 +142,19 @@ test("the Open the app button uses an Android intent, with the start page in the
   assert.equal(openAppUrl(android, "http://localhost:8787"), "/app");
 });
 
-test("Home has Book and ten greyed pictures, which change by phone and by day", () => {
-  assert.equal(LOCKED, 10);
-  assert.ok(ICON_IDS.length >= 30);
-  for (const id of ICON_IDS) assert.ok(ICONS[id], id);
-  const a = iconsFor("bodhi11111", "2026-11-28");
-  assert.equal(a.length, 10);
-  assert.equal(new Set(a).size, 10);
-  assert.ok(a.every((id) => ICONS[id]));
-  assert.deepEqual(a, iconsFor("bodhi11111", "2026-11-28")); // the same all day
-  assert.notDeepEqual(a, iconsFor("bodhi11111", "2026-11-29"));
-  assert.notDeepEqual(a, iconsFor("bodhi22222", "2026-11-28"));
-  const shown = new Set();
-  for (let i = 0; i < 60; i++) for (const id of iconsFor(`phone${i}`, "2026-11-28")) shown.add(id);
-  assert.equal(shown.size, ICON_IDS.length, "every picture gets shown to someone");
-  assert.equal(today(Date.UTC(2026, 10, 28, 18, 31)), "2026-11-29");
+test("Home is a ring of eleven subjects and the joker, turned by the rising sign", () => {
+  assert.equal(SUBJECTS.length, 12);
+  assert.equal(SUBJECTS[11].id, "joker"); // Meena, the twelfth sign
+  assert.deepEqual(SUBJECTS.filter((x) => x.open).map((x) => [x.id, x.open]), [["word", "/book"], ["joker", "/life"]]);
+  assert.equal(new Set(SUBJECTS.map((x) => x.id)).size, 12);
+  for (const x of SUBJECTS) for (const l of LANG_ORDER) assert.ok(x.name[l], `${x.id} ${l}`);
+  assert.deepEqual([...LANG_ORDER].sort(), LANGS.map((l) => l.id).sort());
+  assert.equal(nameOf(SUBJECTS[2], "hi"), "शब्द");
+  assert.equal(nameOf(SUBJECTS[2], "xx"), "Word");
+  // Vrishchika (7) rising: Nature is in house 1, People in house 2, and Art comes last.
+  assert.deepEqual(ring(7).map((x) => x.id), ["nature", "people", "hand", "money", "joker", "body", "music", "word", "earth", "rule", "number", "art"]);
+  assert.equal(ring(0)[0].id, "body");
+  for (const x of SUBJECTS) assert.ok(TRACKED.includes(x.id === "word" ? BOOK.id : x.id === "joker" ? JOKER.id : `subject:${x.id}`), x.id);
 });
 
 test("every kind of work, list and sign has a word", () => {
@@ -166,40 +166,34 @@ test("every kind of work, list and sign has a word", () => {
 });
 
 test("taps wait on the phone and are taken off only when sent", () => {
-  let p = addTap({}, "icon:money");
-  p = addTap(p, "icon:money");
+  let p = addTap({}, "subject:number");
+  p = addTap(p, "subject:number");
   p = addTap(p, "book");
-  p = addTap(p, "seen:money");
+  p = addTap(p, "subject:money");
   p = addTap(p, "icon:nothing");
-  assert.deepEqual(p, { "icon:money": 2, book: 1, "seen:money": 1 });
-  assert.deepEqual(subtract({ book: 3, "icon:money": 1 }, { book: 2, "icon:money": 1 }), { book: 1 });
+  assert.deepEqual(p, { "subject:number": 2, book: 1, "subject:money": 1 });
+  assert.deepEqual(subtract({ book: 3, "subject:number": 1 }, { book: 2, "subject:number": 1 }), { book: 1 });
   const me = { ...blank(), uid: "", lang: "hi", name: "Asha" };
   assert.deepEqual(profileOf(me), { id: undefined, lang: "hi", pin: "", variants: [] });
 });
 
-test("a picture is ranked by the share of people who tapped it after being shown it", async () => {
+test("the admin panel shows which subjects are pressed, which lives are shown and how many are heard", async () => {
   const e = env();
-  const a = await signUp(e);
-  const b = await signUp(e, { lang: "en" });
-  const c = await signUp(e, { lang: "ta" });
-  for (const u of [a, b, c]) assert.equal((await post(e, "/api/tap", { user: u, taps: { "seen:money": 1, "seen:cricket": 1 } })).status, 200);
-  assert.equal((await post(e, "/api/tap", { user: a, taps: { "icon:money": 3, book: 1 } })).status, 200);
-  assert.equal((await post(e, "/api/tap", { user: a, taps: { "icon:money": 2 } })).status, 200);
-  assert.equal((await post(e, "/api/tap", { user: b, taps: { "icon:money": 1, "icon:cricket": 1, "icon:nothing": 9, "icon:tv": 100000 } })).status, 200);
+  const a = await signUp(e), b = await signUp(e);
+  await post(e, "/api/tap", { user: a, taps: { "subject:number": 3, joker: 2, "life:einstein": 2, heard: 1, centre: 1 } });
+  await post(e, "/api/tap", { user: b, taps: { "subject:number": 1, book: 1, "life:leonardo": 1 } });
   const d = await adminData(e.DB, NOW);
-  const of = (id) => d.icons.find((x) => x.id === id);
-  assert.deepEqual([of("money").seen, of("money").users, of("money").taps], [3, 2, 6]);
-  assert.equal(Math.round(of("money").rate * 100), 67);
-  assert.equal(Math.round(of("cricket").rate * 100), 33);
-  assert.equal(of("tv").taps, 500);
-  assert.equal(of("tv").rate, 0); // tapped but never counted as shown
-  assert.equal(of("music").taps, 0);
-  assert.equal(d.icons[0].id, "money");
-  assert.equal(d.icons.length, ICON_IDS.length);
-  assert.deepEqual([d.book.users, d.book.taps], [1, 1]);
-  assert.equal(d.users.active_today, 3);
+  assert.equal(d.subjects.length, 12);
+  assert.deepEqual([d.subjects[0].id, d.subjects[0].users, d.subjects[0].taps], ["number", 2, 4]);
+  assert.deepEqual(d.subjects.filter((x) => x.taps).map((x) => x.id).sort(), ["joker", "number", "word"]);
+  assert.deepEqual(d.lives.map((l) => [l.id, l.taps]), [["einstein", 2], ["leonardo", 1], ["aryabhata", 0]]);
+  assert.equal(d.heard.taps, 1);
+  assert.equal(d.centre.users, 1);
   const html = await adminPage(e.DB, NOW, "owner@example.com");
-  assert.ok(html.includes("67%") && html.includes("💰") && html.includes("owner@example.com"));
+  assert.match(html, /Subjects pressed/);
+  assert.match(html, /Lives shown/);
+  assert.match(html, /Albert Einstein/);
+  assert.match(html, /owner@example\.com/);
 });
 
 test("counts from an unknown phone, for unknown things, or to a removed address are refused", async () => {
@@ -217,20 +211,21 @@ test("counts from an unknown phone, for unknown things, or to a removed address 
   assert.deepEqual(await from(undefined), { state: "" });
 });
 
-test("the joker shows a different surprise each time, and both are counted", () => {
-  assert.ok(SURPRISE_IDS.includes("speak"));
-  for (const id of SURPRISE_IDS) assert.ok(SURPRISES[id], id);
+test("the joker opens a different life each time, in the person's language or else English", () => {
+  assert.ok(LIVES.length >= 2);
+  for (const l of LIVES) { assert.ok(l.picture && l.years && l.name.en && l.text.en, l.id); assert.ok(l.text.en.length <= 2500, l.id); }
   let last = null;
   for (let i = 0; i < 200; i++) {
-    const next = surprise(last, (i * 0.37) % 1);
-    assert.ok(SURPRISE_IDS.includes(next));
-    assert.notEqual(next, last);
-    last = next;
+    const next = nextLife(last, (i * 0.37) % 1);
+    assert.notEqual(next.id, last);
+    last = next.id;
   }
-  assert.ok(SURPRISE_IDS.includes(surprise(null, 0.999999)));
-  assert.ok(TRACKED.includes(JOKER.id));
-  for (const id of SURPRISE_IDS) assert.ok(TRACKED.includes(`joker:${id}`));
-  assert.equal(addTap({}, "joker:speak")["joker:speak"], 1);
+  assert.ok(nextLife(null, 0.999999));
+  assert.equal(lifeLang(LIVES[0], "hi"), "hi");
+  assert.equal(lifeLang(LIVES[0], "ta"), "en");
+  assert.ok(TRACKED.includes(JOKER.id) && TRACKED.includes("heard"));
+  for (const l of LIVES) assert.ok(TRACKED.includes(`life:${l.id}`));
+  assert.equal(addTap({}, "life:einstein")["life:einstein"], 1);
 });
 
 test("a browser tab is sent to the install page, the installed app never", () => {
@@ -283,6 +278,16 @@ test("a recording is made once by Sarvam, saved, and only for the app's own word
   assert.equal((await ask(clipUrl("hi", "robot", "गाय"), env)).status, 404);
   assert.equal((await ask(clipUrl("hi", "man", "गाय"), { VOICE })).status, 503, "no key: the phone speaks instead");
   assert.equal(calls.length, 2);
+  // A whole life is read the same way, by its id.
+  const { lifeUrl } = await import("../lib/voice.js");
+  const life = await ask(lifeUrl("hi", "man", "einstein"), env);
+  assert.equal(life.status, 200);
+  const read = JSON.parse(calls[2][1].body);
+  assert.ok(read.text.startsWith("अल्बर्ट आइंस्टीन") && read.speaker === "shubh");
+  await ask(lifeUrl("hi", "man", "einstein"), env);
+  assert.equal(calls.length, 3);
+  assert.equal((await ask(lifeUrl("hi", "man", "nobody"), env)).status, 404);
+  assert.equal((await ask(lifeUrl("ta", "man", "einstein"), env)).status, 404, "no Tamil text yet");
 });
 
 test("where people come from and how far they get", async () => {

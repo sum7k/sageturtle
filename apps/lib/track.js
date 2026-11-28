@@ -5,7 +5,6 @@ import { TRACKED, COUNTED } from "./buttons.js";
 export const KEY = "bodhilabs.taps.v1";
 const REF = "bodhilabs.ref.v1"; // who sent this person here, kept from the first visit
 const VISIT = "bodhilabs.visit.v1"; // the day this browser was last counted as a visit
-const SEEN = "bodhilabs.seen.v1"; // the day the pictures on Home were last counted as shown
 
 /** Add one tap to the waiting counts. Unknown buttons are ignored. */
 export function addTap(pending, button) {
@@ -64,17 +63,8 @@ export function tap(button) {
   sync();
 }
 
-/** Today in India, as YYYY-MM-DD. The pictures on Home change with it. */
+/** Today in India, as YYYY-MM-DD. */
 export const today = (now = Date.now()) => new Date(now + 19800000).toISOString().slice(0, 10);
-
-/** Count that these pictures were shown, once per phone per day, so taps can be compared with showings. */
-export function seen(icons, day) {
-  try {
-    if (!icons.length || localStorage.getItem(SEEN) === day) return;
-    localStorage.setItem(SEEN, day);
-  } catch { return; }
-  write(icons.reduce((p, id) => addTap(p, `seen:${id}`), read()));
-}
 
 /**
  * Who sent the person: "?from=whatsapp" (or utm_source) in the link, else the site the link was on. Our own pages
