@@ -1,5 +1,6 @@
 "use client";
 
+import { markSeen } from "@/lib/stages";
 import { useEffect, useRef, useState } from "react";
 import Icon, { P } from "./Icon";
 import LessonArt from "./LessonArt";
@@ -41,7 +42,7 @@ export default function Lesson({ lesson, lang, onClose }) {
       timer = setTimeout(() => {
         if (!alive) return;
         if (at < last) setAt(at + 1);
-        else { tap(`watched:${lesson.id}`); setEnded(true); }
+        else { tap(`watched:${lesson.id}`); markSeen(lesson.id); setEnded(true); }
       }, Math.max(REST, least - (Date.now() - began)));
     };
     sayLine(lineId(lesson, at), line, heardIn, who.current, go);

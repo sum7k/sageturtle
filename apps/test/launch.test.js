@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { BOOK, WORD, LIFE, TRACKED, tapName } from "../lib/buttons.js";
 import { AROUND, CENTRE, SAY } from "../lib/grid.js";
 import { WORD_HOUSES } from "../lib/word.js";
-import { stageHouses, subjectsAt, doorOf, cleanStage } from "../lib/stages.js";
+import { stageHouses, subjectsAt, doorOf, cleanStage, partsOf, stageAfter } from "../lib/stages.js";
 import { TOP } from "../lib/top.js";
 import { mark, report } from "../lib/learn.js";
 import { shouldLook, afterLook } from "../lib/ask.js";
@@ -216,6 +216,18 @@ test("Gyan is walked by stage: only the learner's stage and those behind it open
   for (const stage of [1, 2]) for (const x of SUBJECTS) for (const l of lessonsOf(x.id, stage)) assert.ok(!l.chapter, l.id);
   assert.deepEqual(subjectsAt(1, 7).map((x) => x.id), ring(7).map((x) => x.id)); // still turned by the rising sign
   assert.deepEqual([tapName("stage", subjectsAt(3, 0)[2]), tapName("stage", subjectsAt(1, 0)[2])], [BOOK.id, WORD.id]);
+  // Moving up: a stage is finished when all that is made for it is done; then the next one opens.
+  const one = partsOf(1);
+  assert.ok(one.length >= 5 && one.every((p) => p.startsWith("lesson:")));
+  assert.equal(stageAfter(1, []), 1);
+  assert.equal(stageAfter(1, one.slice(1)), 1, "one lesson is still unseen");
+  assert.equal(stageAfter(1, one), 2);
+  assert.equal(stageAfter(2, one), 2, "nothing is made for stage 2 yet, so the learner waits there");
+  assert.equal(partsOf(3).filter((p) => p.startsWith("word:")).length, 12);
+  assert.equal(stageAfter(3, partsOf(3)), 4);
+  const made = [{ id: "a", stage: 1 }, { id: "b", stage: 2 }];
+  assert.equal(stageAfter(1, ["lesson:a", "lesson:b"], made), 3, "two finished stages are passed at once");
+  assert.equal(stageAfter(12, partsOf(12)), 12);
 });
 
 test("the phone remembers which words go well and which need practice", () => {

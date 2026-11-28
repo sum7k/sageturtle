@@ -3,11 +3,16 @@
 // stage and the ones behind it are open; the ones ahead are closed. Inside a stage are the twelve subjects, and a
 // subject shows only what was made for that stage. So a child at stage 1, who cannot read yet, never meets a
 // written lesson of stage 6.
-// Moving up is not built yet (the entry and exit checks of the syllabus): a new learner stays at stage 1.
+// Moving up: when everything made for the learner's stage is done (each lesson seen to its end; in stage 3, each
+// word of the word game matched once), the next stage opens. Nothing is announced and nothing is marked; the next
+// house is simply open. A stage with nothing made yet cannot be finished, so the learner waits there. The entry and
+// exit checks of the syllabus will replace this rule when they are built.
 // For looking at the work, every stage can be opened on a phone: the admin panel has the switch, and so do
 // /gyan?all=1 and /gyan?all=0.
 import { BOOK } from "./buttons.js";
-import { lessonsOf } from "./lessons.js";
+import { WORD_KEYS } from "./book.js";
+import { LESSONS, lessonsOf } from "./lessons.js";
+import { loadLearn } from "./learn.js";
 import { ring } from "./subjects.js";
 
 export const STAGES = 12;
@@ -46,4 +51,37 @@ export function stageHere(search = "") {
   if (asked === null) return at;
   const n = cleanStage(asked);
   return allOpen() || n <= at ? n : at;
+}
+
+export const SEEN = "bodhilabs.seen.v1"; // the lessons this learner has seen to the end
+
+/** Everything there is to do at a stage, as names: "lesson:<id>", and in stage 3 "word:<key>" for the word game. */
+export function partsOf(stage, lessons = LESSONS) {
+  const made = lessons.filter((l) => l.stage === stage).map((l) => `lesson:${l.id}`);
+  return stage === READS_FROM ? [...made, ...WORD_KEYS.map((k) => `word:${k}`)] : made;
+}
+/** The stage a learner at `at` stands at, given what they have done: it moves up past every stage that is all done. */
+export function stageAfter(at, done, lessons = LESSONS) {
+  let now = cleanStage(at);
+  while (now < STAGES) {
+    const parts = partsOf(now, lessons);
+    if (!parts.length || !parts.every((p) => done.includes(p))) break;
+    now++;
+  }
+  return now;
+}
+
+const seen = () => { try { const v = JSON.parse(localStorage.getItem(SEEN)); return Array.isArray(v) ? v.filter((x) => typeof x === "string") : []; } catch { return []; } };
+/** Look at what is done on this phone and move the learner up if their stage is finished. Returns their stage. */
+export function moveUp() {
+  const done = [...seen().map((id) => `lesson:${id}`), ...Object.keys(loadLearn()).map((k) => `word:${k}`)];
+  const at = loadStage(), now = stageAfter(at, done);
+  if (now !== at) { try { localStorage.setItem(KEY, String(now)); } catch {} }
+  return now;
+}
+/** A lesson was seen to its end. */
+export function markSeen(id) {
+  const list = seen();
+  if (!list.includes(id)) { try { localStorage.setItem(SEEN, JSON.stringify([...list, id])); } catch {} }
+  return moveUp();
 }

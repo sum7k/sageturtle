@@ -6,7 +6,7 @@ import Bar from "@/components/Bar";
 import Grid from "@/components/Grid";
 import { useMe } from "@/components/useMe";
 import { nextStep } from "@/lib/store";
-import { allOpen, loadStage, setAllOpen, stageHouses } from "@/lib/stages";
+import { allOpen, moveUp, setAllOpen, stageHouses } from "@/lib/stages";
 import { nameOf } from "@/lib/subjects";
 import { topById } from "@/lib/top";
 
@@ -28,7 +28,7 @@ export default function Gyan() {
     const asked = new URLSearchParams(location.search).get("all");
     if (asked !== null) setAllOpen(asked === "1");
     setAll(allOpen());
-    setAt(loadStage());
+    setAt(moveUp());
   }, [me, ready, router]);
   if (!ready || at === null) return <main className="screen" />;
 

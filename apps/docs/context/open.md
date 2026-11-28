@@ -29,7 +29,7 @@ Messages leaves two things to others: open groups go to Discussions, and calls i
 
 - What the eleven buttons are: eleven subjects, or the pre-school time plus ten years. The Gyan path (`gyan/docs/syllabus-map.md`) has eleven stages and, separately, eleven labels (Word, Number, Nature, Earth, People, Rule, Money, Art, Music, Body, Hand).
 - What Learned, Now and Next should really show (v1: the word game's words, kept on the phone). Whether the corner button needs more than the language.
-- Moving a learner up a stage (the entry and exit checks of the syllabus) is not built: everyone stays at stage 1.
+- Moving up a stage is by finishing its lessons (`lib/stages.js`); the syllabus's entry and exit checks are not built. Stage 2 has nothing made, so a learner who finishes stage 1 waits there.
 - The Ask box may still answer from lines of a higher stage (`answer` in `lib/find.js` does not pass the learner's stage).
 - Stage 1 holds only Nature's lessons and Lives; Word at stages 1 and 2 (hearing, no print) is not built.
 - The 121 lives: the list and the texts in eleven languages (being written in another thread), and real pictures in place of emoji.

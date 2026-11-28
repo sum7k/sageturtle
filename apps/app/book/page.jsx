@@ -7,6 +7,7 @@ import { useMe } from "@/components/useMe";
 import { PICTURE, WORD_KEYS, round, wordFor, lettersFor } from "@/lib/book";
 import { loadLearn, mark, saveLearn } from "@/lib/learn";
 import { say } from "@/lib/speak";
+import { moveUp } from "@/lib/stages";
 import { nameOf } from "@/lib/subjects";
 import { WORD_HOUSES } from "@/lib/word";
 import { tap } from "@/lib/track";
@@ -33,6 +34,7 @@ function Words({ lang }) {
     if (key !== r.answer) { say(wordFor(lang, key), lang); return setWrong((w) => [...w, key]); }
     tap("right");
     saveLearn(mark(loadLearn(), r.answer, wrong.length === 0)); // for the Learned, Now and Next pages
+    moveUp(); // all twelve words matched once finishes Word at this stage
     setRight(true);
     // The next picture comes only when both voices have said the word, and never sooner than a second.
     // If the sound never ends (a stalled network), it comes after ten seconds anyway.
