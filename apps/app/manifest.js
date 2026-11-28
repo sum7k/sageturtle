@@ -6,9 +6,11 @@ export default function manifest() {
     name: "BodhiLabs",
     short_name: "BodhiLabs",
     id: "/",
-    start_url: "/",
+    start_url: "/app",
     scope: "/",
     display: "standalone",
+    // Lets the landing page ask the phone whether the app is already installed.
+    related_applications: [{ platform: "webapp", url: "https://bodhilabs.org/manifest.webmanifest" }],
     orientation: "portrait",
     background_color: "#eaf4ff",
     theme_color: "#eaf4ff",

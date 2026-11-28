@@ -2,8 +2,8 @@
 // Pages: the network first, so a new release shows at once; the saved copy when there is no network.
 // Files with a hashed name (/_next/static) never change: the saved copy first.
 // /api and /admin are never saved.
-const CACHE = "bodhilabs-v1";
-const PAGES = ["/", "/start", "/home", "/book", "/wish"];
+const CACHE = "bodhilabs-v2";
+const PAGES = ["/", "/app", "/start", "/home", "/book", "/wish"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PAGES)).catch(() => {}).then(() => self.skipWaiting()));

@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { BUTTONS, TRACKED } from "../lib/buttons.js";
+import { openAppUrl } from "../lib/browser.js";
 import { LANGS, langById, guessLang, stateLang, firstGuess } from "../lib/langs.js";
 import { STR, t } from "../lib/strings.js";
 import { LETTERS, lettersFor, WORDS, WORD_KEYS, PICTURE, round, wordFor } from "../lib/book.js";
@@ -201,4 +202,13 @@ test("the admin panel is shut unless the request carries a good Cloudflare Acces
   const forged = (await sign(good)).split(".");
   forged[1] = b64(JSON.stringify({ ...good, email: "thief@example.com" }));
   assert.equal(await who(null, forged.join(".")), null);
+});
+
+test("the Open the app button uses an Android intent, with the start page in the tab as the way back", () => {
+  const android = "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 Chrome/131.0 Mobile Safari/537.36";
+  const url = openAppUrl(android, "https://bodhilabs.org");
+  assert.ok(url.startsWith("intent://bodhilabs.org/app#Intent;scheme=https;"));
+  assert.ok(url.includes("S.browser_fallback_url=https%3A%2F%2Fbodhilabs.org%2Fapp;") && url.endsWith(";end"));
+  assert.equal(openAppUrl("Mozilla/5.0 (Macintosh)", "https://bodhilabs.org"), "/app");
+  assert.equal(openAppUrl(android, "http://localhost:8787"), "/app");
 });
