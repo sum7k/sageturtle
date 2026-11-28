@@ -474,15 +474,16 @@ test("a lesson is scenes: a drawing and a spoken line, recorded once under the l
   const { lineUrl } = await import("../lib/voice.js");
   const { voice } = await import("../worker/voice.js");
   const art = (await import("node:fs")).readFileSync(new URL("../components/LessonArt.jsx", import.meta.url), "utf8");
-  assert.equal(lessonsOf("nature", 1).length, 3);
+  assert.equal(lessonsOf("nature", 1).length, 7);
   for (const l of LESSONS) {
+    assert.ok(l.by.hi && l.by.en && ["man", "woman"].includes(l.who) && l.scenes[0].art === "teller" && l.scenes[0].say.hi.startsWith(`मैं ${l.by.hi} हूँ`), `${l.id}: told by a named person, who says so first`);
     assert.ok(TRACKED.includes(`lesson:${l.id}`) && TRACKED.includes(`watched:${l.id}`));
     for (const s of l.scenes) {
       assert.ok(s.say.hi && s.say.en, `${l.id}: every line in Hindi and English`);
       assert.ok(new RegExp(`\\n  ${s.art}: \\(`).test(art), `${l.id}: the drawing "${s.art}" exists`);
     }
   }
-  const fire = LESSONS[0];
+  const fire = LESSONS.find((l) => l.id === "fire");
   assert.equal(lessonLang(fire, "hi"), "hi");
   assert.equal(lessonLang(fire, "ta"), "en"); // not written yet: heard in English
   assert.equal(lineText(lineId(fire, 2), "hi"), fire.scenes[2].say.hi);

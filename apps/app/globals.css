@@ -246,3 +246,15 @@ h1, h2, p { margin: 0; }
 .art .climb { animation: climb 4s ease-in-out infinite; }
 @keyframes climb { 0%, 100% { transform: translateY(20px); } 50% { transform: translateY(-90px); } }
 @media (prefers-reduced-motion: reduce) { .art .mv { animation-duration: 0.01s !important; animation-iteration-count: 1 !important; } }
+.art .hop { animation: hop 1.2s ease-in-out infinite; }
+@keyframes hop { 50% { transform: translateY(-16px); } }
+.art .wave { animation: wave 1s ease-in-out infinite; }
+@keyframes wave { 50% { transform: rotate(6deg) translateY(-4px); } }
+.art .flap { animation: flap 0.6s ease-in-out infinite; }
+@keyframes flap { 50% { transform: translateY(-14px) scale(1.06, 0.92); } }
+.art .crow { transform-origin: 50% 100%; animation: crow 2s ease-in-out infinite; }
+@keyframes crow { 50% { transform: rotate(-8deg) scale(1.06); } }
+.art .grow { transform-origin: 50% 100%; animation: grow 3.5s ease-out both; }
+@keyframes grow { from { transform: scale(0.05); } }
+.art .pull { animation: pull 3s ease-in-out both; }
+@keyframes pull { from { transform: translateY(40px); } 60%, to { transform: translateY(-40px); } }

@@ -14,13 +14,13 @@ const LEAST = 3500; // a scene stays at least this long, so the drawing is seen 
  * One lesson, played: a drawing that moves and a line spoken over it, scene after scene. Nothing is written.
  * The next scene comes when the line has been said. A press on the drawing holds it and a second press goes on;
  * the arrows go one scene back or forward; at the end the gold button plays it again. The dots show where we are.
- * The whole lesson is heard in one voice, a man's or a woman's, picked when it opens.
+ * The whole lesson is heard in one voice: its teller's (lesson.who), a man's or a woman's.
  */
 export default function Lesson({ lesson, lang, onClose }) {
   const [at, setAt] = useState(0);
   const [held, setHeld] = useState(false);
   const [ended, setEnded] = useState(false);
-  const who = useRef(Math.random() < 0.5 ? "man" : "woman");
+  const who = useRef(lesson.who ?? (Math.random() < 0.5 ? "man" : "woman"));
   const heardIn = lessonLang(lesson, lang);
   const last = lesson.scenes.length - 1;
 
@@ -44,7 +44,7 @@ export default function Lesson({ lesson, lang, onClose }) {
   return (
     <section className="lesson">
       <button type="button" className="stage" aria-label={held ? "Go on" : "Hold"} onClick={() => !ended && setHeld(!held)}>
-        <LessonArt key={at} art={lesson.scenes[at].art} still={held} />
+        <LessonArt key={at} art={lesson.scenes[at].art} prop={lesson.scenes[at].prop} still={held} />
         {held && <span className="round white big held"><Icon d={P.play} size={40} /></span>}
       </button>
       <div className="dots" aria-hidden="true">{lesson.scenes.map((_, i) => <i key={i} className={i === at ? "on" : i < at ? "seen" : ""} />)}</div>

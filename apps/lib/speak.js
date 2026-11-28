@@ -54,7 +54,10 @@ function speakPhone(text, locale, { voice, pitch }) {
     if (voice) u.voice = voice;
     u.pitch = pitch;
     u.rate = 0.85;
-    u.onend = u.onerror = done;
+    // Some phones never say that the voice has ended; then the length of the text decides.
+    const late = setTimeout(done, 4000 + text.length * 160);
+    late.unref?.();
+    u.onend = u.onerror = () => { clearTimeout(late); done(); };
     synth.speak(u);
   });
 }

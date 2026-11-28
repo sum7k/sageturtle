@@ -93,14 +93,73 @@ const ART = {
   each: () => (<Day>{["🐘", "🐄", "🦚", "🐟", "🐒"].map((p, i) => <E key={p} x={44 + i * 68} y={i % 2 ? 150 : 206} s={56} move="pop" delay={i * 0.9}>{p}</E>)}</Day>),
 };
 
+/** A child, whole. `on` rings one part in gold; `move` moves that part. */
+function Kid({ x = 180, y = 250, s = 1, c = "#6f8fd6", on, wave, hop }) {
+  const ring = (cx, cy, r) => <circle cx={cx} cy={cy} r={r} fill="none" stroke={SUN} strokeWidth="6" className="mv ringing" />;
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s})`}>
+      <g className={`mv ${hop ? "hop" : ""}`}>
+        <path d="M-16-70v64M16-70v64" stroke={SKIN} strokeWidth="16" strokeLinecap="round" />
+        <path d="M-26-8h18M8-8h18" stroke={NIGHT} strokeWidth="12" strokeLinecap="round" />
+        <g className={`mv ${wave ? "wave" : ""}`}><path d="M-30-132l-28 44M30-132l28-44" stroke={SKIN} strokeWidth="14" strokeLinecap="round" /></g>
+        <rect x="-32" y="-144" width="64" height="84" rx="20" fill={c} />
+        <circle cx="0" cy="-176" r="32" fill={SKIN} />
+        <path d="M-32-180a32 32 0 0 1 64 0c-16-14-48-14-64 0z" fill={NIGHT} />
+        <circle cx="-11" cy="-174" r="4" fill={NIGHT} /><circle cx="11" cy="-174" r="4" fill={NIGHT} />
+        <path d="M-10-162q10 8 20 0" fill="none" stroke={NIGHT} strokeWidth="3" strokeLinecap="round" />
+        {on === "head" && ring(0, -178, 44)}
+        {on === "hands" && <>{ring(-58, -88, 18)}{ring(58, -176, 18)}</>}
+        {on === "legs" && <>{ring(-16, -30, 30)}{ring(16, -30, 30)}</>}
+      </g>
+    </g>
+  );
+}
+const Room = ({ c = "#fff0bf", children }) => (<><rect width="360" height="300" fill={c} /><path d="M0 250h360v50H0z" fill="#ffe3dc" />{children}</>);
+const Soil = ({ children }) => (<><rect width="360" height="300" fill={SKY} /><circle cx="300" cy="50" r="28" fill={SUN} className="mv glow" /><path d="M0 190h360v110H0z" fill={EARTH} /><path d="M0 190q90-14 180 0t180 0v14H0z" fill={GRASS} />{children}</>);
+const Roots = ({ x, y }) => <path d={`M${x} ${y}v40M${x} ${y + 8}l-26 30M${x} ${y + 8}l26 30M${x - 12} ${y + 24}l-14 6M${x + 12} ${y + 24}l14 6`} fill="none" stroke={WOOD} strokeWidth="5" strokeLinecap="round" />;
+const Drops = ({ x, y = 90, n = 3 }) => Array.from({ length: n }, (_, i) => <E key={i} x={x + i * 24} y={y} s={26} move="fall" delay={i * 0.35}>💧</E>);
+const No = ({ x, y, r }) => (<g className="mv glow"><circle cx={x} cy={y} r={r} fill="none" stroke="#e5484d" strokeWidth="7" /><path d={`M${x - r * 0.7} ${y - r * 0.7}L${x + r * 0.7} ${y + r * 0.7}`} stroke="#e5484d" strokeWidth="7" /></g>);
+
+Object.assign(ART, {
+  // The teller says who they are: a person, and one thing of their work beside them.
+  teller: ({ prop }) => (<Room c="#fff0bf"><circle cx="180" cy="150" r="120" fill="#fff" opacity="0.6" className="mv glow" /><Person x="150" y="252" s={2} c="#8a6fb0" move="sway" /><E x="268" y="150" s={64} move="bob">{prop}</E></Room>),
+  // My body
+  body: () => (<Room><Kid hop /></Room>),
+  head: () => (<Room c="#ddf3e4"><Kid on="head" /></Room>),
+  hands: () => (<Room c="#e9e4ff"><Kid on="hands" wave /><E x="296" y="120" s={50} move="bob">🏺</E></Room>),
+  legs: () => (<Room c="#eaf4ff"><Kid on="legs" hop /></Room>),
+  wash: () => (<Room c="#eaf4ff"><Kid x={150} /><Drops x={110} y={40} n={4} /><path d="M236 262q60-20 124 0v38H236z" fill={WATER} /><E x="296" y="216" s={56} move="dip">🙌</E></Room>),
+  bodies: () => (<Room><Kid x={70} s={0.72} c="#e58fb0" /><Kid x={180} c="#6f8fd6" wave /><Kid x={290} s={0.86} c="#7fb894" /></Room>),
+  // Birds
+  wings: () => (<Day><Tree x="60" y="240" /><E x="180" y="110" s={90} move="flap">🐦</E><E x="290" y="150" s={40} move="fly">🐦</E></Day>),
+  parrot: () => (<Day><Tree x="300" y="244" /><path d="M0 150h210" stroke={WOOD} strokeWidth="12" strokeLinecap="round" /><E x="130" y="96" s={130} move="proud">🦜</E></Day>),
+  rooster: () => (<Day><E x="180" y="184" s={150} move="crow">🐓</E><E x="270" y="96" s={30} move="rise">🎵</E></Day>),
+  owl: () => (<Dark><circle cx="290" cy="60" r="22" fill="#e9e4ff" /><Tree x="110" y="244" c="#2f5a45" /><path d="M110 150h160" stroke="#6f4630" strokeWidth="12" strokeLinecap="round" /><E x="220" y="100" s={110} move="bob">🦉</E></Dark>),
+  duck: () => (<><rect width="360" height="300" fill={SKY} /><circle cx="300" cy="50" r="28" fill={SUN} className="mv glow" /><path d="M0 190q45-14 90 0t90 0 90 0 90 0v110H0z" fill={WATER} className="mv sway" /><E x="180" y="150" s={130} move="swim">🦆</E></>),
+  nest: () => (<Day><Tree x="320" y="244" /><path d="M96 200a84 50 0 0 0 168 0z" fill={WOOD} /><path d="M100 200h160" stroke="#6f4630" strokeWidth="8" strokeLinecap="round" />{[140, 180, 220].map((x, i) => <ellipse key={x} cx={x} cy={186} rx="18" ry="24" fill="#fff" className="mv pop" style={{ animationDelay: `${i * 0.6}s` }} />)}<g className="mv appear" style={{ animationDelay: "5s" }}><E x="180" y="150" s={54}>🐣</E></g></Day>),
+  // Plants
+  seed: () => (<Soil><ellipse cx="180" cy="236" rx="14" ry="10" fill={WOOD} className="mv glow" /></Soil>),
+  sprout: () => (<Soil><ellipse cx="180" cy="236" rx="14" ry="10" fill={WOOD} /><Drops x={156} y={70} /><g className="mv grow"><E x="180" y="166" s={70}>🌱</E></g></Soil>),
+  tree: () => (<Soil><Roots x={180} y={196} /><g className="mv grow"><Tree x="180" y="200" /></g></Soil>),
+  flower: () => (<Soil><Tree x="180" y="200" />{[[150, 96], [206, 88], [180, 130]].map(([x, y], i) => <E key={i} x={x} y={y} s={30} move="pop" delay={i * 0.6}>🌸</E>)}{[[136, 128], [226, 122]].map(([x, y], i) => <E key={i} x={x} y={y} s={30} move="pop" delay={3.4 + i * 0.6}>🥭</E>)}</Soil>),
+  shade: () => (<Day><ellipse cx="180" cy="250" rx="120" ry="16" fill={LEAF} opacity="0.5" /><g transform="translate(180 244) scale(1.5)"><Tree x={0} y={0} /></g><E x="150" y="96" s={34} move="bob">🐦</E><E x="220" y="130" s={28} move="bob" delay={0.6}>🥭</E><Person x="110" y="258" s={0.8} c="#6f8fd6" /><Person x="246" y="258" s={0.62} c="#e58fb0" /></Day>),
+  // What we eat
+  fruit: () => (<Day><Tree x="64" y="240" />{["🥭", "🍌", "🍇"].map((p, i) => <E key={p} x={140 + i * 80} y={170} s={76} move="pop" delay={i * 1.4}>{p}</E>)}</Day>),
+  roots: () => (<Soil><E x="120" y="216" s={84} move="pull">🥕</E><E x="244" y="236" s={76} move="pull" delay={1.6}>🍠</E></Soil>),
+  nuts: () => (<Day><E x="90" y="200" s={76} move="pop">🥜</E><E x="190" y="196" s={84} move="pop" delay={2.2}>🍯</E><E x="280" y="110" s={44} move="fly">🐝</E></Day>),
+  noteat: () => (<Day><E x="180" y="196" s={120}>🍄</E><No x={180} y={190} r={84} /></Day>),
+  askfirst: () => (<Day><Person x="130" y="252" s={1.25} c="#6f8fd6" /><Person x="230" y="252" s={0.9} c="#e58fb0" move="sway" /><E x="290" y="150" s={54} move="bob">🍄</E><E x="296" y="80" s={44} move="pop" delay={1.2}>❓</E></Day>),
+  drink: () => (<Day><path d="M0 220q45-14 90 0t90 0 90 0 90 0v80H0z" fill={WATER} className="mv sway" /><Kid x={110} y={236} s={0.8} /><E x="230" y="150" s={84} move="bob">💧</E></Day>),
+});
+
 export const ART_IDS = Object.keys(ART);
 
 /** One drawing, by its name. `still` holds every move (used while the lesson is paused). */
-export default function LessonArt({ art, still = false }) {
+export default function LessonArt({ art, prop, still = false }) {
   const Draw = ART[art];
   return (
     <svg aria-hidden="true" viewBox="0 0 360 300" className={`art${still ? " still" : ""}`}>
-      {Draw ? <Draw /> : <rect width="360" height="300" fill={SKY} />}
+      {Draw ? <Draw prop={prop} /> : <rect width="360" height="300" fill={SKY} />}
     </svg>
   );
 }
