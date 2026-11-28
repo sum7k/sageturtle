@@ -62,7 +62,7 @@ export function passages(lang, { lessons = LESSONS, upTo = Infinity } = {}) {
     if (lesson.stage > upTo) continue;
     const heardIn = lessonLang(lesson, lang);
     if (heardIn !== lang) continue; // a question in Tamil cannot be matched to English lines by their words
-    lesson.scenes.forEach((scene, i) => out.push({ id: lineId(lesson, i), lesson: lesson.id, scene: i, art: scene.art, lang, text: scene.say[lang] }));
+    lesson.scenes.forEach((scene, i) => out.push({ id: lineId(lesson, i), lesson: lesson.id, scene: i, art: scene.art, prop: scene.prop, who: lesson.who, lang, text: scene.say[lang] }));
   }
   return out;
 }
@@ -119,10 +119,12 @@ export function find(ix, question, most = 3, lang = ix.docs[0]?.passage.lang) {
 
 const made = new Map(); // one index per language, made the first time it is needed
 /** Ask the lessons a question in the learner's language. Lessons not yet written in it are searched in English. */
-export function answer(question, lang, most = 3) {
+export function answer(question, lang, most = 3, lessons = LESSONS) {
   for (const l of lang === "en" ? ["en"] : [lang, "en"]) {
-    if (!made.has(l)) made.set(l, index(passages(l)));
-    const got = find(made.get(l), question, most);
+    const key = lessons === LESSONS ? l : null; // only the app's own lessons are kept
+    const ix = (key && made.get(key)) || index(passages(l, { lessons }));
+    if (key) made.set(key, ix);
+    const got = find(ix, question, most);
     if (got.length) return got;
   }
   return [];

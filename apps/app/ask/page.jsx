@@ -42,7 +42,7 @@ export default function Ask() {
   };
   const show = (lines, at) => {
     const line = lines[at].passage;
-    sayLine(line.id, line.text, line.lang, who.current);
+    sayLine(line.id, line.text, line.lang, line.who ?? who.current); // the lesson's own teller
   };
   const ask = (asked = text) => {
     const mine = asked.trim();
@@ -83,7 +83,7 @@ export default function Ask() {
         <section className="panel talk found">
           <p className="mine" dir="auto">{found.asked}</p>
           <button type="button" className="stage" aria-label="Hear again" onClick={() => show(found.lines, found.at)}>
-            <LessonArt key={line.passage.id} art={line.passage.art} />
+            <LessonArt key={line.passage.id} art={line.passage.art} prop={line.passage.prop} />
           </button>
           <p className="theirs" dir="auto" lang={line.passage.lang}>{line.passage.text}</p>
           <div className="foot">
