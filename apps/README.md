@@ -11,7 +11,8 @@ Until 2026-11-28 the product was called SageTurtle.
   chooses it. One tile is picked in advance from the phone's language, or from the state the person is in
   (`firstGuess` in `lib/langs.js`). The drawings are placeholders, with no religious symbols.
 - **Every level is a 4 by 4 grid** (`components/Grid.jsx`, `lib/grid.js`). The twelve outer boxes are the level's
-  twelve houses, house 1 top left and then round with the clock. On Home (`app/home`) they are the eleven subjects
+  twelve houses, house 1 top left and then round with the clock. On Home (`app/home`, `lib/top.js`) house 1 is Gyan,
+  house 2 is Vartaman (not built, only counted) and ten are empty. Inside Gyan (`app/gyan`) they are the eleven subjects
   and Lives (`lib/subjects.js`), turned by the rising sign (`lib/lagna.js`), whose subject is in house 1. Inside
   Word (`app/word`, `lib/word.js`) they are Word's own twelve houses in order; only Letters is open, and it is the
   word game. A press on a closed box is only counted. The language button is in the top corner of Home.
@@ -57,7 +58,7 @@ The pages are static files (`next build` writes `out/`). Cloudflare serves them 
 | Table | One row per | Used for |
 | :--- | :--- | :--- |
 | `users` | phone that chose a language | users, new and active users; language; place and work once registered |
-| `taps` | person, thing and day | taps (sum of `count`) and distinct users (count of people). The thing is `word`, `book` (the word game), `subject:<id>`, `word:<house>`, `lives`, `life:<id>` (a life shown), `heard`, `centre:<box>`, `answer` or `right` |
+| `taps` | person, thing and day | taps (sum of `count`) and distinct users (count of people). The thing is `gyan`, `vartaman`, `top:<house>`, `word`, `book` (the word game), `subject:<id>`, `word:<house>`, `lives`, `life:<id>` (a life shown), `heard`, `centre:<box>`, `answer` or `right` |
 | `questions` | question from the Ask box | waiting and answered questions |
 | `wishes` | (unused) | answers to a question that was removed on 2026-11-28 |
 

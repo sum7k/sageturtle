@@ -2,6 +2,7 @@
 import { BOOK, WORD, tapName } from "../lib/buttons.js";
 import { CENTRE } from "../lib/grid.js";
 import { WORD_HOUSES } from "../lib/word.js";
+import { TOP } from "../lib/top.js";
 import { SUBJECTS } from "../lib/subjects.js";
 import { LIVES } from "../lib/lives.js";
 import { LANGS } from "../lib/langs.js";
@@ -45,14 +46,17 @@ export async function adminData(db, now = Date.now()) {
       { step: "Opened the first page", ...counted("visit") },
       { step: "Installed the app", ...counted("install") },
       { step: "Chose a language", today: u.new_today, week: u.new_week, total: u.total },
+      { step: "Opened Gyan", ...people("gyan") },
       { step: "Opened Word", ...people(WORD.id) },
       { step: "Opened the word game", ...people(BOOK.id) },
       { step: "Picked a word", ...people("answer") },
       { step: "Got a word right", ...people("right") },
     ],
     book: { ...zero, ...by[BOOK.id] },
-    // Home: for each subject, how many people pressed it and how often.
-    subjects: SUBJECTS.map((x) => ({ id: x.id, picture: x.picture, name: x.name.en, open: !!x.open, ...zero, ...by[tapName("home", x)] }))
+    // Home, the top level: Gyan, Vartaman and the ten empty boxes.
+    top: TOP.map((x, i) => ({ n: i + 1, id: x.id, picture: x.picture, name: x.name.en || "Empty box", open: !!x.open, ...zero, ...by[tapName("top", x)] })),
+    // Inside Gyan: for each subject, how many people pressed it and how often.
+    subjects: SUBJECTS.map((x) => ({ id: x.id, picture: x.picture, name: x.name.en, open: !!x.open, ...zero, ...by[tapName("gyan", x)] }))
       .sort((a, b) => b.users - a.users || b.taps - a.taps),
     // Inside Word: its twelve houses, in order.
     houses: WORD_HOUSES.map((x, i) => ({ n: i + 1, id: x.id, picture: x.picture, name: x.name.en, open: !!x.open, ...zero, ...by[tapName("word", x)] })),
@@ -109,6 +113,8 @@ ${d.questions.done.length ? `<details><summary>Answered</summary>${d.questions.d
 <section><h2>How far people get</h2><div class="card">${table(["Step", "Today", "7 days", "All"],
     d.funnel.map((f) => [`${esc(f.step)}<span class="bar" style="width:${Math.round((f.total / top) * 100)}%"></span>`, num(f.today), num(f.week), num(f.total)]))}</div>
 <p class="muted">The first two rows count browsers and installs, a browser at most once a day. The other rows count people, each once.</p></section>
+<section><h2>Home</h2><div class="card">${table(["House", "People", "Presses", "Today"],
+    d.top.map((x) => [`${x.n}. <span class="pic">${x.picture}</span>${esc(x.name)}${x.open ? "" : ' <span class="tag">closed</span>'}`, num(x.users), num(x.taps), num(x.taps_today)]))}</div></section>
 <section><h2>Subjects pressed</h2><div class="card">${table(["Subject", "People", "Presses", "Today"], [
     ...d.subjects.map((x) => [`<span class="pic">${x.picture}</span>${esc(x.name)}${x.open ? "" : ' <span class="tag">closed</span>'}`, num(x.users), num(x.taps), num(x.taps_today)]),
     ...d.centre.map((x) => [`<span class="pic">${x.picture}</span>${esc(x.name)} <span class="tag">middle</span>`, num(x.users), num(x.taps), num(x.taps_today)]),
