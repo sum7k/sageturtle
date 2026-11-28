@@ -4,8 +4,12 @@
 // next, and a place to ask a question.
 import { names } from "./subjects.js";
 
-/** Where each house sits, as [row, column] from 1: house 1 is the top left box and the rest go round with the clock. */
-export const AROUND = [[1, 1], [1, 2], [1, 3], [1, 4], [2, 4], [3, 4], [4, 4], [4, 3], [4, 2], [4, 1], [3, 1], [2, 1]];
+/**
+ * Where each house sits, as [row, column] from 1 (sumeet, 2026-11-28). The bottom right box is always the last
+ * house, the twelfth. Counting starts in the box just left of it: house 1, then left along the bottom row, up the
+ * left side, right along the top row, and down the right side to end in the bottom right.
+ */
+export const AROUND = [[4, 3], [4, 2], [4, 1], [3, 1], [2, 1], [1, 1], [1, 2], [1, 3], [1, 4], [2, 4], [3, 4], [4, 4]];
 
 /** The four in the middle. Each opens its own page (app/past, app/now, app/next, app/ask). */
 export const CENTRE = [

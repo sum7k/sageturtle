@@ -11,7 +11,8 @@ Until 2026-11-28 the product was called SageTurtle.
   chooses it. One tile is picked in advance from the phone's language, or from the state the person is in
   (`firstGuess` in `lib/langs.js`). The drawings are placeholders, with no religious symbols.
 - **Every level is a 4 by 4 grid** (`components/Grid.jsx`, `lib/grid.js`). The twelve outer boxes are the level's
-  twelve houses, house 1 top left and then round with the clock. On Home (`app/home`, `lib/top.js`) house 1 is Gyan,
+  twelve houses: the twelfth is always bottom right, house 1 is just left of it, and the count runs left along the
+  bottom, up the left side, across the top and down the right side. On Home (`app/home`, `lib/top.js`) house 1 is Gyan,
   house 2 is Vartaman (not built, only counted) and ten are empty. Inside Gyan (`app/gyan`, `lib/stages.js`) they are
   the twelve stages of the path: the learner's stage and those behind it are open, the rest closed. Inside a stage
   (`app/stage?n=`) they are the eleven subjects and Lives (`lib/subjects.js`), turned by the rising sign

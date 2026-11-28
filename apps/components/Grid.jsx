@@ -10,7 +10,7 @@ import { tap } from "@/lib/track";
 
 /**
  * The 4 by 4 grid that every level shows. `houses` are the twelve of this level, house 1 first; they fill the outer
- * boxes, starting top left and going round with the clock. A house with `open` is entered; any other only shakes and
+ * boxes in the order of AROUND (lib/grid.js): the twelfth is bottom right, and house 1 is just left of it. A house with `open` is entered; any other only shakes and
  * is counted. `first` is the house to ring in gold (on Home, the one of the rising sign). The four boxes in the
  * middle are the same on every level.
  */
