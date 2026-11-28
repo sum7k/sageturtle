@@ -3,6 +3,8 @@
 // No drawing holds a written word, so one drawing serves every language. Animals and fruit are the phone's own
 // emoji, as elsewhere in the app; fire, people, land and sky are drawn here.
 
+import { ZERO_ART } from "./art/zero";
+
 const NIGHT = "#14174a", DUSK = "#2b2f5e", SKY = "#cfe8ff", HILL = "#bfe6cc", GRASS = "#7fb894", LEAF = "#5a9c74";
 const SUN = "#ffc531", FLAME = "#ff8a3d", EARTH = "#c9a27a", STONE = "#9aa0b5", WOOD = "#8a5a3c", SKIN = "#c68a5e", WATER = "#8fd0f5";
 
@@ -151,6 +153,9 @@ Object.assign(ART, {
   askfirst: () => (<Day><Person x="130" y="252" s={1.25} c="#6f8fd6" /><Person x="230" y="252" s={0.9} c="#e58fb0" move="sway" /><E x="290" y="150" s={54} move="bob">🍄</E><E x="296" y="80" s={44} move="pop" delay={1.2}>❓</E></Day>),
   drink: () => (<Day><path d="M0 220q45-14 90 0t90 0 90 0 90 0v80H0z" fill={WATER} className="mv sway" /><Kid x={110} y={236} s={0.8} /><E x="230" y="150" s={84} move="bob">💧</E></Day>),
 });
+
+// Chapters for older learners keep their drawings in their own files (components/art).
+Object.assign(ART, ZERO_ART);
 
 export const ART_IDS = Object.keys(ART);
 

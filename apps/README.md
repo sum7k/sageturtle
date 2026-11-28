@@ -37,6 +37,11 @@ Until 2026-11-28 the product was called SageTurtle.
   itself (CSS, no animation library) and one spoken line (a Sarvam recording made once, `/api/voice?line=fire.2`). One
   drawing serves every language. Nature (`app/nature`) is open inside Gyan with the first seven: my body, the five senses,
   fire, animals, birds, plants and what we eat, in Hindi and English; other languages hear English until their lines are written.
+- **Chapters, for learners who read** (`lib/chapters/`, `lib/narrators.js`, `components/art/`, `components/Practice.jsx`):
+  the same lesson player, with the spoken line also written under the drawing, the narrator named ("told in the voice
+  of X", see CLAUDE.md), one voice from start to end, and a few unmarked sums after the last scene. Number
+  (`app/number`) is open inside Gyan with one sample chapter of stage 6, "Zero, fortune and debt", told in the voice of
+  Brahmagupta: six lessons, 44 scenes, in Hindi and English.
 - **Gyan** (the reading app; `book` in the code, `lib/book.js`). Everything spoken is heard twice, in a man's and a
   woman's voice (`lib/speak.js`): a Sarvam recording made once and kept in Cloudflare KV (`worker/voice.js`), or the
   phone's own voice when there is none. The Sarvam key is the Worker secret `SARVAM_API_KEY`.
