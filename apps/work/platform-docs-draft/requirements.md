@@ -1,6 +1,6 @@
 > DRAFT, stopped on 2026-11-26. sumeet: this cannot be written until each of the ten remaining apps is designed. Not agreed, not for guidance. Per-app parts are guesses from the design map.
 
-# BodhiLabs: requirements that are not features
+# CubeGullak: requirements that are not features
 
 Written 2026-11-26. One set for the whole platform, because the backend is shared. What each app does is in the design
 map (`variant-map.html`); this file says how well the platform must do it. Privacy needs are in `privacy.md`. The design
@@ -99,7 +99,7 @@ Measured on a cheap Android phone (2 GB memory) on a slow 4G line, in India.
 - Live speech on a server costs roughly 0.5 rupee a minute at usual vendor prices (estimate, vendors not yet compared;
   see `shell/backlog.md` "Price of voice"). One minute a day would cost about 15 rupees a month, 300 times everything
   else. This is why the phone's own recognition comes first.
-- (C) Video is never stored or sent by BodhiLabs. It plays from YouTube. Music plays from Spotify.
+- (C) Video is never stored or sent by CubeGullak. It plays from YouTube. Music plays from Spotify.
 
 ## 7. Phones and browsers
 

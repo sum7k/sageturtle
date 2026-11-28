@@ -396,7 +396,7 @@
   "heading": {
    "kind": "title1",
    "maxW": 4620,
-   "text": "BodhiLabs shell: first run and home",
+   "text": "CubeGullak shell: first run and home",
    "w": 240,
    "x": -940,
    "y": -300
@@ -490,7 +490,7 @@
   },
   "handoff": {
    "fill": "green",
-   "text": "BodhiLabs does not carry one-to-one calls and messages itself. Each row has two buttons: the handset opens the phone's dialer, and the second opens the chat in the app that person chose in Reach me (WhatsApp, Telegram or SMS). These are plain links, with no fees. Reach me is one optional number and one app; it is not the account and is never checked by OTP. WhatsApp has no link that starts a call, so a call always goes to the dialer. Kids are never handed off: they keep calls and messages inside the app, with guardians only. Groups (speak to the class, class chat, class call) also stay inside the app.",
+   "text": "CubeGullak does not carry one-to-one calls and messages itself. Each row has two buttons: the handset opens the phone's dialer, and the second opens the chat in the app that person chose in Reach me (WhatsApp, Telegram or SMS). These are plain links, with no fees. Reach me is one optional number and one app; it is not the account and is never checked by OTP. WhatsApp has no link that starts a call, so a call always goes to the dialer. Kids are never handed off: they keep calls and messages inside the app, with guardians only. Groups (speak to the class, class chat, class call) also stay inside the app.",
    "w": 560,
    "x": 3420,
    "y": 6364
@@ -523,7 +523,7 @@
    "w": 560,
    "x": 2820,
    "y": 11764,
-   "text": "Messages is the door to people. For adults it shows the lists from Me, with the list that fits their work first (here trade, for a person who farms and runs a shop). A row hands off: the handset opens the phone's dialer and the mark opens that person's chat in WhatsApp, Telegram or SMS. BodhiLabs keeps no one-to-one chat for adults. The number comes from that person's Reach me; a person who left it empty has no buttons. The white band on top holds what stays inside the app: a guardian's chats with a child, and the class. In-app messages are voice notes and stickers; typing is one tap away. A parent sees the child's chats with every guardian. A kid sees only guardians, as big faces. The class chat is seen by the teacher. A teacher's notice to a class of kids goes to the parents, and only in office hours."
+   "text": "Messages is the door to people. For adults it shows the lists from Me, with the list that fits their work first (here trade, for a person who farms and runs a shop). A row hands off: the handset opens the phone's dialer and the mark opens that person's chat in WhatsApp, Telegram or SMS. CubeGullak keeps no one-to-one chat for adults. The number comes from that person's Reach me; a person who left it empty has no buttons. The white band on top holds what stays inside the app: a guardian's chats with a child, and the class. In-app messages are voice notes and stickers; typing is one tap away. A parent sees the child's chats with every guardian. A kid sees only guardians, as big faces. The class chat is seen by the teacher. A teacher's notice to a class of kids goes to the parents, and only in office hours."
   },
   "messages2": {
    "fill": "green",
@@ -576,5 +576,5 @@
   "Messages-Class-Teacher.dc.html"
  ],
  "pages": [],
- "title": "BodhiLabs shell screens"
+ "title": "CubeGullak shell screens"
 }

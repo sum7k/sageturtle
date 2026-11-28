@@ -6,7 +6,7 @@ export const STEPS = ["language", "lock", "place", "variant", "alerts"];
 
 export function blank() {
   // `variants` is everything the person does; `variant` is the first of them. `uid` is the id the server gave at registration.
-  // `sign` is the person's sign in Horoscope. `reach` is how others may call or message this person outside BodhiLabs; it is not the account.
+  // `sign` is the person's sign in Horoscope. `reach` is how others may call or message this person outside CubeGullak; it is not the account.
   return { v: 1, uid: "", lang: "", lock: "", pin: "", variants: [], variant: "", alerts: "", name: "", username: "", sign: "", people: {}, reach: blankReach() };
 }
 

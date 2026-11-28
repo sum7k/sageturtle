@@ -1,4 +1,4 @@
-// BodhiLabs is for education only (sumeet, 2026-11-28). Every stage of Gyan (lib/stages.js) shows the eleven subjects of the path and Lives (जीवनी),
+// CubeGullak is for education only (sumeet, 2026-11-28). Every stage of Gyan (lib/stages.js) shows the eleven subjects of the path and Lives (जीवनी),
 // twelve in all, one for each sign of the zodiac. They sit in the twelve outer boxes of a 4x4 grid (components/Grid.jsx)
 // and turn with the lagna (lib/lagna.js): the subject of the rising sign is in house 1, and the others follow in order.
 // The subjects are the eleven labels of the Gyan path (gyan/docs/syllabus-map.md). Which sign holds which subject

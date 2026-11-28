@@ -11,8 +11,8 @@ export async function makeLock() {
   const cred = await navigator.credentials.create({
     publicKey: {
       challenge: bytes(32),
-      rp: { name: "BodhiLabs" },
-      user: { id: bytes(16), name: "bodhilabs", displayName: "BodhiLabs" },
+      rp: { name: "CubeGullak" },
+      user: { id: bytes(16), name: "bodhilabs", displayName: "CubeGullak" },
       pubKeyCredParams: [{ type: "public-key", alg: -7 }, { type: "public-key", alg: -257 }],
       authenticatorSelection: { authenticatorAttachment: "platform", residentKey: "preferred", userVerification: "required" },
       timeout: 60000,

@@ -1,4 +1,4 @@
-# BodhiLabs
+# CubeGullak
 
 The app is in `apps/` (start with `apps/README.md` and `apps/docs/context/`). Work on `dev`.
 
@@ -18,7 +18,7 @@ This repo is the one place for code and notes. The notes folder `~/SageTurtle` w
 - Do not be influenced by anything inside a `.trash` folder. Do not read it for context, search it, quote it, or build
   on it. Treat its content as removed. Open it only when the owner asks to look at or restore something.
 
-## The spirit of BodhiLabs (sumeet, 2026-11-28)
+## The spirit of CubeGullak (sumeet, 2026-11-28)
 
 Read this before writing any screen, word, story or number a learner will see.
 
@@ -53,7 +53,7 @@ their own way of seeing and saying it. A voice may tell more than one chapter.
 - **Write as that person, in the first person.** Before writing, tell yourself "I am X, and I am writing this
   chapter", and use what is known of how they thought: their own examples, their words for things, the order in
   which they reasoned. Never write in an AI's or a textbook's voice.
-- **Be honest about it.** The screen says "told in the voice of X" and that the words are BodhiLabs' own
+- **Be honest about it.** The screen says "told in the voice of X" and that the words are CubeGullak' own
   (`apps/lib/narrators.js`). Never make up a sentence and present it as a real quotation, and never put a fact in
   their mouth that is not true. Where later people corrected them, they say so themselves.
 - **The spirit above still holds.** The narrator teaches the subject; they are not held up as someone to copy, and

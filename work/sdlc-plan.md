@@ -7,7 +7,7 @@ Status: ✅ done · 🟡 partly done · ⏳ waiting on sumeet · ⬜ not started
 
 ## Next, in order
 
-1. ⏳ sumeet: deploy the BodhiLabs launch build and set up Cloudflare Access for `/admin` (steps in the repository's `apps/README.md`). The build is on `dev`: 11 buttons, tap counts, admin panel, words in 11 languages (2026-11-28).
+1. ⏳ sumeet: deploy the CubeGullak launch build and set up Cloudflare Access for `/admin` (steps in the repository's `apps/README.md`). The build is on `dev`: 11 buttons, tap counts, admin panel, words in 11 languages (2026-11-28).
 2. ✅ Reach me is agreed (sumeet, 2026-11-28). Its code is on the `dev` branch.
 3. 🟡 Cloudflare: the Wrangler config, the Worker and the D1 database `bodhilabs` exist; nothing is deployed yet.
 4. ⬜ Close the shell's screen gaps (listed in `apps/docs/context/open.md`).

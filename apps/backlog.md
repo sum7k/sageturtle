@@ -1,4 +1,4 @@
-# BodhiLabs apps: backlog
+# CubeGullak apps: backlog
 
 Things parked on purpose. Each line says what it is and what it needs before work can start. Newest at the bottom.
 
@@ -6,5 +6,5 @@ Things parked on purpose. Each line says what it is and what it needs before wor
 - **Age check for adult accounts.** Until this is solved, a child can sign up alone as an adult. Options looked at on 2026-11-26: Aadhaar or PAN card OCR (legal limits on storing Aadhaar), payment as a signal (no longer fits, the apps are free), a face scan with a head tilt and no saved picture (strong for children against adults, weak near 18, needs a pass mark near 21, not tested on Indian faces or cheap cameras), voice (errors of 4 to 10 years, easy to fool). Needs: a choice of method, and a rule for adults aged 18 to 21 who fail a face scan.
 - **Wire agency licence for full news rights.** PTI or ANI. Ordinary news APIs do not grant the right to republish. Needs: a price quote and a budget.
 - **X developer account for Khabri's topics.** Khabri reads about 20 chosen X handles through X's paid API (cap 10,000 posts, about 50 US dollars a month). The use case stated at sign-up is binding. Needs: open the account, state the use case exactly (posts are used only as pointers to topics, never rewritten, translated or shown changed), and ask X whether an app that earns from ads and subscriptions needs the Enterprise plan.
-- Khabri repo still writes and shows four levels (Novice to Advanced, level buttons, "Go deeper", level remembered per topic). Change the pipeline, the card and its CLAUDE.md to one continuous khabar, easy first, when Khabri is built into BodhiLabs.
+- Khabri repo still writes and shows four levels (Novice to Advanced, level buttons, "Go deeper", level remembered per topic). Change the pipeline, the card and its CLAUDE.md to one continuous khabar, easy first, when Khabri is built into CubeGullak.
 - **Requirements, privacy and high-level design for all 12 apps.** Three documents for `docs/`: `requirements.md`, `privacy.md` (DPDP law, parental consent, threat model) and `hld.md` (Cloudflare design, data model, flows, Khabri pipeline). sumeet stopped this on 2026-11-26: it cannot be written until each of the ten remaining apps is designed. A stopped draft is in `work/platform-docs-draft/`; its looked-up facts (DPDP duties start about 13 May 2027; Cloudflare limits) are still useful, its per-app parts are guesses. Needs: the ten apps designed.

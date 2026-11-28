@@ -41,7 +41,7 @@ meaning; class 3 reads at least 60.
 **Teaching at the Right Level** (Pratham): children are tested with the ASER ladder, grouped by what they can do and
 not by their class, and taught from there. In Uttar Pradesh, 10 to 20 day camps raised language scores by 0.70
 standard deviations, a very large gain; in Haryana one hour a day in school gave 0.15 (Banerjee and others 2016).
-This is the best Indian evidence, and BodhiLabs already works this way: the learner's level, not age, decides the step.
+This is the best Indian evidence, and CubeGullak already works this way: the learner's level, not age, decides the step.
 
 **Duolingo.** What it does, and how strong the proof is:
 

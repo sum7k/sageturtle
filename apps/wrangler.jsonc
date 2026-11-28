@@ -3,6 +3,8 @@
   "name": "bodhilabs",
   "main": "worker/index.js",
   "compatibility_date": "2026-11-01",
+  // CubeGullak. The Worker, its database and its store keep their first name, bodhilabs: renaming them would
+  // make new, empty ones.
   // The app is static files in ./out (made by `npm run build`). They are served without running the Worker.
   // Only /api and /admin run the Worker, so the cost follows taps, not page views.
   "assets": {
@@ -25,8 +27,11 @@
     "ACCESS_TEAM_DOMAIN": "",
     "ACCESS_AUD": ""
   },
-  // Cloudflare creates the DNS records and certificates for these automatically.
+  // Cloudflare creates the DNS records and certificates for these automatically. cubegullak.com is the name now
+  // (sumeet, 2026-11-28); bodhilabs.org stays attached and sends people on to cubegullak.com.
   "routes": [
+    { "pattern": "cubegullak.com", "custom_domain": true },
+    { "pattern": "www.cubegullak.com", "custom_domain": true },
     { "pattern": "bodhilabs.org", "custom_domain": true },
     { "pattern": "www.bodhilabs.org", "custom_domain": true }
   ],

@@ -15,7 +15,7 @@
 - शब्द: names of the 12 houses in the other ten languages.
 - Lessons: after sumeet's review of the first three (Nature: fire, senses, animals), write the rest of stage 1, subject by subject, then the lines in the other ten languages.
 - Lessons: the "hear the word, tap the picture" check after a lesson.
-- Ask: try the small model at bodhilabs.org/lab on a real Android phone and on a Mac; decide when it may download (Wi-Fi only, asked first, or never).
+- Ask: try the small model at cubegullak.com/lab on a real Android phone and on a Mac; decide when it may download (Wi-Fi only, asked first, or never).
 - Ask: move Transformers.js and the model files to Cloudflare R2; an embedding model for meaning (multilingual-e5-small, 118 MB) if word matching misses too much.
 - Ask: search the Lives too; load lines stage by stage when more stages are written; show ask:found, ask:near and ask:none in /admin.
 - Ask: run the phone's model in a web worker; show cloud answers used (`cloud` in taps) in /admin; a KV namespace of its own for kept answers.

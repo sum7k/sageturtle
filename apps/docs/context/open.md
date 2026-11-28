@@ -2,7 +2,7 @@
 
 ## Waiting on sumeet
 
-- Deploy BodhiLabs and set up Cloudflare Access for `/admin` (`apps/README.md`).
+- Deploy CubeGullak and set up Cloudflare Access for `/admin` (`apps/README.md`).
 - Look at the 11 language drawings and say which to change.
 - Check Claude's choices marked (C) in `decisions.md`, above all: the limit of three variants, the five clashing pairs, the group tile names and the table of lists per variant.
 - Find five people for the Messages test (`apps/messages/docs/case.md`): a shopkeeper, a farmer, a parent of a young child, a teacher and a person over 60.

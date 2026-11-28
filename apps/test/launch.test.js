@@ -88,7 +88,7 @@ test("a sign gets one line a day, and two signs do not share it", () => {
 
 const NOW = Date.UTC(2026, 10, 28, 6); // 11:30 in India
 const env = () => ({ DB: testDb(), ASSETS: { fetch: async () => new Response("page") } });
-const post = (e, path, body, now = NOW) => handle(new Request(`https://bodhilabs.org${path}`, { method: "POST", body: JSON.stringify(body) }), e, now);
+const post = (e, path, body, now = NOW) => handle(new Request(`https://cubegullak.com${path}`, { method: "POST", body: JSON.stringify(body) }), e, now);
 const signUp = async (e, profile = { lang: "hi" }, now = NOW) => (await (await post(e, "/api/register", profile, now)).json()).id;
 
 test("the day changes at midnight in India", () => {
@@ -115,7 +115,7 @@ test("a phone gets an id with only a language, a bad profile is refused, and a k
 
 test("the admin panel is shut unless the request carries a good Cloudflare Access signature", async () => {
   const e = env();
-  const get = (headers = {}, extra = {}, url = "https://bodhilabs.org/admin") => handle(new Request(url, { headers }), { ...e, ...extra }, NOW);
+  const get = (headers = {}, extra = {}, url = "https://cubegullak.com/admin") => handle(new Request(url, { headers }), { ...e, ...extra }, NOW);
   assert.equal((await get()).status, 403);
   assert.equal((await get({ "cf-access-jwt-assertion": "a.b.c" }, { ACCESS_TEAM_DOMAIN: "t.cloudflareaccess.com", ACCESS_AUD: "aud" })).status, 403);
   assert.equal((await get({}, { ADMIN_DEV: "yes" })).status, 403); // the developer switch works only on localhost
@@ -131,7 +131,7 @@ test("the admin panel is shut unless the request carries a good Cloudflare Acces
   };
   const cfg = { ACCESS_TEAM_DOMAIN: "team.cloudflareaccess.com", ACCESS_AUD: "aud123" };
   const certs = async () => new Response(JSON.stringify({ keys: [jwk] }));
-  const who = async (claims, token) => accessEmail(new Request("https://bodhilabs.org/admin", { headers: { "cf-access-jwt-assertion": token ?? (await sign(claims)) } }), cfg, NOW, certs);
+  const who = async (claims, token) => accessEmail(new Request("https://cubegullak.com/admin", { headers: { "cf-access-jwt-assertion": token ?? (await sign(claims)) } }), cfg, NOW, certs);
   const good = { aud: ["aud123"], iss: "https://team.cloudflareaccess.com", exp: NOW / 1000 + 600, email: "owner@example.com" };
   assert.equal(await who(good), "owner@example.com");
   assert.equal(await who({ ...good, aud: ["other"] }), null);
@@ -144,10 +144,10 @@ test("the admin panel is shut unless the request carries a good Cloudflare Acces
 
 test("the Open the app button uses an Android intent, with the start page in the tab as the way back", () => {
   const android = "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 Chrome/131.0 Mobile Safari/537.36";
-  const url = openAppUrl(android, "https://bodhilabs.org");
-  assert.ok(url.startsWith("intent://bodhilabs.org/app#Intent;scheme=https;"));
-  assert.ok(url.includes("S.browser_fallback_url=https%3A%2F%2Fbodhilabs.org%2Fapp;") && url.endsWith(";end"));
-  assert.equal(openAppUrl("Mozilla/5.0 (Macintosh)", "https://bodhilabs.org"), "/app");
+  const url = openAppUrl(android, "https://cubegullak.com");
+  assert.ok(url.startsWith("intent://cubegullak.com/app#Intent;scheme=https;"));
+  assert.ok(url.includes("S.browser_fallback_url=https%3A%2F%2Fcubegullak.com%2Fapp;") && url.endsWith(";end"));
+  assert.equal(openAppUrl("Mozilla/5.0 (Macintosh)", "https://cubegullak.com"), "/app");
   assert.equal(openAppUrl(android, "http://localhost:8787"), "/app");
 });
 
@@ -265,22 +265,22 @@ test("the phone remembers which words go well and which need practice", () => {
 
 test("a question reaches the admin panel and the answer comes back to the phone that asked", async () => {
   const e = { ...env(), ADMIN_KEY: "open-sesame-42", VOICE: { get: async () => null, put: async () => {} } };
-  const signIn = await handle(new Request("https://bodhilabs.org/admin", { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ key: "open-sesame-42" }) }), e, NOW);
+  const signIn = await handle(new Request("https://cubegullak.com/admin", { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ key: "open-sesame-42" }) }), e, NOW);
   const cookie = signIn.headers.get("set-cookie").split(";")[0];
   const a = await signUp(e), b = await signUp(e, { lang: "ta" });
   assert.equal((await post(e, "/api/ask", { user: a, text: "  मुझे गिनती कब मिलेगी?  " })).status, 200);
   assert.equal((await post(e, "/api/ask", { user: a, text: "" })).status, 400);
   assert.equal((await post(e, "/api/ask", { user: a, text: "x".repeat(501) })).status, 400);
   assert.equal((await post(e, "/api/ask", { user: "00000000-0000-0000-0000-000000000000", text: "hello" })).status, 404);
-  const list = async (id) => (await handle(new Request(`https://bodhilabs.org/api/ask?user=${id}`), e, NOW)).json();
+  const list = async (id) => (await handle(new Request(`https://cubegullak.com/api/ask?user=${id}`), e, NOW)).json();
   let mine = (await list(a)).questions;
   assert.deepEqual(mine.map((q) => [q.text, q.reply]), [["मुझे गिनती कब मिलेगी?", ""]]);
   assert.deepEqual((await list(b)).questions, []);
-  assert.equal((await handle(new Request("https://bodhilabs.org/api/ask?user=nobody"), e, NOW)).status, 404);
+  assert.equal((await handle(new Request("https://cubegullak.com/api/ask?user=nobody"), e, NOW)).status, 404);
   const d = await adminData(e.DB, NOW);
   assert.deepEqual(d.questions.open.map((q) => [q.lang, q.text]), [["hi", "मुझे गिनती कब मिलेगी?"]]);
   assert.match(await adminPage(e.DB, NOW, "x"), /Questions \(1 waiting\)/);
-  const answer = (env2, id, reply, headers = {}) => handle(new Request("https://bodhilabs.org/admin/reply", { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded", ...headers }, body: new URLSearchParams({ id, reply }) }), env2, NOW);
+  const answer = (env2, id, reply, headers = {}) => handle(new Request("https://cubegullak.com/admin/reply", { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded", ...headers }, body: new URLSearchParams({ id, reply }) }), env2, NOW);
   assert.equal((await answer(e, mine[0].id, "soon")).status, 403, "only the owner answers");
   assert.equal((await answer(e, mine[0].id, "soon", { cookie, origin: "https://evil.example" })).status, 403);
   assert.equal((await answer(e, mine[0].id, "जल्दी ही <b>", { cookie })).status, 303);
@@ -347,10 +347,10 @@ test("counts from an unknown phone, for unknown things, or to a removed address 
   const id = await signUp(e);
   assert.equal((await post(e, "/api/tap", { user: id, taps: { nothing: 1 } })).status, 400);
   assert.equal((await post(e, "/api/wish", { user: id, text: "anything" })).status, 404);
-  assert.equal((await handle(new Request("https://bodhilabs.org/api/tap"), e, NOW)).status, 405);
-  assert.equal((await handle(new Request("https://bodhilabs.org/api/other"), e, NOW)).status, 404);
-  assert.equal(await (await handle(new Request("https://bodhilabs.org/home"), e, NOW)).text(), "page");
-  const from = async (cf) => (await handle(Object.assign(new Request("https://bodhilabs.org/api/where"), { cf }), e, NOW)).json();
+  assert.equal((await handle(new Request("https://cubegullak.com/api/tap"), e, NOW)).status, 405);
+  assert.equal((await handle(new Request("https://cubegullak.com/api/other"), e, NOW)).status, 404);
+  assert.equal(await (await handle(new Request("https://cubegullak.com/home"), e, NOW)).text(), "page");
+  const from = async (cf) => (await handle(Object.assign(new Request("https://cubegullak.com/api/where"), { cf }), e, NOW)).json();
   assert.deepEqual(await from({ country: "IN", regionCode: "MH" }), { state: "MH" });
   assert.deepEqual(await from({ country: "US", regionCode: "CA" }), { state: "" });
   assert.deepEqual(await from(undefined), { state: "" });
@@ -374,10 +374,10 @@ test("Lives opens a different life each time, in the person's language or else E
 });
 
 test("a browser tab is sent to the install page, the installed app never", () => {
-  assert.equal(mustInstall({ path: "/home", standalone: false, host: "bodhilabs.org" }), true);
-  assert.equal(mustInstall({ path: "/app", standalone: false, host: "www.bodhilabs.org" }), true);
-  assert.equal(mustInstall({ path: "/home", standalone: true, host: "bodhilabs.org" }), false);
-  assert.equal(mustInstall({ path: "/", standalone: false, host: "bodhilabs.org" }), false);
+  assert.equal(mustInstall({ path: "/home", standalone: false, host: "cubegullak.com" }), true);
+  assert.equal(mustInstall({ path: "/app", standalone: false, host: "www.cubegullak.com" }), true);
+  assert.equal(mustInstall({ path: "/home", standalone: true, host: "cubegullak.com" }), false);
+  assert.equal(mustInstall({ path: "/", standalone: false, host: "cubegullak.com" }), false);
   assert.equal(mustInstall({ path: "/book", standalone: false, host: "localhost" }), false);
   // The installed app is known in every way a browser may show it, and is never asked to install.
   const mode = (m) => ({ media: (q) => q === `(display-mode: ${m})` });
@@ -432,13 +432,13 @@ test("a recording is played only when one was made beforehand; else the phone sp
 
 test("where people come from and how far they get", async () => {
   const { refOf } = await import("../lib/track.js");
-  assert.equal(refOf("?from=WhatsApp", "", "bodhilabs.org"), "whatsapp");
-  assert.equal(refOf("?utm_source=yt", "https://x.com/a", "bodhilabs.org"), "yt");
-  assert.equal(refOf("", "https://www.youtube.com/watch?v=1", "bodhilabs.org"), "youtube.com");
-  assert.equal(refOf("", "https://www.bodhilabs.org/home", "bodhilabs.org"), "");
-  assert.equal(refOf("?from=<script>", "", "bodhilabs.org"), "");
+  assert.equal(refOf("?from=WhatsApp", "", "cubegullak.com"), "whatsapp");
+  assert.equal(refOf("?utm_source=yt", "https://x.com/a", "cubegullak.com"), "yt");
+  assert.equal(refOf("", "https://www.youtube.com/watch?v=1", "cubegullak.com"), "youtube.com");
+  assert.equal(refOf("", "https://www.cubegullak.com/home", "cubegullak.com"), "");
+  assert.equal(refOf("?from=<script>", "", "cubegullak.com"), "");
   const e = env();
-  const reg = async (body, cf) => (await handle(Object.assign(new Request("https://bodhilabs.org/api/register", { method: "POST", body: JSON.stringify(body) }), { cf }), e, NOW)).json();
+  const reg = async (body, cf) => (await handle(Object.assign(new Request("https://cubegullak.com/api/register", { method: "POST", body: JSON.stringify(body) }), { cf }), e, NOW)).json();
   const a = await reg({ lang: "hi", ref: "whatsapp" }, { country: "IN", regionCode: "UP" });
   await reg({ lang: "hi", ref: "bad ref!" }, { country: "IN", regionCode: "UP" });
   await reg({ lang: "ta" }, { country: "US", regionCode: "CA" });
@@ -457,8 +457,8 @@ test("the passcode opens the admin panel and the phone stays signed in", async (
   const e = { ...env(), ADMIN_KEY: "open-sesame-42" };
   const kv = new Map();
   e.VOICE = { get: async (k) => kv.get(k) ?? null, put: async (k, v) => { kv.set(k, v); } };
-  const at = (init = {}) => handle(new Request("https://bodhilabs.org/admin", init), e, NOW);
-  const form = (key) => at({ method: "POST", headers: { "content-type": "application/x-www-form-urlencoded", origin: "https://bodhilabs.org" }, body: new URLSearchParams({ key }) });
+  const at = (init = {}) => handle(new Request("https://cubegullak.com/admin", init), e, NOW);
+  const form = (key) => at({ method: "POST", headers: { "content-type": "application/x-www-form-urlencoded", origin: "https://cubegullak.com" }, body: new URLSearchParams({ key }) });
   const box = await at();
   assert.equal(box.status, 200);
   assert.match(await box.text(), /Passcode/);
@@ -473,7 +473,7 @@ test("the passcode opens the admin panel and the phone stays signed in", async (
   assert.equal((await at({ method: "POST", headers: { "content-type": "application/x-www-form-urlencoded", origin: "https://evil.example" }, body: new URLSearchParams({ key: "open-sesame-42" }) })).status, 403);
   for (let i = 0; i < 20; i++) await form("wrong");
   assert.equal((await form("open-sesame-42")).status, 429, "too many wrong tries shuts the door for the day");
-  assert.equal((await handle(new Request("https://bodhilabs.org/admin"), { ...env(), ADMIN_KEY: "short" }, NOW)).status, 403, "a short passcode is not accepted");
+  assert.equal((await handle(new Request("https://cubegullak.com/admin"), { ...env(), ADMIN_KEY: "short" }, NOW)).status, 403, "a short passcode is not accepted");
 });
 
 test("the lagna: the rising sign for a place and a moment", async () => {

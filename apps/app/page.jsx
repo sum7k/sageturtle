@@ -56,7 +56,7 @@ export default function Landing() {
   return (
     <main className="screen landing center">
       <Turtle />
-      <h1 className="brand">BodhiLabs</h1>
+      <h1 className="brand">CubeGullak</h1>
       {stage === "open" && (
         <>
           <a className="round gold huge" href={openAppUrl(navigator.userAgent, location.origin)} aria-label={t(lang, "open")}><Icon d={P.open} size={64} /></a>

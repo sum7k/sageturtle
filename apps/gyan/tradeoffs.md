@@ -23,7 +23,7 @@ Format: `- [where] Choice. Why. Cost.`
 - [tests] The entry test is a skip check with 3 rounds of 5 questions, 4 right each; all passed clears the stage. Why: sumeet said about three tests are enough. Cost: 15 questions is a thin check of a whole age.
 - [tests] The exit test is 10 mixed questions and 7 right passes. Why: sumeet said a learner weak in one thing should still move ahead; with a mix, one weak side costs only two or three questions. Cost: a learner can finish Gyan with a real gap, for example in maths. Done under sumeet's "use your judgement"; before the one-path decision he asked for separate progress per subject.
 - [tests] Placement climbs from stage 1. Why: simplest. Cost: a well-read person answers about 150 questions; a faster way is in `backlog.md`.
-- [tests] No marks or ranks are shown. Why: Kids have no scores in BodhiLabs. Cost: a learner cannot see how close they were.
+- [tests] No marks or ranks are shown. Why: Kids have no scores in CubeGullak. Cost: a learner cannot see how close they were.
 - [numbers] Before stage 6, numbers are written as counts of ones, tens and hundreds, and sums use counters. Why: zero and written arithmetic had not come. Cost: this needs its own design and may confuse a learner who already knows digits.
 - [history] India is told in full and the world beside it only where it turned the story. Why: NCERT does the same. Cost: China, Africa and the Americas are thin.
 - [dates] Dates are the commonly given ones and unchecked. Why: this map is about order. Cost: each needs a check when its step is written.

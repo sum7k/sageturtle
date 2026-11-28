@@ -1,6 +1,6 @@
 # Stories
 
-Original stories for the BodhiLabs learner: 12 for each of the 12 Gyan stages (pre-school plus classes 1 to 11), 144 in all.
+Original stories for the CubeGullak learner: 12 for each of the 12 Gyan stages (pre-school plus classes 1 to 11), 144 in all.
 
 - A stage's 12 stories open when the learner reaches that stage, so the tone and length fit the age.
 - They are about dharma as religion based on logic: good values reached by clear reasoning, not by fear or command.

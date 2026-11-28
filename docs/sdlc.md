@@ -1,4 +1,4 @@
-# BodhiLabs SDLC
+# CubeGullak SDLC
 
 Agreed with sumeet on 2026-11-26. This is how every app goes from idea to launch. The unrolled list of items, with
 their status, is in `work/sdlc-plan.md`.

@@ -82,7 +82,7 @@ export async function adminPage(db, now = Date.now(), email = "") {
   const top = Math.max(1, ...d.funnel.map((f) => f.total));
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
-<title>BodhiLabs admin</title>
+<title>CubeGullak admin</title>
 <style>
 :root{--bg:#eaf4ff;--ink:#14174a;--muted:#3d4273;--card:#fff;--gold:#ffc531;--line:#d5e6f8}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,sans-serif}
@@ -100,7 +100,7 @@ a{color:inherit}
 .q{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;padding:12px}.q p{margin:0}.qt{font-size:17px;white-space:pre-wrap;overflow-wrap:anywhere}.qa{background:var(--bg);border-radius:12px;padding:10px;white-space:pre-wrap;overflow-wrap:anywhere}
 .q textarea{width:100%;font:inherit;border:1px solid var(--line);border-radius:12px;padding:10px}.q button{align-self:flex-end;font:inherit;font-weight:700;background:var(--gold);border:0;border-radius:99px;padding:10px 22px}
 </style></head><body><main>
-<header><h1>BodhiLabs</h1><span class="muted">${esc(d.today)} (India) · <a href="/admin">refresh</a></span></header>
+<header><h1>CubeGullak</h1><span class="muted">${esc(d.today)} (India) · <a href="/admin">refresh</a></span></header>
 <section class="tiles">
 ${tile("People today", d.users.active_today)}${tile("People, 7 days", d.users.active_week)}${tile("People in all", d.users.total)}${tile("New today", d.users.new_today)}${tile("New, 7 days", d.users.new_week)}${tile("Registered", d.users.registered)}
 </section>
@@ -124,7 +124,7 @@ ${d.questions.done.length ? `<details><summary>Answered</summary>${d.questions.d
 <button type="button" onclick="localStorage.removeItem('bodhilabs.allstages.v1');this.textContent='Closed again'">Close them again</button></p></section>
 <section><h2>Where people are</h2><div class="card">${table(["State", "People"], d.states.map((r) => [esc(r.state || "Not known"), num(r.users)]))}</div></section>
 <section><h2>Who sent them</h2><div class="card">${table(["From", "People"], d.refs.map((r) => [esc(r.ref || "Direct or not known"), num(r.users)]))}</div>
-<p class="muted">To tell links apart, share them as bodhilabs.org/?from=whatsapp (any short name).</p></section>
+<p class="muted">To tell links apart, share them as cubegullak.com/?from=whatsapp (any short name).</p></section>
 <section><h2>Languages chosen</h2><div class="card">${table(["Language", "People"], d.langs.map((r) => [esc(langName(r.lang)), num(r.users)]))}</div></section>
 <section><h2>New people by day</h2><div class="card">${table(["Day", "People"], d.signups.map((r) => [esc(r.day), num(r.users)]))}</div></section>
 <details><summary>Lives shown</summary><div class="card">${table(["Life", "People", "Times"],

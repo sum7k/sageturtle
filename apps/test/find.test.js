@@ -129,7 +129,7 @@ test("an answer is written on Cloudflare from our own lines only, kept, and capp
     VOICE: { get: async (k) => kept.get(k) ?? null, put: async (k, v) => { kept.set(k, v); } },
     AI: { run: async (model, input) => { calls.push({ model, input }); return { response: " A fish lives in water. " }; } },
   };
-  const post = (path, body) => handle(new Request(`https://bodhilabs.org${path}`, { method: "POST", body: JSON.stringify(body) }), e, 1764300000000);
+  const post = (path, body) => handle(new Request(`https://cubegullak.com${path}`, { method: "POST", body: JSON.stringify(body) }), e, 1764300000000);
   const { id } = await (await post("/api/register", { lang: "en" })).json();
   const line = passages("en")[1];
   const ask = (text, extra = {}) => post("/api/answer", { user: id, text, lang: "en", lines: [line.id], ...extra });

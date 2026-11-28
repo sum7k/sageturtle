@@ -36,7 +36,7 @@ Messages stores nothing about one-to-one talk between adults. No text, no call r
 1. The person opens Messages. The variant's list is chosen. Rows are ordered by last reached.
 2. A tap on the handset opens `tel:<number>`. A tap on the mark opens `https://wa.me/<number>`,
    `https://t.me/+<number>` or `sms:<number>`, by the app that person chose.
-3. The phone leaves BodhiLabs. Messages saves only the time of the tap.
+3. The phone leaves CubeGullak. Messages saves only the time of the tap.
 4. A person with no number has no buttons. A kid's row never has buttons.
 
 **A kid and a guardian.**

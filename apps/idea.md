@@ -1,15 +1,15 @@
-# BodhiLabs apps: the idea
+# CubeGullak apps: the idea
 
 One PWA with 13 apps for Indian people of every age. Each person sees the apps in a variant that fits their life. The live design map is at https://claude.ai/artifact/KBQ1Cuj8GjVKK5e9nT5A6G and its source is in `docs/variant-map.html`.
 
 ## Launch plan (2026-11-28)
 
-The product is BodhiLabs (bodhilabs.org); it was SageTurtle before. Apps are made and released one by one.
+The product is CubeGullak (cubegullak.com); it was SageTurtle before. Apps are made and released one by one.
 Home has 11 buttons. The first row is open: Book (a study app that teaches reading), Horoscope and Khabri. The other
 eight (Earnings, Reminders, Hobbies, Meetings, Messages, Discussions, Events, Directory) are locked: a tap shows a lock
 and is counted, so we see which app people want next. Icons are placeholders. The top of Home is the ad spot; for now
 it asks "What functionality would you want next?" and opens a form. A simple registration is required. The owner sees
-taps, distinct users and the answers on an admin panel at bodhilabs.org/admin. Everything runs on Cloudflare.
+taps, distinct users and the answers on an admin panel at cubegullak.com/admin. Everything runs on Cloudflare.
 
 The rest of this file describes the full product that the launch grows into.
 

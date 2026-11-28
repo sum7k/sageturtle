@@ -1,4 +1,4 @@
-// The server side of BodhiLabs, one Cloudflare Worker. The app itself is static files; this answers only:
+// The server side of CubeGullak, one Cloudflare Worker. The app itself is static files; this answers only:
 //   GET  /api/where     the Indian state the request comes from, to pre-select a language
 //   POST /api/register  a phone chooses its language (or later adds its place and work)
 //   POST /api/tap       taps on Home's buttons, and which pictures were shown

@@ -13,7 +13,7 @@ import { reachLinks } from "@/lib/reach";
 /** One list of people. People join only by scanning each other's code, so strangers cannot find anyone. */
 const APP_NAME = { whatsapp: "WhatsApp", telegram: "Telegram", sms: "SMS" };
 
-/** The two ways out of BodhiLabs for one person: the dialer, and their chat in the app they chose. */
+/** The two ways out of CubeGullak for one person: the dialer, and their chat in the app they chose. */
 function Reach({ person }) {
   const links = reachLinks(person);
   if (!links) return null;

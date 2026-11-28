@@ -1,4 +1,4 @@
-// Every level of BodhiLabs looks the same (sumeet, 2026-11-28): a grid of 4 by 4, sixteen boxes.
+// Every level of CubeGullak looks the same (sumeet, 2026-11-28): a grid of 4 by 4, sixteen boxes.
 // The twelve outer boxes are the twelve houses of that level: the subjects on Home, a subject's own twelve steps
 // inside it. The four boxes in the middle are the same everywhere: the learner's own page, a place to ask, the
 // settings, and one kept empty.

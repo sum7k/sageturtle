@@ -54,10 +54,10 @@ export async function passOk(req, env) {
   return same(got, await token(env));
 }
 
-const page = (note = "", status = 200) => new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>BodhiLabs admin</title>
+const page = (note = "", status = 200) => new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>CubeGullak admin</title>
 <style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#eaf4ff;color:#14174a;font:18px system-ui,sans-serif}form{display:flex;flex-direction:column;gap:14px;width:min(320px,86vw)}
 input,button{font:inherit;padding:16px;border-radius:16px;border:2px solid #14174a}button{background:#ffc531;font-weight:700}p{margin:0;color:#a11}</style></head>
-<body><form method="post" action="/admin"><b>BodhiLabs admin</b><input type="password" name="key" placeholder="Passcode" autocomplete="current-password" required autofocus><button>Open</button><p>${note}</p></form></body></html>`,
+<body><form method="post" action="/admin"><b>CubeGullak admin</b><input type="password" name="key" placeholder="Passcode" autocomplete="current-password" required autofocus><button>Open</button><p>${note}</p></form></body></html>`,
   { status, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex" } });
 
 /** GET shows the passcode box. POST checks the passcode and, when right, gives the cookie and opens the panel. */

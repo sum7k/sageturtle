@@ -3,14 +3,14 @@ export const dynamic = "force-static";
 
 export default function manifest() {
   return {
-    name: "BodhiLabs",
-    short_name: "BodhiLabs",
+    name: "CubeGullak",
+    short_name: "CubeGullak",
     id: "/",
     start_url: "/app?source=pwa",
     scope: "/",
     display: "standalone",
     // Lets the landing page ask the phone whether the app is already installed.
-    related_applications: [{ platform: "webapp", url: "https://bodhilabs.org/manifest.webmanifest" }],
+    related_applications: [{ platform: "webapp", url: "https://cubegullak.com/manifest.webmanifest" }],
     orientation: "portrait",
     background_color: "#eaf4ff",
     theme_color: "#eaf4ff",

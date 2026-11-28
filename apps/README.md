@@ -1,6 +1,6 @@
-# BodhiLabs apps
+# CubeGullak apps
 
-One installable web app (bodhilabs.org) for learning: twelve subjects, opened one by one.
+One installable web app (cubegullak.com) for learning: twelve subjects, opened one by one.
 Until 2026-11-28 the product was called SageTurtle.
 
 ## What is live in this build
@@ -110,11 +110,11 @@ server, `/api` and `/admin` from the Worker beside it on 8787; `scripts/dev.mjs`
 
 1. A push to `dev` deploys by itself through Cloudflare Workers Builds, once the `bodhilabs` Worker is connected to this
    repository (Worker, Settings, Builds): branch `dev`, root directory `apps`, build command `npm run build`, deploy
-   command `npm run ship` (applies D1 migrations, then publishes to bodhilabs.org and www.bodhilabs.org).
+   command `npm run ship` (applies D1 migrations, then publishes to cubegullak.com and www.cubegullak.com).
    Pushes to other branches do not deploy. By hand from a computer: `npx wrangler login`, then `npm run deploy`.
 2. The admin panel `/admin` opens with a passcode: set the Worker secret `ADMIN_KEY` (8 characters or more) in the
    Cloudflare dashboard. The phone that typed it stays signed in for a year. Until it is set, `/admin` answers 403.
-   Cloudflare Access also works: make an Access application for `bodhilabs.org/admin` and put its team domain and
+   Cloudflare Access also works: make an Access application for `cubegullak.com/admin` and put its team domain and
    audience tag into `ACCESS_TEAM_DOMAIN` and `ACCESS_AUD` in `wrangler.jsonc`.
 
 ## Not done yet

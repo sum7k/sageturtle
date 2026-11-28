@@ -9,7 +9,7 @@ Messages is the door to people. It does two things.
 
 1. **Reach a person.** It shows the lists of people from Me. A row hands off: the handset opens the phone's dialer, and
    the mark opens that person's chat in WhatsApp, Telegram or SMS. The number and the app come from that person's
-   Reach me in Me (sumeet, 2026-11-28); a person who left it empty has no buttons. BodhiLabs carries no one-to-one talk for adults and
+   Reach me in Me (sumeet, 2026-11-28); a person who left it empty has no buttons. CubeGullak carries no one-to-one talk for adults and
    keeps none of it (sumeet, 2026-11-26).
 2. **Talk inside the app, only where an outside app cannot keep the rules.** There are two such places:
    - a child and a guardian (a kid is never handed off, and a parent can see the chats);
@@ -41,7 +41,7 @@ a shop) the tile opens into those versions. A version is the same screen with th
 
 ## What it does not do
 
-- It does not show what was said in WhatsApp, Telegram, SMS or on a call. BodhiLabs cannot see it.
+- It does not show what was said in WhatsApp, Telegram, SMS or on a call. CubeGullak cannot see it.
 - So an adult has no inbox and no unread count for those. People are ordered by who was reached last from this phone.
 - Strangers cannot appear. A person is in a list only after both scanned each other's code.
 - Open groups (neighbours, a self-help group, staff, a project team) are not here. See `backlog.md`.

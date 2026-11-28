@@ -1,6 +1,6 @@
 > DRAFT, stopped on 2026-11-26. sumeet: this cannot be written until each of the ten remaining apps is designed. Not agreed, not for guidance. Per-app parts are guesses from the design map.
 
-# BodhiLabs: privacy, the DPDP law and threats
+# CubeGullak: privacy, the DPDP law and threats
 
 Written 2026-11-26. One set for the whole platform. This is a design note, not legal advice: a lawyer must read it
 before launch (legal risk is sumeet's call).
@@ -16,15 +16,15 @@ the Gazette text.
 - The duties that bind us (notice, consent, children, security, breaches, erasure, rights) start 18 months after
   notification: about **13 May 2027**. That is under six months from today. Anything launched before that date should
   already follow them.
-- BodhiLabs is the "data fiduciary". Cloudflare, Dodo Payments and any speech or writing vendor are "data processors"
+- CubeGullak is the "data fiduciary". Cloudflare, Dodo Payments and any speech or writing vendor are "data processors"
   working under our contract. A person is the "data principal".
 - A child is anyone under 18 (Act, section 2). So both Kids and Teens are children in law.
 - Penalties (Act, Schedule): up to 250 crore rupees for weak security, up to 200 crore for not reporting a breach, up
   to 200 crore for breaking the children's rules.
 
-## 2. What the law asks, and what BodhiLabs does
+## 2. What the law asks, and what CubeGullak does
 
-| The law asks | BodhiLabs does |
+| The law asks | CubeGullak does |
 | :--- | :--- |
 | A notice before consent: which data, why, how to withdraw, how to complain. Plain language, on its own, in English or the person's Indian language (Act, sections 5 and 6). | One notice screen in the first run, after the language is chosen. It is spoken aloud and can also be read, in all twelve languages. Each purpose is a picture with a spoken line and its own yes or no. This is the one place where written text is offered, because the law needs a notice a person can keep. |
 | Consent is free, specific and as easy to withdraw as to give. | Me has a consent tile showing every yes and no. A tap withdraws. Withdrawing stops that use and never locks the person out of the rest. |
@@ -33,7 +33,7 @@ the Gazette text.
 | A breach is told to each affected person without delay, and to the Board at once and in detail within 72 hours (Rule 7). | A written breach plan. People are told through an alert and a spoken card on Home, since we hold no phone number or email. |
 | Erase after long inactivity. For large social, shopping and gaming services: 3 years with no use, with a warning 48 hours before (Rule 8, Third Schedule; the classes and their sizes need a check). | A family not opened for 3 years is warned by alert and then erased. We follow this from the start so nothing changes when we grow. |
 | Keep logs and traffic data for at least one year (Rules 6 and 8). | Access logs are kept one year, then deleted. They hold ids, not names or content. |
-| Publish who answers questions about data (Rule 9). Answer complaints within 90 days (Rule 14). | A named grievance contact on bodhilabs.org and in Me. Target: 7 days. |
+| Publish who answers questions about data (Rule 9). Answer complaints within 90 days (Rule 14). | A named grievance contact on cubegullak.com and in Me. Target: 7 days. |
 | Rights: see your data, correct it, erase it, name a nominee (Act, sections 11 to 14). | Me shows everything held. Each item can be changed or removed. Nominee is a person from the Family list. |
 | Children: verifiable consent of the parent before any processing (Act, section 9; Rule 10). | See section 3. |
 | Children: no tracking, no behavioural monitoring, no targeted advertising (Act, section 9). | See section 4. |

@@ -2,10 +2,10 @@ import "./globals.css";
 import Offline from "@/components/Offline";
 
 export const metadata = {
-  title: "BodhiLabs",
-  description: "BodhiLabs",
+  title: "CubeGullak",
+  description: "CubeGullak",
   icons: { icon: "/icon.svg", apple: "/apple-touch-icon.png" },
-  appleWebApp: { capable: true, title: "BodhiLabs", statusBarStyle: "default" },
+  appleWebApp: { capable: true, title: "CubeGullak", statusBarStyle: "default" },
 };
 export const viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: "#eaf4ff" };
 

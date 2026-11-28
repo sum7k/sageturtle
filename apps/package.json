@@ -1,8 +1,8 @@
 {
-  "name": "bodhilabs",
+  "name": "cubegullak",
   "version": "0.1.0",
   "private": true,
-  "description": "BodhiLabs: eleven apps in one, released one by one.",
+  "description": "CubeGullak: eleven apps in one, released one by one.",
   "type": "module",
   "engines": {
     "node": ">=22"

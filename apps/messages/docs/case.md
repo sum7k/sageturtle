@@ -29,7 +29,7 @@ One page, part of step 1 of the SDLC. Written 2026-11-28. What the app does is i
 ## Not goals
 
 - Replacing WhatsApp, Telegram or SMS for adults. We hand off to them.
-- An inbox, history or unread count for talk that happens outside BodhiLabs.
+- An inbox, history or unread count for talk that happens outside CubeGullak.
 - Open groups (they belong to Discussions) and calls inside the app (they belong to Meetings).
 - Time spent in the app. A good visit to Messages is a short one.
 
@@ -47,7 +47,7 @@ Guardrails, which must not get worse while that number grows:
 
 ## The riskiest assumption
 
-**An adult will open BodhiLabs to reach someone, instead of going straight to WhatsApp or the dialer.** sumeet asked
+**An adult will open CubeGullak to reach someone, instead of going straight to WhatsApp or the dialer.** sumeet asked
 this himself on 2026-11-28. It is most likely true for people who cannot read and for people whose contacts are not
 saved, and most likely false for everyone else.
 

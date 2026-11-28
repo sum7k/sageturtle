@@ -1,4 +1,4 @@
-# BodhiLabs apps: tradeoffs and choices
+# CubeGullak apps: tradeoffs and choices
 
 Each line is a choice made without asking, or a risk accepted. It gives the choice, the reason, and what we gave up. Only the current choice is kept; a line is replaced when the choice changes. Newest at the bottom.
 
@@ -25,7 +25,7 @@ Format: `- [where] Choice. Why. Cost / what we gave up.`
 - [home] Human approved 2026-11-26: Home shows one tile per app. Where the person's variants call an app by different names, the tile carries the app's own name and opens into those versions (Earnings opens into Mandi and Leads). With one name it opens straight away. Why: the same app is grouped, yet each variant keeps its own name. Cost: a person with several variants needs one more tap, and sees generic names on the closed tiles.
 - [home] Group tiles use these names: Learning, Earnings, Reminders, Hobbies, Meetings, Messages, Discussions, Events, Directory, Adverts. Why: one word, a noun, close to what the app is. Cost: not checked with users.
 - [home] A long press arranges a tile: keep on top, move earlier or later, hide. Hidden tiles wait behind a last grey tile. No folders. Why: the human asked for favourites, archive and reorder; grouping by app already does the job of folders. Cost: moving is by arrow buttons, not by dragging, in the first build.
-- [launch] Human, 2026-11-28: renamed to BodhiLabs; apps released one by one; Home has 11 buttons with placeholder icons, the first row open (Book, Horoscope, Khabri) and eight locked that count taps; the top of Home is the ad spot, for now a question that opens a form; registration required; admin at bodhilabs.org/admin; Cloudflare only; words in 11 languages and no voice.
+- [launch] Human, 2026-11-28: renamed to CubeGullak; apps released one by one; Home has 11 buttons with placeholder icons, the first row open (Book, Horoscope, Khabri) and eight locked that count taps; the top of Home is the ad spot, for now a question that opens a form; registration required; admin at cubegullak.com/admin; Cloudflare only; words in 11 languages and no voice.
 - [launch] The eight locked buttons are Earnings, Reminders, Hobbies, Meetings, Messages, Discussions, Events and Directory, and each shows its name. Why: a tap on a named button tells us which app people want; a tap on a nameless icon tells us only which picture they like. Adverts is left out because Home already has the ad spot, and Wisdom because it is built last. Cost: the names themselves steer the taps; the human said "random icons" and may have wanted no names.
 - [launch] The 11 languages are the earlier twelve without Punjabi. Why: the human said 11; Punjabi has the fewest speakers of the twelve (2011 census). Cost: about 3 crore Punjabi speakers get Hindi or English.
 - [launch] The ten Indian languages are written by Claude. Why: to launch with words everywhere. Cost: not checked by native speakers; some words will be stiff or wrong.

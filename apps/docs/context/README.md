@@ -1,20 +1,20 @@
-# BodhiLabs apps: context
+# CubeGullak apps: context
 
 Written on 2026-11-26 at the end of the design chat, so that a new chat can start fresh. Read this folder first.
-On 2026-11-28 the product was renamed from SageTurtle to BodhiLabs and the launch plan changed; see the top of `decisions.md`.
+On 2026-11-28 the product was renamed from SageTurtle to CubeGullak and the launch plan changed; see the top of `decisions.md`.
 
-- `README.md` (this file): what BodhiLabs is, where everything lives, how to start.
+- `README.md` (this file): what CubeGullak is, where everything lives, how to start.
 - `decisions.md`: every decision so far, and who made it.
 - `open.md`: what is waiting, what is not designed, what is not built, and what comes next.
 
-## What BodhiLabs is
+## What CubeGullak is
 
 One installable web app (a PWA) that holds thirteen apps for people in India: Wisdom, Khabri (khabar), Learn, Earn, Reminders,
 Hobbies, Meetings, Messages, Discussions, Events, Yellow Pages (directory), Advertise, and Me. Who the person is decides
 what each app is called and what it does. There are 11 variants: Kids, Teens, and nine adult ones (Student, Looking for a
 job, Office job, Shop or business, Daily work, Farming, Home, Teacher, Retired).
 
-sumeet is the single owner of BodhiLabs (bodhilabs.org, before that SageTurtle at sageturtle.me), to be a One Person Company. Surya is a product, not a company.
+sumeet is the single owner of CubeGullak (cubegullak.com, before that SageTurtle at sageturtle.me), to be a One Person Company. Surya is a product, not a company.
 The old company name Broadvale is being removed (root `backlog.md`).
 
 ## Where things live

@@ -1,6 +1,6 @@
 > DRAFT, stopped on 2026-11-26. sumeet: this cannot be written until each of the ten remaining apps is designed. Not agreed, not for guidance. Per-app parts are guesses from the design map.
 
-# BodhiLabs: high-level design
+# CubeGullak: high-level design
 
 Written 2026-11-26. One design for all twelve apps, because the backend is shared. It meets `requirements.md` and
 `privacy.md`. Choices made here are logged in `../tradeoffs.md` under [hld]. Cloudflare limits and prices were checked
@@ -115,7 +115,7 @@ law ever requires storage in India (`privacy.md` section 6).
 
 ### What Terraform creates, and what Wrangler does
 
-Terraform (lasting things): the zone and DNS for bodhilabs.org; the D1 databases (`khabri`, `learn`, `safety`, `ops`,
+Terraform (lasting things): the zone and DNS for cubegullak.com; the D1 databases (`khabri`, `learn`, `safety`, `ops`,
 and `local_<PIN3>` from a list); the three R2 buckets with their lifecycle rules; the two KV namespaces; the eight
 queues; the Access application and policy for `admin`; firewall and rate-limit rules; a Turnstile widget; Logpush to
 `backups`; the Workers' custom domains; the secrets store.
@@ -187,7 +187,7 @@ Staging is a second copy of everything with a `-staging` suffix and only a handf
 
 ### Who sees what
 
-| Data | The person | The owner (parent) | A guardian | A teacher | People in a list | Everyone | BodhiLabs staff |
+| Data | The person | The owner (parent) | A guardian | A teacher | People in a list | Everyone | CubeGullak staff |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | An adult's profile and settings | Yes | | | | Name and picture | | Ids only |
 | A child's profile | Picture, nickname, guardians | All, and changes it | Name and picture | Name and picture, if let in | | | Ids only |
