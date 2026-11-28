@@ -7,7 +7,8 @@ import { useMe } from "@/components/useMe";
 import { PICTURE, WORD_KEYS, round, wordFor, lettersFor } from "@/lib/book";
 import { loadLearn, mark, saveLearn } from "@/lib/learn";
 import { say } from "@/lib/speak";
-import { t } from "@/lib/strings";
+import { nameOf } from "@/lib/subjects";
+import { WORD_HOUSES } from "@/lib/word";
 import { tap } from "@/lib/track";
 
 const KEY = "bodhilabs.book.v1"; // which round the person has reached
@@ -87,7 +88,7 @@ export default function Book() {
   const other = page === "words" ? "letters" : "words";
   return (
     <main className="screen">
-      <Bar back="/word" title={t(lang, "book")} right={
+      <Bar back="/word" title={nameOf(WORD_HOUSES.find((h) => h.open === "/book"), lang)} right={
         <button type="button" className="round white" aria-label={other} onClick={() => setPage(other)}>
           {page === "words" ? <b className="abc" lang={lang}>{lettersFor(lang)[0]}</b> : <Icon d={P.picture} size={24} />}
         </button>

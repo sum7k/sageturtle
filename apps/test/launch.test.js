@@ -182,6 +182,10 @@ test("every level is a grid of sixteen: twelve houses around and the same four i
   assert.equal(new Set(TOP.map((x) => x.id)).size, 12);
   for (const x of TOP) assert.ok(TRACKED.includes(tapName("top", x)), x.id);
   for (const l of LANGS) assert.ok(TOP[0].name[l.id] && TOP[1].name[l.id], l.id);
+  // Every name is in the chosen language: English says Knowledge, not the Hindi word in English letters.
+  assert.deepEqual([TOP[0].name.en, TOP[1].name.en, TOP[0].name.ta], ["Knowledge", "Present", "ஞானம்"]);
+  const latin = /[A-Za-z]{3}/;
+  for (const l of LANGS.filter((x) => x.id !== "en")) for (const box of [...TOP.slice(0, 2), ...SUBJECTS, ...WORD_HOUSES, ...CENTRE]) assert.ok(!latin.test(box.name[l.id]), `${box.id} ${l.id}`);
   // Inside Word: twelve houses in order, only Letters open, and it is the word game.
   assert.equal(WORD_HOUSES.length, 12);
   assert.equal(new Set(WORD_HOUSES.map((h) => h.id)).size, 12);
@@ -273,7 +277,7 @@ test("the admin panel shows which subjects are pressed, which lives are shown an
   assert.deepEqual(d.centre.map((c) => [c.id, c.users]), [["past", 0], ["now", 1], ["next", 0], ["ask", 0]]);
   assert.deepEqual(d.houses.slice(0, 3).map((h) => [h.n, h.id, h.taps]), [[1, "names", 2], [2, "sounds", 0], [3, "letters", 1]]);
   assert.match(await adminPage(e.DB, NOW, "x"), /Inside Word/);
-  assert.deepEqual(d.top.slice(0, 3).map((x) => [x.n, x.id, x.name]), [[1, "gyan", "Gyan"], [2, "vartaman", "Vartaman"], [3, "top:3", "Empty box"]]);
+  assert.deepEqual(d.top.slice(0, 3).map((x) => [x.n, x.id, x.name]), [[1, "gyan", "Knowledge"], [2, "vartaman", "Present"], [3, "top:3", "Empty box"]]);
   const html = await adminPage(e.DB, NOW, "owner@example.com");
   assert.match(html, /Subjects pressed/);
   assert.match(html, /Lives shown/);

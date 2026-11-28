@@ -2,7 +2,7 @@
 // The eleven Indian languages were written by Claude and are not yet checked by a native speaker.
 // Short lists are kept as one line split on "|", in the order of the keys named beside them.
 
-// The first row: Gyan (knowledge; the reading app, "book" in the code), Bhavishya (the future; horoscope) and
+// The first row, each in the language's own word (English: Knowledge, Future, Present): Gyan (knowledge; the reading app, "book" in the code), Bhavishya (the future; horoscope) and
 // Vartaman (the present; khabri). Named by sumeet on 2026-11-28.
 const APPS = "book|horoscope|khabri|earn|reminders|hobbies|meetings|messages|discussions|events|directory".split("|");
 const WORK = "v_college|v_jobs|v_office|v_shop|v_gig|v_farm|v_home|v_teach|v_retired".split("|");
@@ -15,7 +15,7 @@ const lang = ({ apps, work, lists, me, signs, ...text }) => ({ ...zip(APPS, apps
 
 export const STR = {
   en: lang({
-    apps: "Gyan|Bhavishya|Vartaman|Earnings|Reminders|Hobbies|Meetings|Messages|Discussions|Events|Directory",
+    apps: "Knowledge|Future|Present|Earnings|Reminders|Hobbies|Meetings|Messages|Discussions|Events|Directory",
     work: "Student|Looking for a job|Office job|Shop or business|Daily work|Farming|Home|Teacher|Retired",
     lists: "Family|Friends|Work|Trade|Neighbours|Class|Guardians",
     me: "My name|Language|What I do|My place|Khabar alerts|My lock|Reach me|Remove ads",
