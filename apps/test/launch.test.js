@@ -402,46 +402,20 @@ test("every spoken text gets a man's voice and a woman's, Indian first", async (
   delete globalThis.speechSynthesis; delete globalThis.SpeechSynthesisUtterance;
 });
 
-test("a recording is made once by ElevenLabs, saved, and only for the app's own words", async () => {
-  const { voice } = await import("../worker/voice.js");
-  const { spoken, clipUrl, VOICE_LANG, SPEAKERS } = await import("../lib/voice.js");
+test("a recording is played only when one was made beforehand; else the phone speaks", async () => {
+  const { spoken, mark, recordingPath, recordingOf } = await import("../lib/voice.js");
   assert.ok(spoken("hi").includes("गाय") && spoken("hi").includes("नमस्ते। आइए पढ़ें।") && spoken("hi").includes("क"));
-  for (const l of LANG_ORDER) assert.ok(VOICE_LANG[l], `${l} has a recorded voice`);
-  const store = new Map();
-  const VOICE = { get: async (k) => store.get(k) ?? null, put: async (k, v) => { store.set(k, v.buffer ?? v); } };
-  const calls = [];
-  const eleven = async (url, init) => { calls.push([url, init]); return new Response("mp3!"); };
-  const ask = (path, env) => voice(new Request(`https://bodhilabs.org${path}`), env, eleven);
-  const env = { VOICE, ELEVENLABS_API_KEY: "k" };
-  const url = clipUrl("hi", "woman", "गाय");
-  const first = await ask(url, env);
-  assert.equal(first.status, 200);
-  assert.equal(first.headers.get("content-type"), "audio/mpeg");
-  assert.equal(await first.text(), "mp3!");
-  const sent = JSON.parse(calls[0][1].body);
-  assert.deepEqual([calls[0][0], sent.text, sent.language_code, sent.model_id], [`https://api.elevenlabs.io/v1/text-to-speech/${SPEAKERS.woman[0]}?output_format=mp3_44100_128`, "गाय", "hi", "eleven_v3"]);
-  assert.equal(calls[0][1].headers["xi-api-key"], "k");
-  assert.equal(await (await ask(url, env)).text(), "mp3!");
-  assert.equal(calls.length, 1, "the second time it is read, not made");
-  assert.equal(JSON.parse((await ask(clipUrl("or", "man", spoken("or")[0]), env), calls[1][1].body)).language_code, "or");
-  assert.equal((await ask(clipUrl("hi", "woman", "anything else"), env)).status, 404);
-  assert.equal((await ask(clipUrl("ur", "woman", spoken("ur")[0]), env)).status, 200, "Urdu is recorded too now");
-  assert.equal((await ask(clipUrl("hi", "robot", "गाय"), env)).status, 404);
-  assert.equal((await ask(clipUrl("hi", "man", "गाय"), { VOICE })).status, 503, "no key: the phone speaks instead");
-  assert.equal(calls.length, 3);
-  // A whole life is read the same way, by its id.
-  const { lifeUrl } = await import("../lib/voice.js");
-  const life = await ask(lifeUrl("hi", "man", "einstein"), env);
-  assert.equal(life.status, 200);
-  const read = JSON.parse(calls[3][1].body);
-  assert.ok(read.text.startsWith("अल्बर्ट आइंस्टीन") && calls[3][0].includes(SPEAKERS.man[0]));
-  await ask(lifeUrl("hi", "man", "einstein"), env);
-  assert.equal(calls.length, 4);
-  // A voice chosen in the dashboard replaces the default one.
-  await ask(clipUrl("hi", "man", "मछली"), { ...env, ELEVENLABS_VOICE_MAN: "other" });
-  assert.match(calls[4][0], /text-to-speech\/other\?/);
-  assert.equal((await ask(lifeUrl("hi", "man", "nobody"), env)).status, 404);
-  assert.equal((await ask(lifeUrl("ta", "man", "einstein"), env)).status, 404, "no Tamil text yet");
+  assert.match(mark("गाय"), /^[0-9a-f]{8}$/);
+  assert.notEqual(mark("गाय"), mark("गाय।"), "a changed text gets a new recording");
+  assert.equal(recordingPath("hi", "woman", "word", "", "गाय"), `/voice/hi/word.woman.${mark("गाय")}.m4a`);
+  assert.equal(recordingPath("hi", "man", "life", "einstein", "x"), `/voice/hi/life-einstein.man.${mark("x")}.m4a`);
+  assert.equal(recordingOf("hi", "woman", "word", "", "गाय"), null, "nothing recorded yet: the phone speaks");
+  // The phone's best voice is used: premium, then enhanced, then the rest.
+  const { quality, pair } = await import("../lib/speak.js");
+  const v = (name, lang) => ({ name, lang, localService: true });
+  assert.deepEqual([quality(v("Lekha")), quality(v("Lekha (Enhanced)")), quality(v("Lekha (Premium)"))], [0, 2, 3]);
+  const best = pair([v("Lekha", "hi-IN"), v("Lekha (Premium)", "hi-IN")], "hi-IN", 0.1).find((s) => s.who === "woman");
+  assert.equal(best.voice.name, "Lekha (Premium)");
 });
 
 test("where people come from and how far they get", async () => {
@@ -529,8 +503,7 @@ test("a place guesses the language, and a phone that says no changes nothing", a
 
 test("a lesson is scenes: a drawing and a spoken line, recorded once under the line's name", async () => {
   const { LESSONS, lessonsOf, lessonLang, lineId, lineText } = await import("../lib/lessons.js");
-  const { lineUrl } = await import("../lib/voice.js");
-  const { voice } = await import("../worker/voice.js");
+  const { mark } = await import("../lib/voice.js");
   const fs = await import("node:fs");
   const art = ["../components/LessonArt.jsx", "../components/art/zero.jsx"].map((f) => fs.readFileSync(new URL(f, import.meta.url), "utf8")).join("\n");
   assert.equal(lessonsOf("nature", 1).length, 7);
@@ -547,16 +520,8 @@ test("a lesson is scenes: a drawing and a spoken line, recorded once under the l
   assert.equal(lessonLang(fire, "ta"), "en"); // not written yet: heard in English
   assert.equal(lineText(lineId(fire, 2), "hi"), fire.scenes[2].say.hi);
   assert.equal(lineText("fire.99", "hi"), "");
-  const store = new Map(), calls = [];
-  const env = { ELEVENLABS_API_KEY: "k", VOICE: { get: async (k) => store.get(k) ?? null, put: async (k, v) => { store.set(k, v.buffer ?? v); } } };
-  const eleven = async (url, init) => { calls.push(JSON.parse(init.body)); return new Response("mp3!"); };
-  const ask = (path) => voice(new Request(`https://bodhilabs.org${path}`), env, eleven);
-  assert.equal((await ask(lineUrl("hi", "man", "fire.2"))).status, 200);
-  assert.equal(calls[0].text, fire.scenes[2].say.hi);
-  assert.equal((await ask(lineUrl("hi", "man", "fire.2"))).status, 200);
-  assert.equal(calls.length, 1, "made once, then read");
-  assert.equal((await ask(lineUrl("hi", "man", "fire.99"))).status, 404);
-  assert.equal((await ask(lineUrl("ta", "man", "fire.2"))).status, 404);
+  const { recordingPath } = await import("../lib/voice.js");
+  assert.equal(recordingPath("hi", "man", "line", "fire.2", fire.scenes[2].say.hi), `/voice/hi/line-fire.2.man.${mark(fire.scenes[2].say.hi)}.m4a`);
 });
 
 test("a chapter is told in one named voice, and its sums are right", async () => {

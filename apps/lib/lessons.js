@@ -1,7 +1,7 @@
 // Lessons: short moving pictures with a spoken line, for stages 1 and 2 of the Gyan path, where nothing is read.
 // A lesson is not a video file. It is a list of scenes; each scene names a drawing (components/LessonArt.jsx, drawn
 // and moved by the phone itself) and the line that is spoken over it. The same drawing serves every language; only
-// the recording changes (an ElevenLabs voice, made once and kept: worker/voice.js). So a lesson weighs a few kilobytes.
+// the recording changes (a file made beforehand, lib/voice.js; the phone's own voice until it is made). So a lesson weighs a few kilobytes.
 // The steps come from gyan/docs/syllabus-map.md. The lines were written by Claude, in Hindi and English first;
 // the other ten languages follow once the lessons are approved. Until then they are heard in English.
 //
