@@ -1,5 +1,7 @@
 // The admin panel: one page of numbers, made on the server from the database. English only; it is for the owner.
-import { BOOK, JOKER } from "../lib/buttons.js";
+import { BOOK, WORD, tapName } from "../lib/buttons.js";
+import { CENTRE } from "../lib/grid.js";
+import { WORD_HOUSES } from "../lib/word.js";
 import { SUBJECTS } from "../lib/subjects.js";
 import { LIVES } from "../lib/lives.js";
 import { LANGS } from "../lib/langs.js";
@@ -14,7 +16,7 @@ export async function adminData(db, now = Date.now()) {
   const today = day(now);
   const week = day(now, 6);
   const all = (sql, ...args) => db.prepare(sql).bind(...args).all().then((r) => r.results);
-  const [users, buttons, counts, langs, states, refs, variants, signups] = await Promise.all([
+  const [users, buttons, counts, langs, states, refs, variants, signups, asked, answered] = await Promise.all([
     db.prepare(`SELECT COUNT(*) AS total, SUM(pin <> '') AS registered, SUM(created_day = ?1) AS new_today, SUM(created_day >= ?2) AS new_week,
       SUM(last_day = ?1) AS active_today, SUM(last_day >= ?2) AS active_week FROM users`).bind(today, week).first(),
     all(`SELECT button, SUM(count) AS taps, COUNT(DISTINCT user_id) AS users,
@@ -27,6 +29,8 @@ export async function adminData(db, now = Date.now()) {
     all("SELECT ref, COUNT(*) AS users FROM users GROUP BY ref ORDER BY users DESC LIMIT 20"),
     all("SELECT j.value AS variant, COUNT(*) AS users FROM users, json_each(users.variants) AS j GROUP BY j.value ORDER BY users DESC"),
     all("SELECT created_day AS day, COUNT(*) AS users FROM users WHERE created_day >= ? GROUP BY created_day ORDER BY created_day DESC", day(now, 13)),
+    all("SELECT id, day, lang, text FROM questions WHERE replied_at = 0 ORDER BY id DESC LIMIT 50"),
+    all("SELECT id, day, lang, text, reply FROM questions WHERE replied_at > 0 ORDER BY replied_at DESC LIMIT 20"),
   ]);
   const by = Object.fromEntries(buttons.map((b) => [b.button, b]));
   const zero = { taps: 0, users: 0, taps_today: 0, users_today: 0, taps_week: 0, users_week: 0 };
@@ -41,15 +45,21 @@ export async function adminData(db, now = Date.now()) {
       { step: "Opened the first page", ...counted("visit") },
       { step: "Installed the app", ...counted("install") },
       { step: "Chose a language", today: u.new_today, week: u.new_week, total: u.total },
-      { step: "Opened Word", ...people(BOOK.id) },
+      { step: "Opened Word", ...people(WORD.id) },
+      { step: "Opened the word game", ...people(BOOK.id) },
       { step: "Picked a word", ...people("answer") },
       { step: "Got a word right", ...people("right") },
     ],
     book: { ...zero, ...by[BOOK.id] },
-    // The ring on Home: for each subject, how many people pressed it and how often. Word is the open one ("book").
-    subjects: SUBJECTS.map((x) => ({ id: x.id, picture: x.picture, name: x.name.en, open: !!x.open, ...zero, ...by[x.id === "word" ? BOOK.id : x.id === JOKER.id ? JOKER.id : `subject:${x.id}`] }))
+    // Home: for each subject, how many people pressed it and how often.
+    subjects: SUBJECTS.map((x) => ({ id: x.id, picture: x.picture, name: x.name.en, open: !!x.open, ...zero, ...by[tapName("home", x)] }))
       .sort((a, b) => b.users - a.users || b.taps - a.taps),
-    centre: { ...zero, ...by.centre },
+    // Inside Word: its twelve houses, in order.
+    houses: WORD_HOUSES.map((x, i) => ({ n: i + 1, id: x.id, picture: x.picture, name: x.name.en, open: !!x.open, ...zero, ...by[tapName("word", x)] })),
+    // The four in the middle of every grid.
+    centre: CENTRE.map((c) => ({ id: c.id, picture: c.picture, name: c.name.en, ...zero, ...by[`centre:${c.id}`] })),
+    // Questions from the "?" box: those waiting for an answer, and the last ones answered.
+    questions: { open: asked, done: answered },
     // The joker: which lives were shown, and how many people listened.
     lives: LIVES.map((l) => ({ id: l.id, picture: l.picture, name: l.name.en, ...zero, ...by[`life:${l.id}`] })).sort((a, b) => b.taps - a.taps),
     heard: { ...zero, ...by.heard },
@@ -85,19 +95,27 @@ th{font-size:12px;color:var(--muted);font-weight:600}.n{text-align:right;font-va
 .tag{font-size:11px;padding:2px 7px;border-radius:99px;background:var(--bg);margin-left:6px;color:var(--muted)}
 .pic{font-size:22px;margin-right:8px;vertical-align:middle}summary{font-weight:700;font-size:18px;cursor:pointer;margin-bottom:8px}
 a{color:inherit}
+.q{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;padding:12px}.q p{margin:0}.qt{font-size:17px;white-space:pre-wrap;overflow-wrap:anywhere}.qa{background:var(--bg);border-radius:12px;padding:10px;white-space:pre-wrap;overflow-wrap:anywhere}
+.q textarea{width:100%;font:inherit;border:1px solid var(--line);border-radius:12px;padding:10px}.q button{align-self:flex-end;font:inherit;font-weight:700;background:var(--gold);border:0;border-radius:99px;padding:10px 22px}
 </style></head><body><main>
 <header><h1>BodhiLabs</h1><span class="muted">${esc(d.today)} (India) · <a href="/admin">refresh</a></span></header>
 <section class="tiles">
 ${tile("People today", d.users.active_today)}${tile("People, 7 days", d.users.active_week)}${tile("People in all", d.users.total)}${tile("New today", d.users.new_today)}${tile("New, 7 days", d.users.new_week)}${tile("Registered", d.users.registered)}
 </section>
+<section id="questions"><h2>Questions (${num(d.questions.open.length)} waiting)</h2>
+${d.questions.open.length ? d.questions.open.map((q) => `<form class="card q" method="post" action="/admin/reply"><p class="muted">${esc(q.day)} · ${esc(langName(q.lang))}</p><p class="qt" dir="auto">${esc(q.text)}</p>
+<input type="hidden" name="id" value="${q.id}"><textarea name="reply" rows="3" maxlength="2000" required dir="auto" placeholder="Your answer. The learner sees it in the app."></textarea><button>Send answer</button></form>`).join("") : '<div class="card"><p class="none">No question is waiting</p></div>'}
+${d.questions.done.length ? `<details><summary>Answered</summary>${d.questions.done.map((q) => `<div class="card q"><p class="muted">${esc(q.day)} · ${esc(langName(q.lang))}</p><p class="qt" dir="auto">${esc(q.text)}</p><p class="qa" dir="auto">${esc(q.reply)}</p></div>`).join("")}</details>` : ""}</section>
 <section><h2>How far people get</h2><div class="card">${table(["Step", "Today", "7 days", "All"],
     d.funnel.map((f) => [`${esc(f.step)}<span class="bar" style="width:${Math.round((f.total / top) * 100)}%"></span>`, num(f.today), num(f.week), num(f.total)]))}</div>
 <p class="muted">The first two rows count browsers and installs, a browser at most once a day. The other rows count people, each once.</p></section>
 <section><h2>Subjects pressed</h2><div class="card">${table(["Subject", "People", "Presses", "Today"], [
     ...d.subjects.map((x) => [`<span class="pic">${x.picture}</span>${esc(x.name)}${x.open ? "" : ' <span class="tag">closed</span>'}`, num(x.users), num(x.taps), num(x.taps_today)]),
-    [`<span class="pic">🐢</span>The learner in the centre`, num(d.centre.users), num(d.centre.taps), num(d.centre.taps_today)],
+    ...d.centre.map((x) => [`<span class="pic">${x.picture}</span>${esc(x.name)} <span class="tag">middle</span>`, num(x.users), num(x.taps), num(x.taps_today)]),
   ])}</div>
-<p class="muted">Closed subjects only count the press. Lives is the joker.</p></section>
+<p class="muted">Closed subjects only count the press. Lives is the joker. The four marked "middle" are the boxes in the middle of every grid.</p></section>
+<section><h2>Inside Word</h2><div class="card">${table(["House", "People", "Presses", "Today"],
+    d.houses.map((x) => [`${x.n}. <span class="pic">${x.picture}</span>${esc(x.name)}${x.open ? "" : ' <span class="tag">closed</span>'}`, num(x.users), num(x.taps), num(x.taps_today)]))}</div></section>
 <section><h2>Where people are</h2><div class="card">${table(["State", "People"], d.states.map((r) => [esc(r.state || "Not known"), num(r.users)]))}</div></section>
 <section><h2>Who sent them</h2><div class="card">${table(["From", "People"], d.refs.map((r) => [esc(r.ref || "Direct or not known"), num(r.users)]))}</div>
 <p class="muted">To tell links apart, share them as bodhilabs.org/?from=whatsapp (any short name).</p></section>

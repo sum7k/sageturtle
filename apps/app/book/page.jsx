@@ -5,6 +5,7 @@ import Bar from "@/components/Bar";
 import Icon, { P } from "@/components/Icon";
 import { useMe } from "@/components/useMe";
 import { PICTURE, WORD_KEYS, round, wordFor, lettersFor } from "@/lib/book";
+import { loadLearn, mark, saveLearn } from "@/lib/learn";
 import { say } from "@/lib/speak";
 import { t } from "@/lib/strings";
 import { tap } from "@/lib/track";
@@ -30,6 +31,7 @@ function Words({ lang }) {
     tap("answer");
     if (key !== r.answer) { say(wordFor(lang, key), lang); return setWrong((w) => [...w, key]); }
     tap("right");
+    saveLearn(mark(loadLearn(), r.answer, wrong.length === 0)); // for the Learned, Now and Next pages
     setRight(true);
     // The next picture comes only when both voices have said the word, and never sooner than a second.
     // If the sound never ends (a stalled network), it comes after ten seconds anyway.
@@ -85,7 +87,7 @@ export default function Book() {
   const other = page === "words" ? "letters" : "words";
   return (
     <main className="screen">
-      <Bar back="/home" title={t(lang, "book")} right={
+      <Bar back="/word" title={t(lang, "book")} right={
         <button type="button" className="round white" aria-label={other} onClick={() => setPage(other)}>
           {page === "words" ? <b className="abc" lang={lang}>{lettersFor(lang)[0]}</b> : <Icon d={P.picture} size={24} />}
         </button>

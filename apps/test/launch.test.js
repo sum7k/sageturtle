@@ -1,6 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { BOOK, JOKER, TRACKED } from "../lib/buttons.js";
+import { BOOK, WORD, JOKER, TRACKED, tapName } from "../lib/buttons.js";
+import { AROUND, CENTRE, SAY } from "../lib/grid.js";
+import { WORD_HOUSES } from "../lib/word.js";
+import { mark, report } from "../lib/learn.js";
+import { shouldLook, afterLook } from "../lib/ask.js";
 import { SUBJECTS, LANG_ORDER, ring, nameOf } from "../lib/subjects.js";
 import { LIVES, nextLife, lifeLang } from "../lib/lives.js";
 import { mustInstall, openAppUrl } from "../lib/browser.js";
@@ -142,10 +146,10 @@ test("the Open the app button uses an Android intent, with the start page in the
   assert.equal(openAppUrl(android, "http://localhost:8787"), "/app");
 });
 
-test("Home is a ring of eleven subjects and the joker, turned by the rising sign", () => {
+test("Home holds eleven subjects and the joker, turned by the rising sign", () => {
   assert.equal(SUBJECTS.length, 12);
   assert.equal(SUBJECTS[11].id, "joker"); // Meena, the twelfth sign
-  assert.deepEqual(SUBJECTS.filter((x) => x.open).map((x) => [x.id, x.open]), [["word", "/book"], ["joker", "/life"]]);
+  assert.deepEqual(SUBJECTS.filter((x) => x.open).map((x) => [x.id, x.open]), [["word", "/word"], ["joker", "/life"]]);
   assert.equal(new Set(SUBJECTS.map((x) => x.id)).size, 12);
   for (const x of SUBJECTS) for (const l of LANG_ORDER) assert.ok(x.name[l], `${x.id} ${l}`);
   assert.deepEqual([...LANG_ORDER].sort(), LANGS.map((l) => l.id).sort());
@@ -154,7 +158,75 @@ test("Home is a ring of eleven subjects and the joker, turned by the rising sign
   // Vrishchika (7) rising: Nature is in house 1, People in house 2, and Art comes last.
   assert.deepEqual(ring(7).map((x) => x.id), ["nature", "people", "hand", "money", "joker", "body", "music", "word", "earth", "rule", "number", "art"]);
   assert.equal(ring(0)[0].id, "body");
-  for (const x of SUBJECTS) assert.ok(TRACKED.includes(x.id === "word" ? BOOK.id : x.id === "joker" ? JOKER.id : `subject:${x.id}`), x.id);
+  for (const x of SUBJECTS) assert.ok(TRACKED.includes(tapName("home", x)), x.id);
+  assert.deepEqual([tapName("home", SUBJECTS[2]), tapName("home", SUBJECTS[11]), tapName("home", SUBJECTS[0])], [WORD.id, JOKER.id, "subject:body"]);
+});
+
+test("every level is a grid of sixteen: twelve houses around and the same four in the middle", () => {
+  const boxes = [...AROUND, ...CENTRE.map((c) => c.at)].map(([r, c]) => `${r},${c}`);
+  assert.equal(new Set(boxes).size, 16);
+  for (const [r, c] of AROUND) assert.ok(r === 1 || r === 4 || c === 1 || c === 4);
+  assert.deepEqual(AROUND[0], [1, 1]); // house 1 is top left
+  assert.deepEqual(AROUND[3], [1, 4]); // and they go round with the clock
+  for (let i = 0; i < 12; i++) { const [a, b] = [AROUND[i], AROUND[(i + 1) % 12]]; assert.equal(Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]), 1); }
+  assert.deepEqual(CENTRE.map((c) => c.id), ["past", "now", "next", "ask"]);
+  for (const c of CENTRE) { assert.ok(TRACKED.includes(`centre:${c.id}`)); for (const l of LANG_ORDER) assert.ok(c.name[l], `${c.id} ${l}`); }
+  for (const [k, v] of Object.entries(SAY)) for (const l of LANG_ORDER) assert.ok(v[l], `${k} ${l}`);
+  // Inside Word: twelve houses in order, only Letters open, and it is the word game.
+  assert.equal(WORD_HOUSES.length, 12);
+  assert.equal(new Set(WORD_HOUSES.map((h) => h.id)).size, 12);
+  assert.deepEqual(WORD_HOUSES.filter((h) => h.open).map((h) => [h.id, h.open]), [["letters", BOOK.href]]);
+  for (const h of WORD_HOUSES) { assert.ok(TRACKED.includes(tapName("word", h)), h.id); for (const l of LANG_ORDER) assert.ok(h.name[l], `${h.id} ${l}`); }
+  assert.deepEqual([tapName("word", WORD_HOUSES[2]), tapName("word", WORD_HOUSES[0])], [BOOK.id, "word:names"]);
+});
+
+test("the phone remembers which words go well and which need practice", () => {
+  let s = {};
+  for (const first of [true, true, true, false]) s = mark(s, "cow", first);
+  for (const first of [false, false, true]) s = mark(s, "sun", first);
+  s = mark(s, "tree", true); s = mark(s, "tree", false);
+  const r = report(s, ["sun", "cow", "tree", "fish"]);
+  assert.deepEqual(r.learned, ["sun", "cow", "tree"]);
+  assert.deepEqual(r.strong, ["cow"]);
+  assert.deepEqual(r.weak, ["sun"]);
+  assert.deepEqual([r.first, r.seen], [5, 9]);
+  assert.deepEqual(report({}, ["cow"]), { learned: [], strong: [], weak: [], seen: 0, first: 0 });
+});
+
+test("a question reaches the admin panel and the answer comes back to the phone that asked", async () => {
+  const e = { ...env(), ADMIN_KEY: "open-sesame-42", VOICE: { get: async () => null, put: async () => {} } };
+  const signIn = await handle(new Request("https://bodhilabs.org/admin", { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ key: "open-sesame-42" }) }), e, NOW);
+  const cookie = signIn.headers.get("set-cookie").split(";")[0];
+  const a = await signUp(e), b = await signUp(e, { lang: "ta" });
+  assert.equal((await post(e, "/api/ask", { user: a, text: "  मुझे गिनती कब मिलेगी?  " })).status, 200);
+  assert.equal((await post(e, "/api/ask", { user: a, text: "" })).status, 400);
+  assert.equal((await post(e, "/api/ask", { user: a, text: "x".repeat(501) })).status, 400);
+  assert.equal((await post(e, "/api/ask", { user: "00000000-0000-0000-0000-000000000000", text: "hello" })).status, 404);
+  const list = async (id) => (await handle(new Request(`https://bodhilabs.org/api/ask?user=${id}`), e, NOW)).json();
+  let mine = (await list(a)).questions;
+  assert.deepEqual(mine.map((q) => [q.text, q.reply]), [["मुझे गिनती कब मिलेगी?", ""]]);
+  assert.deepEqual((await list(b)).questions, []);
+  assert.equal((await handle(new Request("https://bodhilabs.org/api/ask?user=nobody"), e, NOW)).status, 404);
+  const d = await adminData(e.DB, NOW);
+  assert.deepEqual(d.questions.open.map((q) => [q.lang, q.text]), [["hi", "मुझे गिनती कब मिलेगी?"]]);
+  assert.match(await adminPage(e.DB, NOW, "x"), /Questions \(1 waiting\)/);
+  const answer = (env2, id, reply, headers = {}) => handle(new Request("https://bodhilabs.org/admin/reply", { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded", ...headers }, body: new URLSearchParams({ id, reply }) }), env2, NOW);
+  assert.equal((await answer(e, mine[0].id, "soon")).status, 403, "only the owner answers");
+  assert.equal((await answer(e, mine[0].id, "soon", { cookie, origin: "https://evil.example" })).status, 403);
+  assert.equal((await answer(e, mine[0].id, "जल्दी ही <b>", { cookie })).status, 303);
+  mine = (await list(a)).questions;
+  assert.equal(mine[0].reply, "जल्दी ही <b>");
+  const page = await adminPage(e.DB, NOW, "x");
+  assert.match(page, /Questions \(0 waiting\)/);
+  assert.ok(page.includes("जल्दी ही &lt;b&gt;") && !page.includes("जल्दी ही <b>"));
+  for (let i = 0; i < 4; i++) assert.equal((await post(e, "/api/ask", { user: a, text: `q${i}` })).status, 200);
+  assert.equal((await post(e, "/api/ask", { user: a, text: "one too many" })).status, 429, "five a day");
+  // The phone looks for an answer only while it waits for one, and at most once an hour.
+  assert.equal(shouldLook({}, 1e9), false);
+  assert.equal(shouldLook({ waiting: true, checked: 0 }, 3600000), true);
+  assert.equal(shouldLook({ waiting: true, checked: 1000 }, 60000), false);
+  assert.deepEqual(afterLook({ waiting: true }, [{ reply: "yes" }, { reply: "" }], 5), { waiting: true, checked: 5, fresh: true, answered: 1 });
+  assert.deepEqual(afterLook({ fresh: true, answered: 1 }, [{ reply: "yes" }], 6, true), { waiting: false, checked: 6, fresh: false, answered: 1 });
 });
 
 test("every kind of work, list and sign has a word", () => {
@@ -180,7 +252,7 @@ test("taps wait on the phone and are taken off only when sent", () => {
 test("the admin panel shows which subjects are pressed, which lives are shown and how many are heard", async () => {
   const e = env();
   const a = await signUp(e), b = await signUp(e);
-  await post(e, "/api/tap", { user: a, taps: { "subject:number": 3, joker: 2, "life:einstein": 2, heard: 1, centre: 1 } });
+  await post(e, "/api/tap", { user: a, taps: { "subject:number": 3, joker: 2, "life:einstein": 2, heard: 1, "centre:now": 1, word: 1, "word:names": 2 } });
   await post(e, "/api/tap", { user: b, taps: { "subject:number": 1, book: 1, "life:leonardo": 1 } });
   const d = await adminData(e.DB, NOW);
   assert.equal(d.subjects.length, 12);
@@ -188,7 +260,9 @@ test("the admin panel shows which subjects are pressed, which lives are shown an
   assert.deepEqual(d.subjects.filter((x) => x.taps).map((x) => x.id).sort(), ["joker", "number", "word"]);
   assert.deepEqual(d.lives.map((l) => [l.id, l.taps]), [["einstein", 2], ["leonardo", 1], ["aryabhata", 0]]);
   assert.equal(d.heard.taps, 1);
-  assert.equal(d.centre.users, 1);
+  assert.deepEqual(d.centre.map((c) => [c.id, c.users]), [["past", 0], ["now", 1], ["next", 0], ["ask", 0]]);
+  assert.deepEqual(d.houses.slice(0, 3).map((h) => [h.n, h.id, h.taps]), [[1, "names", 2], [2, "sounds", 0], [3, "letters", 1]]);
+  assert.match(await adminPage(e.DB, NOW, "x"), /Inside Word/);
   const html = await adminPage(e.DB, NOW, "owner@example.com");
   assert.match(html, /Subjects pressed/);
   assert.match(html, /Lives shown/);
@@ -315,12 +389,12 @@ test("where people come from and how far they get", async () => {
   await reg({ lang: "ta" }, { country: "US", regionCode: "CA" });
   for (const name of ["visit", "visit", "visit", "install"]) assert.equal((await post(e, "/api/count", { name })).status, 200);
   assert.equal((await post(e, "/api/count", { name: "other" })).status, 400);
-  await post(e, "/api/tap", { user: a.id, taps: { book: 1, answer: 3, right: 1 } });
+  await post(e, "/api/tap", { user: a.id, taps: { word: 1, book: 1, answer: 3, right: 1 } });
   const d = await adminData(e.DB, NOW);
   assert.deepEqual(d.states.map((r) => [r.state, r.users]), [["UP", 2], ["US", 1]]);
   assert.deepEqual(d.refs.map((r) => [r.ref, r.users]), [["", 2], ["whatsapp", 1]]);
-  assert.deepEqual(d.funnel.map((f) => f.total), [3, 1, 3, 1, 1, 1]);
-  assert.deepEqual(d.funnel.map((f) => f.today), [3, 1, 3, 1, 1, 1]);
+  assert.deepEqual(d.funnel.map((f) => f.total), [3, 1, 3, 1, 1, 1, 1]);
+  assert.deepEqual(d.funnel.map((f) => f.today), [3, 1, 3, 1, 1, 1, 1]);
   assert.match(await adminPage(e.DB, NOW, "x"), /How far people get/);
 });
 

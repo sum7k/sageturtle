@@ -1,16 +1,24 @@
-// What the server counts. Home is a ring of twelve: eleven subjects and the joker (lib/subjects.js).
-// Only Word can be entered yet (it is the reading app, "book" in the code). The other subjects are greyed out:
-// a tap on one does nothing but get counted, so we learn which subjects people reach for.
-// This file is also read by the Worker, to accept counts only for things that exist.
+// What can be counted. A tap is sent to the server only under one of these names (lib/track.js, worker/index.js).
 import { SUBJECTS } from "./subjects.js";
+import { WORD_HOUSES } from "./word.js";
+import { CENTRE } from "./grid.js";
 import { LIFE_IDS } from "./lives.js";
 
-export const BOOK = { id: "book", href: "/book" };
+export const BOOK = { id: "book", href: "/book" }; // the word game, house 3 of Word
+export const WORD = { id: "word", href: "/word" }; // Word, the subject
 export const JOKER = { id: "joker" };
 
-/** Counted per person: Word opened ("book"), a greyed subject tapped ("subject:number"), the joker opened ("joker")
- * and the life it showed ("life:einstein"), a life played aloud ("heard"), the learner in the centre tapped ("centre"), and in Word each word
- * picked ("answer") and each right one ("right"). */
-export const TRACKED = [BOOK.id, ...SUBJECTS.filter((s) => !s.open).map((s) => `subject:${s.id}`), JOKER.id, ...LIFE_IDS.map((l) => `life:${l}`), "heard", "centre", "answer", "right"];
-/** Counted without knowing who, before a phone has an id: the first page opened, and the app installed. */
+/** The name a press on a box is counted under. `level` is "home" or "word". */
+export function tapName(level, box) {
+  if (level === "home") return box.id === "word" ? WORD.id : box.id === "joker" ? JOKER.id : `subject:${box.id}`;
+  return box.open === BOOK.href ? BOOK.id : `word:${box.id}`;
+}
+
+export const TRACKED = [
+  ...SUBJECTS.map((s) => tapName("home", s)),
+  ...WORD_HOUSES.map((h) => tapName("word", h)),
+  ...CENTRE.map((c) => `centre:${c.id}`),
+  ...LIFE_IDS.map((l) => `life:${l}`),
+  "heard", "answer", "right",
+];
 export const COUNTED = ["visit", "install"];

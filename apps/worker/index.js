@@ -4,13 +4,16 @@
 //   POST /api/tap       taps on Home's buttons, and which pictures were shown
 //   POST /api/count     a visit or an install, counted without knowing who
 //   GET  /api/voice     one recorded word, letter or greeting (worker/voice.js)
+//   POST /api/ask       a learner's question; GET /api/ask gives that phone's questions and answers (worker/ask.js)
 //   GET  /admin         the admin panel, behind a passcode or Cloudflare Access (POST /admin signs in)
+//   POST /admin/reply   the owner answers a question
 import { TRACKED, COUNTED } from "../lib/buttons.js";
 import { LANGS } from "../lib/langs.js";
 import { VARIANTS, validCombo } from "../lib/variants.js";
 import { accessEmail, passOk, passLogin } from "./access.js";
 import { adminPage } from "./admin.js";
 import { voice } from "./voice.js";
+import { ask, mine, reply } from "./ask.js";
 
 const MAX_BODY = 4096;
 const MAX_TAPS = 500; // the most taps on one button that one message may carry
@@ -80,8 +83,11 @@ async function count(req, env, now) {
   return json({ ok: true });
 }
 
+/** Who is opening the admin panel: "passcode", the email from Cloudflare Access, or null. */
+const owner = async (req, env, now) => ((await passOk(req, env)) ? "passcode" : accessEmail(req, env, now));
+
 async function admin(req, env, now) {
-  const email = (await passOk(req, env)) ? "passcode" : await accessEmail(req, env, now);
+  const email = await owner(req, env, now);
   if (!email && env.ADMIN_KEY) return passLogin(req, env, now);
   if (!email) return new Response("Not allowed. The admin panel is not set up yet.", { status: 403, headers: { "cache-control": "no-store" } });
   return new Response(await adminPage(env.DB, now, email), { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex" } });
@@ -90,12 +96,17 @@ async function admin(req, env, now) {
 /** Cloudflare knows roughly where a request comes from. Only the state code is passed on, and nothing is saved. */
 const where = (req) => json({ state: req.cf?.country === "IN" ? String(req.cf.regionCode ?? "") : "" });
 
-const POSTS = { "/api/register": register, "/api/tap": tap, "/api/count": count };
+const POSTS = { "/api/register": register, "/api/tap": tap, "/api/count": count, "/api/ask": ask };
 
 export async function handle(req, env, now = Date.now()) {
   const { pathname } = new URL(req.url);
   if (pathname === "/admin" || pathname === "/admin/") return req.method === "GET" ? admin(req, env, now) : req.method === "POST" ? passLogin(req, env, now) : bad("not allowed", 405);
+  if (pathname === "/admin/reply") {
+    if (req.method !== "POST") return bad("not allowed", 405);
+    return (await owner(req, env, now)) ? reply(req, env, now) : bad("not allowed", 403);
+  }
   if (pathname === "/api/where") return where(req);
+  if (pathname === "/api/ask" && req.method === "GET") return mine(req, env);
   if (pathname === "/api/voice") return req.method === "GET" ? voice(req, env) : bad("not allowed", 405);
   if (POSTS[pathname]) return req.method === "POST" ? POSTS[pathname](req, env, now) : bad("not allowed", 405);
   if (pathname.startsWith("/api/") || pathname.startsWith("/admin/")) return bad("not found", 404);

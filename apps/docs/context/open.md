@@ -28,12 +28,13 @@ Messages leaves two things to others: open groups go to Discussions, and calls i
 ## The education pivot (2026-11-28), not settled
 
 - What the eleven buttons are: eleven subjects, or the pre-school time plus ten years. The Gyan path (`gyan/docs/syllabus-map.md`) has eleven stages and, separately, eleven labels (Word, Number, Nature, Earth, People, Rule, Money, Art, Music, Body, Hand).
-- What the centre opens (the profile is planned), and how the learner's progress is measured.
+- What Learned, Now and Next should really show (v1: the word game's words, kept on the phone). Whether the corner button needs more than the language.
+- Inside Word, houses 1 and 2 (hearing, no print) are not built, so a beginner meets Letters first.
 - The 121 lives: the list and the texts in eleven languages (being written in another thread), and real pictures in place of emoji.
 
 ## Built and not built (branch `dev`)
 
-Built for the first release: landing, the language screen with picture tiles and greetings, Home as a ring of twelve houses turned by the lagna (only Word and the joker open), the joker's lives with audio (three placeholders), Book's word matching and letters, install as an app (no caching and no offline opening until the first version is released, sumeet 2026-11-28) and an "Open the app" button,
+Built for the first release: landing, the language screen with picture tiles and greetings, the 4 by 4 grid on Home (subjects turned by the lagna; only Word and the joker open) and inside Word (only Letters open), the four middle pages (Learned, Now, Next, Ask with answers from the admin panel), the joker's lives with audio (three placeholders), Book's word matching and letters, install as an app (no caching and no offline opening until the first version is released, sumeet 2026-11-28) and an "Open the app" button,
 counts of subjects pressed and lives shown, and the admin panel. Words in 11 languages. Horoscope, Khabri, Me and registration are built but not linked.
 The server holds phones and taps (Cloudflare D1). 34 tests pass. A push to `dev` deploys through Cloudflare Workers Builds.
 
