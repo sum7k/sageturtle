@@ -191,6 +191,111 @@ export const LESSONS = [
       { art: "together", say: { hi: "पेड़, पक्षी, जानवर और हम, सब एक ही धरती पर साथ रहते हैं।", en: "Trees, birds, animals and we all live together on one Earth." } },
     ],
   },
+  // Stage 1, Number: "One, two, many. One finger for one thing. Tally marks. More and less".
+  {
+    id: "count", subject: "number", stage: 1, picture: "✋", name: { en: "One, two, many", hi: "एक, दो, बहुत" },
+    by: { id: "shakuntala", en: "Shakuntala Devi", hi: "शकुंतला देवी" }, who: "woman",
+    scenes: [
+      { art: "teller", prop: "🧮", say: { hi: "मैं शकुंतला देवी हूँ। जब मैं बहुत छोटी थी, तभी से मुझे गिनना बहुत अच्छा लगता था।", en: "I am Shakuntala Devi. Ever since I was very small, I loved to count." } },
+      { art: "one", say: { hi: "यह एक आम है। एक। मैं एक उँगली उठाती हूँ।", en: "Here is one mango. One. I raise one finger." } },
+      { art: "two", say: { hi: "अब दो आम हैं। एक, दो। दो उँगलियाँ।", en: "Now there are two mangoes. One, two. Two fingers." } },
+      { art: "three", say: { hi: "एक, दो, तीन। तीन आम, तीन उँगलियाँ। हर चीज़ के लिए एक उँगली।", en: "One, two, three. Three mangoes, three fingers. One finger for each thing." } },
+      { art: "tally", say: { hi: "बहुत पहले लोग हड्डी पर लकीरें खींचकर गिनते थे। हर चीज़ के लिए एक लकीर।", en: "Long ago, people counted by cutting lines on a bone. One line for each thing." } },
+      { art: "more", say: { hi: "इस ओर दो चिड़ियाँ हैं, उस ओर चार। जिस ओर ज़्यादा हैं, वहाँ ज़्यादा उँगलियाँ लगती हैं।", en: "On this side there are two birds, on that side four. Where there are more, we need more fingers." } },
+    ],
+  },
+  // Stage 1, Earth: "My place: near and far; direction from the rising Sun; day and night".
+  {
+    id: "daynight", subject: "earth", stage: 1, picture: "🌗", name: { en: "Day and night", hi: "दिन और रात" },
+    by: { id: "aryabhata", en: "Aryabhata", hi: "आर्यभट" }, who: "man",
+    scenes: [
+      { art: "teller", prop: "🌌", say: { hi: "मैं आर्यभट हूँ। मैं रात-रात भर आसमान देखता था, और सोचता था कि दिन और रात क्यों होते हैं।", en: "I am Aryabhata. I watched the sky night after night, and wondered why there is day and night." } },
+      { art: "sunrise", say: { hi: "सुबह सूरज एक ओर से निकलता है। उस ओर को पूरब कहते हैं।", en: "In the morning the Sun comes up on one side. That side is called the east." } },
+      { art: "noon", say: { hi: "दोपहर में सूरज ऊपर होता है। तब सबसे ज़्यादा उजाला होता है।", en: "At midday the Sun is high above. Then it is brightest." } },
+      { art: "sunset", say: { hi: "शाम को सूरज दूसरी ओर डूबता है। उस ओर को पश्चिम कहते हैं।", en: "In the evening the Sun goes down on the other side. That side is called the west." } },
+      { art: "moon", say: { hi: "रात को अँधेरा होता है। चाँद और तारे दिखते हैं। हम सोते हैं।", en: "At night it is dark. We see the Moon and the stars. We sleep." } },
+      { art: "near", say: { hi: "जो पास है, वह बड़ा दिखता है। जो दूर है, वह छोटा दिखता है। दूर का पेड़ भी असल में बड़ा है।", en: "What is near looks big. What is far looks small. The far tree is really big too." } },
+      { art: "turns", say: { hi: "मैंने सोचा कि धरती घूमती है। इसीलिए सूरज कभी दिखता है, कभी नहीं। इसीलिए दिन और रात होते हैं।", en: "I thought that the Earth turns. That is why we see the Sun, and then we do not. That is why there is day and night." } },
+    ],
+  },
+  // Stage 1, People: "The first humans in Africa; how they spread over the Earth".
+  {
+    id: "firstpeople", subject: "people", stage: 1, picture: "👣", name: { en: "The first people", hi: "पहले लोग" },
+    by: { id: "leakey", en: "Mary Leakey", hi: "मैरी लीकी" }, who: "woman",
+    scenes: [
+      { art: "teller", prop: "⛏️", say: { hi: "मैं मैरी लीकी हूँ। मैं अफ़्रीका में मिट्टी खोदती थी, और बहुत पुराने लोगों के निशान ढूँढती थी।", en: "I am Mary Leakey. I dug the earth in Africa, looking for signs of very old people." } },
+      { art: "footprints", say: { hi: "एक दिन हमें पत्थर जैसी राख में पैरों के निशान मिले। बहुत-बहुत पुराने। कोई यहाँ चला था।", en: "One day we found footprints in ash that had turned to stone. Very, very old. Someone had walked here." } },
+      { art: "band", say: { hi: "सबसे पहले लोग अफ़्रीका में रहते थे। वे छोटे-छोटे समूहों में साथ रहते थे।", en: "The very first people lived in Africa. They lived together in small groups." } },
+      { art: "walk", say: { hi: "फिर वे चलते गए। बहुत धीरे-धीरे, बहुत सालों में।", en: "Then they kept walking. Very slowly, over very many years." } },
+      { art: "spread", say: { hi: "वे हर जगह पहुँचे। पहाड़ों पर, नदियों के पास, ठंडी जगहों में, और भारत में भी।", en: "They reached every place. The mountains, the rivers, the cold lands, and India too." } },
+      { art: "family", say: { hi: "इसीलिए धरती के सारे लोग एक बड़े परिवार जैसे हैं।", en: "That is why all the people of the Earth are like one big family." } },
+    ],
+  },
+  // Stage 1, Rule: "Living in a band: sharing, taking turns".
+  {
+    id: "share", subject: "rule", stage: 1, picture: "🤝", name: { en: "Sharing and taking turns", hi: "बाँटना और बारी" },
+    by: { id: "gandhi", en: "Mohandas Gandhi", hi: "मोहनदास गांधी" }, who: "man",
+    scenes: [
+      { art: "teller", prop: "👓", say: { hi: "मैं मोहनदास गांधी हूँ। लोग मुझे बापू कहते थे। मैं मानता था कि साथ रहने का सबसे अच्छा तरीका है प्यार और सच।", en: "I am Mohandas Gandhi. People called me Bapu. I believed the best way to live together is with love and truth." } },
+      { art: "group", say: { hi: "पहले लोग समूह में साथ रहते थे। अकेले रहना कठिन था, साथ रहना आसान।", en: "The first people lived together in a group. Living alone was hard; living together was easier." } },
+      { art: "sharefood", say: { hi: "जो खाना मिलता, वह सब में बँटता। हर किसी को थोड़ा-थोड़ा।", en: "The food they found was shared by all. A little for everyone." } },
+      { art: "turn", say: { hi: "एक ही चीज़ सबको चाहिए हो, तो हम बारी-बारी से लेते हैं। पहले तुम, फिर मैं।", en: "When everyone wants the same thing, we take turns. First you, then me." } },
+      { art: "help", say: { hi: "कोई गिर जाए, तो हम उसे उठाते हैं। कोई छोटा हो, तो उसकी मदद करते हैं।", en: "If someone falls, we help them up. If someone is small, we help them." } },
+      { art: "sorry", say: { hi: "गलती हो जाए, तो हम सॉरी कहते हैं। और फिर से दोस्त बन जाते हैं।", en: "If we make a mistake, we say sorry. And we are friends again." } },
+    ],
+  },
+  // Stage 1, Hand: "Stone tools. Do: tie a knot, twist a rope".
+  {
+    id: "tools", subject: "hand", stage: 1, picture: "🪨", name: { en: "Stone tools", hi: "पत्थर के औज़ार" },
+    by: { id: "louis-leakey", en: "Louis Leakey", hi: "लुई लीकी" }, who: "man",
+    scenes: [
+      { art: "teller", prop: "🔍", say: { hi: "मैं लुई लीकी हूँ। मुझे अफ़्रीका में बहुत पुराने पत्थर के औज़ार मिले। उन्हें बनाने वालों को हमने हाथ वाला आदमी नाम दिया।", en: "I am Louis Leakey. In Africa I found very old stone tools. We called the people who made them the handy man." } },
+      { art: "knap", say: { hi: "पहले लोग एक पत्थर को दूसरे पत्थर से ठोकते थे। धीरे-धीरे उसकी धार तेज़ हो जाती थी।", en: "The first people struck one stone with another. Slowly its edge became sharp." } },
+      { art: "cut", say: { hi: "तेज़ पत्थर से वे लकड़ी छीलते थे और फल काटते थे।", en: "With the sharp stone they peeled wood and cut fruit." } },
+      { art: "rope", say: { hi: "घास या बेल को आपस में मरोड़ो, तो रस्सी बन जाती है। तुम भी तीन धागे लेकर मरोड़ो।", en: "Twist grass or vines together and it becomes a rope. You too can take three threads and twist them." } },
+      { art: "knot", say: { hi: "रस्सी में गाँठ बाँधो। एक सिरा घुमाओ, अंदर डालो, और खींचो। तुम भी करके देखो।", en: "Tie a knot in the rope. Loop one end, push it through, and pull. Try it yourself." } },
+      { art: "careful", say: { hi: "औज़ार तेज़ होते हैं। हम उन्हें ध्यान से पकड़ते हैं, और बड़ों के साथ ही इस्तेमाल करते हैं।", en: "Tools are sharp. We hold them with care, and use them only with a grown-up." } },
+    ],
+  },
+  // Stage 1, Body: "Do: walk, run, jump, throw, climb, squat".
+  {
+    id: "move", subject: "body", stage: 1, picture: "🏃", name: { en: "Walk, run, jump", hi: "चलो, दौड़ो, कूदो" },
+    by: { id: "milkha", en: "Milkha Singh", hi: "मिल्खा सिंह" }, who: "man",
+    scenes: [
+      { art: "teller", prop: "👟", say: { hi: "मैं मिल्खा सिंह हूँ। बचपन में मैं रोज़ बहुत दूर तक पैदल और दौड़कर जाता था। मुझे दौड़ना बहुत अच्छा लगता था।", en: "I am Milkha Singh. As a boy I walked and ran a long way every day. I loved to run." } },
+      { art: "walking", say: { hi: "आओ, धीरे-धीरे चलें। एक पैर, फिर दूसरा।", en: "Come, let us walk slowly. One foot, then the other." } },
+      { art: "running", say: { hi: "अब तेज़ दौड़ो। हाथ भी आगे-पीछे चलते हैं।", en: "Now run fast. Your arms swing too." } },
+      { art: "jumping", say: { hi: "अब दोनों पैरों से ऊपर कूदो। और धीरे से नीचे आओ।", en: "Now jump up with both feet. And land softly." } },
+      { art: "throwing", say: { hi: "एक गेंद लो और दूर फेंको।", en: "Take a ball and throw it far." } },
+      { art: "squat", say: { hi: "अब नीचे बैठो, जैसे खाना खाने बैठते हैं। फिर खड़े हो जाओ। थक जाओ, तो आराम करो।", en: "Now squat down, as when we sit to eat. Then stand up. When you are tired, rest." } },
+    ],
+  },
+  // Stage 1, Music: "Do: clap a beat; sing a call and an answer; dance in a circle. The first flute. Make a sound from a reed or a leaf".
+  {
+    id: "sound", subject: "music", stage: 1, picture: "🥁", name: { en: "Clap, sing, dance", hi: "ताली, गाना, नाच" },
+    by: { id: "bismillah", en: "Bismillah Khan", hi: "बिस्मिल्लाह ख़ाँ" }, who: "man",
+    scenes: [
+      { art: "teller", prop: "🎺", say: { hi: "मैं बिस्मिल्लाह ख़ाँ हूँ। मैं शहनाई बजाता था। मैंने बनारस में गंगा के किनारे रोज़ अभ्यास किया।", en: "I am Bismillah Khan. I played the shehnai. I practised every day by the Ganga in Banaras." } },
+      { art: "clap", say: { hi: "मेरे साथ ताली बजाओ। एक, दो, तीन, चार। फिर से।", en: "Clap with me. One, two, three, four. Again." } },
+      { art: "call", say: { hi: "मैं गाऊँगा, फिर तुम वही गाना। मैं बुलाऊँ, तुम जवाब दो। आ, आ, आ।", en: "I will sing, then you sing it back. I call, you answer. Aa, aa, aa." } },
+      { art: "circle", say: { hi: "पहले लोग आग के चारों ओर गोले में नाचते थे। हाथ पकड़ो और घूमो।", en: "The first people danced in a circle round the fire. Hold hands and go round." } },
+      { art: "flute", say: { hi: "बहुत पहले किसी ने पक्षी की खोखली हड्डी में छेद किए। उसमें फूँका, तो सुर निकला। यह पहली बाँसुरी थी।", en: "Long ago someone made holes in the hollow bone of a bird. They blew into it, and a note came out. This was the first flute." } },
+      { art: "leaf", say: { hi: "एक पत्ते को दोनों अंगूठों के बीच तानो, और फूँको। सुनो, आवाज़ आती है।", en: "Stretch a leaf between your two thumbs, and blow. Listen, it makes a sound." } },
+    ],
+  },
+  // Stage 1, Art: "Lines, dots and handprints on a cave wall (Bhimbetka). Do: draw lines, then an animal from the side".
+  {
+    id: "cave", subject: "art", stage: 1, picture: "🖐️", name: { en: "Pictures on the cave wall", hi: "गुफ़ा के चित्र" },
+    by: { id: "wakankar", en: "Vishnu Wakankar", hi: "विष्णु वाकणकर" }, who: "man",
+    scenes: [
+      { art: "teller", prop: "🖼️", say: { hi: "मैं विष्णु वाकणकर हूँ। मैं चित्रकार भी था। एक दिन ट्रेन से मुझे भीमबेटका की पहाड़ियाँ दिखीं। वहाँ जाकर मैंने बहुत पुराने चित्र पाए।", en: "I am Vishnu Wakankar. I was a painter too. One day, from a train, I saw the hills of Bhimbetka. When I went there, I found very old pictures." } },
+      { art: "rocks", say: { hi: "ये भीमबेटका की गुफ़ाएँ हैं, हमारे मध्य प्रदेश में। बहुत पुराने लोग यहाँ रहते थे।", en: "These are the caves of Bhimbetka, in our Madhya Pradesh. Very old people lived here." } },
+      { art: "palms", say: { hi: "उन्होंने दीवार पर अपने हाथ की छाप लगाई। रंग लगाया, और हथेली दबा दी।", en: "They pressed their hands on the wall. They put on colour, and pressed the palm." } },
+      { art: "lines", say: { hi: "उन्होंने लकीरें और बिंदु बनाए। तुम भी एक सीधी लकीर बनाओ, फिर एक टेढ़ी।", en: "They made lines and dots. You too, draw a straight line, then a wavy one." } },
+      { art: "animal", say: { hi: "फिर उन्होंने जानवर बनाए, बगल से देखे हुए। एक लंबा शरीर, चार पैर, एक सिर।", en: "Then they drew animals, seen from the side. A long body, four legs, a head." } },
+      { art: "yours", say: { hi: "अब तुम अपना जानवर बनाओ। जैसा तुम्हें दिखे, वैसा। तुम्हारा चित्र तुम्हारा अपना है।", en: "Now draw your own animal. As you see it. Your picture is your own." } },
+    ],
+  },
 ];
 
 // A lesson may carry `house: n` (1 to 12): lessons with the same house are parts of one unit (lib/stages.js unitsOf).

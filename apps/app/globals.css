@@ -291,3 +291,5 @@ h1, h2, p { margin: 0; }
 @keyframes grow { from { transform: scale(0.05); } }
 .art .pull { animation: pull 3s ease-in-out both; }
 @keyframes pull { from { transform: translateY(40px); } 60%, to { transform: translateY(-40px); } }
+.art .spin { animation: spin 8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }

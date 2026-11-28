@@ -212,9 +212,10 @@ test("Gyan is walked by stage: only the learner's stage and those behind it open
   assert.equal(stageHouses(1, true).filter((h) => h.open).length, 12, "for review every stage can be opened");
   for (const h of fresh) assert.ok(TRACKED.includes(tapName("gyan", h)), h.id);
   assert.deepEqual([cleanStage("6"), cleanStage("0"), cleanStage("13"), cleanStage("x"), cleanStage(null)], [6, 1, 1, 1, 1]);
-  // Stage 1: nothing is read. Nature has its picture lessons, a life can be heard, and nothing else is open.
+  // Stage 1: nothing is read. Every subject but Word and Money has picture lessons, and a life can be heard.
   const open = (stage) => subjectsAt(stage, 0).filter((x) => x.open).map((x) => [x.id, x.open]);
-  assert.deepEqual(open(1), [["nature", "/subject?s=nature&stage=1"], ["lives", "/life?stage=1"]]);
+  assert.deepEqual(open(1).map(([id]) => id), ["body", "music", "earth", "rule", "number", "art", "nature", "people", "hand", "lives"]);
+  assert.deepEqual(open(1)[6], ["nature", "/subject?s=nature&stage=1"]);
   assert.deepEqual(open(2), [["lives", "/life?stage=2"]]);
   assert.deepEqual(open(3), [["word", "/book"], ["lives", "/life?stage=3"]]); // written words begin here
   assert.deepEqual(open(6), [["number", "/subject?s=number&stage=6"], ["lives", "/life?stage=6"]]); // the chapter on zero
@@ -230,7 +231,8 @@ test("Gyan is walked by stage: only the learner's stage and those behind it open
   // A house can hold several parts: lessons that name the same house.
   const L = (id, house) => ({ id, subject: "x", stage: 2, house });
   assert.deepEqual(unitsOf("x", 2, [L("a"), L("b", 4), L("c", 4), L("d")]).slice(0, 5).map((h) => h.map((l) => l.id)), [["a"], [], [], ["b", "c"], ["d"]]);
-  assert.equal(doorOf("number", 1), null, "a child at stage 1 never meets the written chapter of stage 6");
+  assert.ok(lessonsOf("number", 1).every((l) => !l.chapter), "a child at stage 1 never meets the written chapter of stage 6");
+  assert.equal(doorOf("money", 1), null, "nothing made: closed");
   assert.equal(doorOf("nature", 6), null);
   // No lesson of stage 1 or 2 shows a written line, and every lesson belongs to one stage.
   for (const stage of [1, 2]) for (const x of SUBJECTS) for (const l of lessonsOf(x.id, stage)) assert.ok(!l.chapter, l.id);

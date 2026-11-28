@@ -197,6 +197,66 @@ Object.assign(ART, {
   together: () => (<Day><Tree x="60" y="236" /><Kid x={150} y={262} s={0.6} c="#e58fb0" /><Person x="200" y="256" s={0.9} c="#6f8fd6" /><E x="270" y="216" s={56} move="bob">🐄</E><E x="56" y="110" s={36} move="bob">🐦</E><E x="320" y="240" s={40} move="walk">🐕</E><E x="200" y="90" s={40} move="fly">🦋</E></Day>),
 });
 
+// Stage 1, one lesson in each other subject: number, earth, people, rule, hand, body, music, art.
+const Mango = ({ x, y, s = 60, delay }) => <E x={x} y={y} s={s} move="pop" delay={delay}>🥭</E>;
+const Fingers = ({ n, x = 270, y = 230 }) => (<g transform={`translate(${x} ${y})`}><rect x="-34" y="-30" width="68" height="60" rx="22" fill={SKIN} />{Array.from({ length: n }, (_, i) => <rect key={i} x={-28 + i * 20} y="-84" width="16" height="60" rx="8" fill={SKIN} className="mv pop" style={{ animationDelay: `${i * 0.6}s` }} />)}</g>);
+const Rock = ({ c = "#b07a52", children }) => (<><rect width="360" height="300" fill={c} /><path d="M0 0h360v40q-90 20-180 0T0 30z" fill="#8a5a3c" /><path d="M0 300v-30q90-14 180 0t180-6v36z" fill="#8a5a3c" />{children}</>);
+const OCHRE = "#b5402c";
+const Deer = ({ x, y, s = 1, c = OCHRE }) => (<g transform={`translate(${x} ${y}) scale(${s})`} stroke={c} strokeWidth="6" strokeLinecap="round" fill="none"><path d="M-40 0h70M-34 0l-8 34M-22 0l6 34M18 0l-6 34M28 0l8 34M30 0l14-24M44-24l12-4M44-24l-4-16M48-30l6-12" /><path d="M-40 0q-10-8-14 4" /></g>);
+const Ball = ({ x, y, move = "", delay }) => <circle cx={x} cy={y} r="14" fill="#e5484d" className={`mv ${move}`} style={delay ? { animationDelay: `${delay}s` } : undefined} />;
+
+Object.assign(ART, {
+  // Number
+  one: () => (<Room c="#ddf3e4"><Mango x={110} y={150} s={90} /><Fingers n={1} /></Room>),
+  two: () => (<Room c="#ddf3e4"><Mango x={80} y={150} s={70} /><Mango x={160} y={150} s={70} delay={0.6} /><Fingers n={2} /></Room>),
+  three: () => (<Room c="#ddf3e4">{[60, 120, 180].map((x, i) => <Mango key={x} x={x} y={150} s={58} delay={i * 0.6} />)}<Fingers n={3} /></Room>),
+  tally: () => (<Room c="#fff0bf"><path d="M50 150q130-40 260 0q-130 50-260 0z" fill="#f4ead2" stroke="#c9b48a" strokeWidth="4" />{Array.from({ length: 7 }, (_, i) => <path key={i} d={`M${100 + i * 24} 128v40`} stroke="#6f4630" strokeWidth="5" strokeLinecap="round" className="mv appear" style={{ animationDelay: `${i * 0.5}s` }} />)}</Room>),
+  more: () => (<Day><path d="M180 120v150" stroke="#fff" strokeWidth="4" strokeDasharray="8 8" />{[0, 1].map((i) => <E key={i} x={70 + i * 50} y={200} s={44} move="bob" delay={i * 0.3}>🐦</E>)}{[0, 1, 2, 3].map((i) => <E key={i} x={220 + (i % 2) * 60} y={170 + Math.floor(i / 2) * 50} s={44} move="bob" delay={i * 0.3}>🐦</E>)}</Day>),
+  // Earth
+  sunrise: () => (<><rect width="360" height="300" fill="#ffd9b8" /><circle cx="60" cy="210" r="40" fill={SUN} className="mv rise" /><Ground c={GRASS} /><path d="M40 270l-20-20M40 270l-20 20M40 270h80" stroke={NIGHT} strokeWidth="6" strokeLinecap="round" /></>),
+  noon: () => (<><rect width="360" height="300" fill={SKY} /><circle cx="180" cy="50" r="34" fill={SUN} className="mv glow" /><Ground /><Tree x="180" y="240" /><ellipse cx="180" cy="244" rx="40" ry="8" fill={LEAF} opacity="0.5" /></>),
+  sunset: () => (<><rect width="360" height="300" fill="#f2a27a" /><circle cx="300" cy="214" r="40" fill={FLAME} className="mv back" /><Ground c="#5a7f60" /><path d="M320 270l20-20M320 270l20 20M320 270h-80" stroke={NIGHT} strokeWidth="6" strokeLinecap="round" /></>),
+  moon: () => (<Dark><circle cx="250" cy="70" r="28" fill="#fff3c4" /><circle cx="262" cy="62" r="24" fill={NIGHT} /><path d="M90 240a60 40 0 0 1 120 0z" fill="#0c0e33" /><E x="150" y="226" s={34}>💤</E></Dark>),
+  near: () => (<Day><Tree x="90" y="250" /><g transform="translate(290 196) scale(0.35)"><Tree x={0} y={0} /></g><E x="196" y="120" s={40} move="pop">👀</E></Day>),
+  turns: () => (<><rect width="360" height="300" fill={NIGHT} /><Stars /><circle cx="60" cy="150" r="34" fill={SUN} className="mv glow" /><g transform="translate(230 150)"><g className="mv spin"><circle r="70" fill="#4f8ed6" /><path d="M-40-30q30-20 50 10t-20 50q-30 0-30-60z" fill={GRASS} /><path d="M20-56q30 10 30 40t-30 0z" fill={GRASS} /></g><path d="M0-70a70 70 0 0 1 0 140z" fill={NIGHT} opacity="0.55" /></g></>),
+  // People
+  footprints: () => (<><rect width="360" height="300" fill="#a89a88" />{Array.from({ length: 6 }, (_, i) => <ellipse key={i} cx={60 + i * 50} cy={i % 2 ? 130 : 170} rx="14" ry="24" fill="#6e6152" transform={`rotate(70 ${60 + i * 50} ${i % 2 ? 130 : 170})`} className="mv appear" style={{ animationDelay: `${i * 0.5}s` }} />)}</>),
+  band: () => (<Day><Logs x="180" y="240" /><Flame x="180" y="236" s={0.7} />{[[90, 1], [140, 0.7], [230, 0.9], [280, 0.6]].map(([x, s], i) => <Person key={x} x={x} y={250} s={s} c={["#8a6fb0", "#e58fb0", "#6f8fd6", "#7fb894"][i]} />)}</Day>),
+  walk: () => (<Day><g className="mv walk">{[[120, 1], [170, 0.7], [220, 0.9]].map(([x, s], i) => <Person key={x} x={x} y={252} s={s} c={["#8a6fb0", "#e58fb0", "#6f8fd6"][i]} />)}</g></Day>),
+  spread: () => (<><rect width="360" height="300" fill="#bfe3f5" /><path d="M60 80q40-30 80 0t40 60-40 50-60 0-20-110z" fill={GRASS} /><path d="M170 60q60-20 120 10t20 60-60 30-80-20 0-80z" fill={GRASS} /><path d="M220 170q30 0 30 40t-30 30-10-70z" fill={GRASS} /><path d="M120 150q-30 20 10 60" stroke={FLAME} strokeWidth="4" fill="none" strokeDasharray="6 6" />{[[120, 170], [180, 100], [240, 200], [270, 110], [90, 90]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="7" fill={FLAME} className="mv pop" style={{ animationDelay: `${i * 0.7}s` }} />)}</>),
+  family: () => (<Day>{[50, 105, 160, 215, 270, 320].map((x, i) => <Person key={x} x={x} y={250} s={0.6 + (i % 3) * 0.15} c={["#8a6fb0", "#e58fb0", "#6f8fd6", "#7fb894", "#c94f4f", "#d9a441"][i]} move="sway" />)}</Day>),
+  // Rule
+  group: () => (<Day>{[[110, 1], [180, 0.7], [250, 0.9]].map(([x, s], i) => <Person key={x} x={x} y={252} s={s} c={["#8a6fb0", "#e58fb0", "#6f8fd6"][i]} move="sway" />)}<E x="180" y="110" s={44} move="pop">❤️</E></Day>),
+  sharefood: () => (<Day>{[[80, 1], [280, 0.8]].map(([x, s], i) => <Person key={x} x={x} y={252} s={s} c={["#8a6fb0", "#e58fb0"][i]} />)}<path d="M140 232h80" stroke={WOOD} strokeWidth="8" strokeLinecap="round" />{[0, 1, 2, 3].map((i) => <E key={i} x={150 + i * 20} y={216} s={26} move="pop" delay={i * 0.4}>🍌</E>)}</Day>),
+  turn: () => (<Day><path d="M60 240q60-120 120-120h40" stroke={WOOD} strokeWidth="10" fill="none" strokeLinecap="round" /><Kid x={110} y={262} s={0.6} c="#e58fb0" hop /><Kid x={200} y={262} s={0.6} c="#6f8fd6" /><Kid x={260} y={262} s={0.6} c="#7fb894" /></Day>),
+  help: () => (<Day><Kid x={140} y={262} s={0.8} wave /><g transform="rotate(-20 230 250)"><Kid x={230} y={262} s={0.6} c="#e58fb0" /></g></Day>),
+  sorry: () => (<Room c="#ffe3dc"><Kid x={120} s={0.85} c="#6f8fd6" /><Kid x={240} s={0.85} c="#7fb894" wave /><E x="180" y="90" s={44} move="pop">🤝</E></Room>),
+  // Hand
+  knap: () => (<Soil><ellipse cx="180" cy="186" rx="44" ry="26" fill={STONE} /><g className="mv dip"><ellipse cx="180" cy="110" rx="26" ry="20" fill="#7d8296" /></g>{[0, 1, 2].map((i) => <circle key={i} cx={150 + i * 30} cy={168} r="4" fill="#fff" className="mv rise" style={{ animationDelay: `${i * 0.3}s` }} />)}</Soil>),
+  cut: () => (<Day><path d="M90 200l60-20 10 20-60 20z" fill={STONE} className="mv sway" /><E x="240" y="200" s={80}>🍉</E></Day>),
+  rope: () => (<Room c="#fff0bf">{[0, 1, 2].map((i) => <path key={i} d={`M40 ${130 + i * 6}q35-20 70 0t70 0 70 0 70 0`} stroke={["#c9a27a", "#a37f5a", "#8a6a48"][i]} strokeWidth="8" fill="none" strokeLinecap="round" className="mv sway" style={{ animationDelay: `${i * 0.2}s` }} />)}<E x="180" y="220" s={50}>🌾</E></Room>),
+  knot: () => (<Room c="#fff0bf"><path d="M40 160h100q40 0 40-36t-30-20q-24 16 10 56h160" stroke="#a37f5a" strokeWidth="12" fill="none" strokeLinecap="round" /><E x="300" y="110" s={46} move="pop">🙌</E></Room>),
+  careful: () => (<Day><Person x="120" y="252" s={1.2} c="#6f8fd6" /><Kid x={220} y={262} s={0.6} c="#e58fb0" /><path d="M150 180l30-10 6 12-30 10z" fill={STONE} /></Day>),
+  // Body
+  walking: () => (<Day><g className="mv walk"><Kid x={180} s={0.9} /></g></Day>),
+  running: () => (<Day><g className="mv fly"><Kid x={180} s={0.9} wave /></g></Day>),
+  jumping: () => (<Day><Kid x={180} s={0.9} hop wave /></Day>),
+  throwing: () => (<Day><Kid x={100} s={0.8} wave /><Ball x={200} y={110} move="fly" /></Day>),
+  squat: () => (<Room c="#ddf3e4"><g className="mv dip"><Kid x={180} s={0.9} /></g></Room>),
+  // Music
+  clap: () => (<Room c="#e9e4ff"><Kid x={140} s={0.9} /><E x="260" y="140" s={70} move="pop">👏</E>{[0, 1, 2, 3].map((i) => <circle key={i} cx={60 + i * 80} cy={40} r="10" fill={SUN} className="mv pop" style={{ animationDelay: `${i * 0.5}s` }} />)}</Room>),
+  call: () => (<Room c="#e9e4ff"><Person x="100" y="250" s={1.1} c="#8a6fb0" /><Kid x={260} s={0.75} c="#7fb894" /><E x="150" y="110" s={36} move="rise">🎵</E><E x="210" y="110" s={36} move="rise" delay={1.2}>🎶</E></Room>),
+  circle: () => (<Dark><Logs x="180" y="210" /><Flame x="180" y="206" s={0.7} /><g transform="translate(180 210)"><g className="mv spin">{Array.from({ length: 6 }, (_, i) => <g key={i} transform={`rotate(${i * 60}) translate(0 -70) rotate(${-i * 60})`}><circle r="12" fill={SKIN} /><rect x="-10" y="8" width="20" height="24" rx="8" fill={["#8a6fb0", "#e58fb0", "#6f8fd6", "#7fb894", "#c94f4f", "#d9a441"][i]} /></g>)}</g></g></Dark>),
+  flute: () => (<Room c="#fff0bf"><rect x="70" y="140" width="220" height="24" rx="12" fill="#f4ead2" stroke="#c9b48a" strokeWidth="3" />{[130, 170, 210, 250].map((x) => <circle key={x} cx={x} cy={152} r="6" fill="#6f4630" />)}<E x="300" y="100" s={34} move="rise">🎵</E></Room>),
+  leaf: () => (<Day><E x="160" y="170" s={110}>🍃</E><E x="160" y="210" s={60}>👍</E><E x="250" y="110" s={34} move="rise">🎵</E></Day>),
+  // Art
+  rocks: () => (<><rect width="360" height="300" fill={SKY} /><path d="M0 300V140q40-60 100-40t60-50 90 20 110 10v220z" fill="#b07a52" /><path d="M120 300v-90a40 40 0 0 1 80 0v90z" fill="#5a3d28" /><Tree x="320" y="300" /></>),
+  palms: () => (<Rock>{[[100, 130], [200, 160], [270, 110]].map(([x, y], i) => <E key={i} x={x} y={y} s={70} move="pop" delay={i * 0.8}>🖐🏾</E>)}</Rock>),
+  lines: () => (<Rock><path d="M50 120h120" stroke={OCHRE} strokeWidth="7" strokeLinecap="round" className="mv appear" /><path d="M190 120q20-20 40 0t40 0 40 0" stroke={OCHRE} strokeWidth="7" fill="none" strokeLinecap="round" className="mv appear" style={{ animationDelay: "1s" }} />{Array.from({ length: 8 }, (_, i) => <circle key={i} cx={70 + i * 30} cy={200} r="6" fill={OCHRE} className="mv pop" style={{ animationDelay: `${1.6 + i * 0.2}s` }} />)}</Rock>),
+  animal: () => (<Rock><g className="mv appear"><Deer x={170} y={150} s={1.6} /></g></Rock>),
+  yours: () => (<Room c="#fff"><rect x="40" y="40" width="280" height="190" rx="12" fill="#fffaf0" stroke="#e0d6c0" strokeWidth="3" /><g className="mv appear"><Deer x={170} y={130} s={1.3} c="#4f5a78" /></g><E x="300" y="240" s={50} move="sway">✏️</E></Room>),
+});
+
 // Chapters for older learners keep their drawings in their own files (components/art).
 Object.assign(ART, ZERO_ART);
 
