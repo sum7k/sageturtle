@@ -170,8 +170,9 @@ test("every level is a grid of sixteen: twelve houses around and the same four i
   const boxes = [...AROUND, ...CENTRE.map((c) => c.at)].map(([r, c]) => `${r},${c}`);
   assert.equal(new Set(boxes).size, 16);
   for (const [r, c] of AROUND) assert.ok(r === 1 || r === 4 || c === 1 || c === 4);
-  assert.deepEqual(AROUND[0], [1, 1]); // house 1 is top left
-  assert.deepEqual(AROUND[3], [1, 4]); // and they go round with the clock
+  assert.deepEqual(AROUND[11], [4, 4]); // the twelfth house is always bottom right
+  assert.deepEqual(AROUND[0], [4, 3]); // house 1 is just left of it
+  assert.deepEqual([AROUND[2], AROUND[5], AROUND[8]], [[4, 1], [1, 1], [1, 4]]); // left along the bottom, up, across the top, down
   for (let i = 0; i < 12; i++) { const [a, b] = [AROUND[i], AROUND[(i + 1) % 12]]; assert.equal(Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]), 1); }
   assert.deepEqual(CENTRE.map((c) => c.id), ["past", "now", "next", "ask"]);
   for (const c of CENTRE) { assert.ok(TRACKED.includes(`centre:${c.id}`)); for (const l of LANG_ORDER) assert.ok(c.name[l], `${c.id} ${l}`); }

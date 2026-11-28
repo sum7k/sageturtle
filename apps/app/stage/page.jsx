@@ -12,8 +12,7 @@ import { stageHere, subjectsAt } from "@/lib/stages";
 
 /**
  * One stage of Gyan: the 4 by 4 grid with the twelve subjects, one for each sign of the zodiac. The houses never
- * move; the subjects turn with the lagna, so the subject of the sign that is rising now is in house 1 (top left,
- * ringed in gold). A subject is open only when something is made for this stage; else a press is only counted.
+ * move; the subjects turn with the lagna, so the subject of the sign that is rising now is in house 1 (ringed in gold). A subject is open only when something is made for this stage; else a press is only counted.
  */
 export default function Stage() {
   const router = useRouter();
