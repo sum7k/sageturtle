@@ -1,41 +1,100 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Bar from "@/components/Bar";
+import Icon, { P } from "@/components/Icon";
+import LessonArt from "@/components/LessonArt";
 import { useLearner } from "@/components/useLearner";
 import { MAX_QUESTION, myQuestions, sendQuestion } from "@/lib/ask";
 import { centreById, say } from "@/lib/grid";
 import { nameOf } from "@/lib/subjects";
+import { answer } from "@/lib/find";
+import { langById } from "@/lib/langs";
+import { hush, sayLine } from "@/lib/speak";
+import { tap } from "@/lib/track";
 
 /**
- * Ask: the learner writes a question and sends it. It is read in the admin panel, and the answer written there
- * shows here, under the question.
+ * Ask: the learner says or writes a question. The phone first looks for the answer in our own lessons (lib/find.js):
+ * the line that fits is shown with its drawing and said aloud, so a learner who cannot read yet is answered too.
+ * When the lessons do not hold a sure answer, the question goes to a person: it is read in the admin panel, and
+ * the answer written there shows here, under the question. The talk button sends it to a person in any case.
  */
 export default function Ask() {
   const { ready, lang, back } = useLearner();
   const [text, setText] = useState("");
   const [state, setState] = useState(""); // "", "sending", "sent", "failed"
   const [list, setList] = useState([]);
+  const [found, setFound] = useState(null); // { asked, lines, at }: what the lessons say, and which line is shown
+  const [hearing, setHearing] = useState(false);
+  const who = useRef(Math.random() < 0.5 ? "man" : "woman");
+  const ear = useRef(null);
   const read = () => myQuestions(true).then((q) => q && setList(q));
   useEffect(() => { if (ready) read(); }, [ready]);
+  useEffect(() => () => { hush(); ear.current?.abort(); }, []);
   if (!ready) return <main className="screen" />;
-  const send = async () => {
-    const mine = text.trim();
+
+  const toPerson = async (mine) => {
     if (!mine || state === "sending") return;
     setState("sending");
     const ok = await sendQuestion(mine);
     setState(ok ? "sent" : "failed");
-    if (ok) { setText(""); read(); }
+    if (ok) read();
   };
+  const show = (lines, at) => {
+    const line = lines[at].passage;
+    sayLine(line.id, line.text, line.lang, who.current);
+  };
+  const ask = (asked = text) => {
+    const mine = asked.trim();
+    if (!mine) return;
+    const lines = answer(mine, lang);
+    const sure = !!lines[0]?.sure;
+    tap(sure ? "ask:found" : lines.length ? "ask:near" : "ask:none");
+    setText("");
+    setState("");
+    setFound(lines.length ? { asked: mine, lines, at: 0 } : null);
+    if (lines.length) show(lines, 0);
+    if (!sure) toPerson(mine);
+  };
+  const turn = (at) => { setFound({ ...found, at }); show(found.lines, at); };
+  // The phone writes down what is said (the browser's own speech recognition, where it has one).
+  const Hear = typeof window !== "undefined" ? window.SpeechRecognition ?? window.webkitSpeechRecognition : null;
+  const listen = () => {
+    if (hearing) return ear.current?.stop();
+    hush();
+    const r = new Hear();
+    r.lang = langById(lang).locale;
+    r.onresult = (e) => ask(e.results[0][0].transcript);
+    r.onend = r.onerror = () => setHearing(false);
+    ear.current = r;
+    setHearing(true);
+    try { r.start(); } catch { setHearing(false); }
+  };
+  const line = found?.lines[found.at];
   return (
     <main className="screen">
       <Bar onBack={back} title={nameOf(centreById("ask"), lang)} />
       <section className="panel ask">
-        <textarea lang={lang} dir="auto" rows={4} maxLength={MAX_QUESTION} placeholder={say("write", lang)} value={text} onChange={(e) => { setText(e.target.value); setState(""); }} />
-        <button type="button" className="send" disabled={!text.trim() || state === "sending"} onClick={send}>{say("send", lang)}</button>
-        {state === "sent" && <p className="sub">{say("sent", lang)}</p>}
-        {state === "failed" && <p className="sub">{say("failed", lang)}</p>}
+        {Hear && <button type="button" className={`round gold big mic${hearing ? " on" : ""}`} aria-label="Speak" onClick={listen}><Icon d={P.mic} size={40} sw={2.5} /></button>}
+        <textarea lang={lang} dir="auto" rows={Hear ? 2 : 4} maxLength={MAX_QUESTION} placeholder={say("write", lang)} value={text} onChange={(e) => { setText(e.target.value); setState(""); }} />
+        <button type="button" className="send" disabled={!text.trim() || state === "sending"} onClick={() => ask()}>{say("send", lang)}</button>
       </section>
+      {found && (
+        <section className="panel talk found">
+          <p className="mine" dir="auto">{found.asked}</p>
+          <button type="button" className="stage" aria-label="Hear again" onClick={() => show(found.lines, found.at)}>
+            <LessonArt key={line.passage.id} art={line.passage.art} />
+          </button>
+          <p className="theirs" dir="auto" lang={line.passage.lang}>{line.passage.text}</p>
+          <div className="foot">
+            <button type="button" className="round white" aria-label="Back one" disabled={found.at === 0} onClick={() => turn(found.at - 1)}><Icon d={P.left} sw={2.5} /></button>
+            <button type="button" className="round white" aria-label="Ask a person" disabled={state === "sending" || state === "sent"} onClick={() => toPerson(found.asked)}><Icon d={P.talk} sw={2.5} /></button>
+            <button type="button" className="round white" aria-label="Forward one" disabled={found.at === found.lines.length - 1} onClick={() => turn(found.at + 1)}><Icon d={P.next} sw={2.5} /></button>
+          </div>
+        </section>
+      )}
+      {state === "sent" && <p className="sub">{say("sent", lang)}</p>}
+      {state === "failed" && <p className="sub">{say("failed", lang)}</p>}
       {list.map((q) => (
         <section key={q.id} className="panel talk">
           <p className="mine" dir="auto">{q.text}</p>

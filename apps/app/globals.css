@@ -136,6 +136,12 @@ h1, h2, p { margin: 0; }
 .ask textarea { width: 100%; border: 2px solid var(--back); border-radius: 16px; padding: 12px; font: inherit; font-size: 18px; color: inherit; resize: vertical; }
 .ask .send { align-self: flex-end; background: var(--gold); border-radius: 999px; padding: 12px 28px; font-size: 18px; font-weight: 700; }
 .ask .send:disabled { opacity: 0.4; }
+.ask .mic { align-self: center; }
+.ask .mic.on { animation: hearing 1s ease-in-out infinite; }
+@keyframes hearing { 50% { transform: scale(1.12); box-shadow: 0 0 0 10px rgba(229, 72, 77, 0.25); } }
+.found .stage { display: block; width: 100%; border-radius: 22px; overflow: hidden; background: var(--cream); }
+.found .art { display: block; width: 100%; height: auto; }
+.found .foot { display: flex; justify-content: space-between; align-items: center; }
 .talk .mine { font-size: 18px; white-space: pre-wrap; overflow-wrap: anywhere; }
 .talk .theirs { background: var(--mint); border-radius: 16px; padding: 12px; font-size: 18px; white-space: pre-wrap; overflow-wrap: anywhere; }
 

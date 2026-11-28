@@ -24,6 +24,7 @@ export const TRACKED = [
   ...CENTRE.map((c) => `centre:${c.id}`),
   ...LIFE_IDS.map((l) => `life:${l}`),
   ...LESSON_IDS.flatMap((l) => [`lesson:${l}`, `watched:${l}`]), // a lesson opened, and seen to its end
+  "ask:found", "ask:near", "ask:none", // a question the lessons answered, half answered, or could not (lib/find.js)
   "heard", "answer", "right",
 ];
 export const COUNTED = ["visit", "install"];

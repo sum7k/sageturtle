@@ -18,8 +18,12 @@ Until 2026-11-28 the product was called SageTurtle.
   word game. A press on a closed box is only counted. The language button is in the top corner of Home.
 - **The four boxes in the middle are the same on every level**: Learned (`app/past`), Now (`app/now`, what goes well
   and what needs practice), Next (`app/next`) and Ask (`app/ask`). The first three read what the phone remembers of
-  the word game (`lib/learn.js`, kept on the phone). Ask sends a typed question (`/api/ask`, table `questions`, five
-  a day); it shows in the admin panel under Questions, and the answer written there shows in the app under the question.
+  the word game (`lib/learn.js`, kept on the phone). Ask takes a question said aloud (the browser's speech recognition) or typed, and first looks for
+  the answer in our own lessons, on the phone (`lib/find.js`: word matching over the lines of `lib/lessons.js`, no
+  download, nothing sent). The line that fits is shown with its drawing and said in its recorded voice. When the
+  lessons hold no sure answer, or the learner presses the talk button, the question goes to a person (`/api/ask`,
+  table `questions`, five a day); it shows in the admin panel under Questions, and the answer written there shows in
+  the app under the question.
 - **Lives (जीवनी) opens one great life** (`lib/lives.js`, `app/life/page.jsx`): a short biography about how the person
   learned and grew, never the same one twice in a row, to read or to hear in a Sarvam voice (`/api/voice?life=<id>`).
   Three placeholder lives, in English and Hindi; the set of 121 is being written. Shown and heard are counted.
@@ -63,7 +67,7 @@ The pages are static files (`next build` writes `out/`). Cloudflare serves them 
 | Table | One row per | Used for |
 | :--- | :--- | :--- |
 | `users` | phone that chose a language | users, new and active users; language; place and work once registered |
-| `taps` | person, thing and day | taps (sum of `count`) and distinct users (count of people). The thing is `gyan`, `vartaman`, `top:<house>`, `word`, `book` (the word game), `subject:<id>`, `word:<house>`, `lives`, `life:<id>` (a life shown), `lesson:<id>` and `watched:<id>` (a lesson opened, and seen to its end), `heard`, `centre:<box>`, `answer` or `right` |
+| `taps` | person, thing and day | taps (sum of `count`) and distinct users (count of people). The thing is `gyan`, `vartaman`, `top:<house>`, `word`, `book` (the word game), `subject:<id>`, `word:<house>`, `lives`, `life:<id>` (a life shown), `lesson:<id>` and `watched:<id>` (a lesson opened, and seen to its end), `heard`, `centre:<box>`, `ask:found`, `ask:near` and `ask:none` (a question the lessons answered, half answered, or could not), `answer` or `right` |
 | `questions` | question from the Ask box | waiting and answered questions |
 | `wishes` | (unused) | answers to a question that was removed on 2026-11-28 |
 
