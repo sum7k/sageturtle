@@ -152,7 +152,7 @@ test("the Open the app button uses an Android intent, with the start page in the
 test("Home holds twelve subjects, turned by the rising sign", () => {
   assert.equal(SUBJECTS.length, 12);
   assert.equal(SUBJECTS[11].id, "lives"); // Meena, the twelfth sign
-  assert.deepEqual(SUBJECTS.filter((x) => x.open).map((x) => [x.id, x.open]), [["word", "/word"], ["nature", "/nature"], ["lives", "/life"]]);
+  assert.deepEqual(SUBJECTS.filter((x) => x.open).map((x) => [x.id, x.open]), [["word", "/word"], ["number", "/number"], ["nature", "/nature"], ["lives", "/life"]]);
   assert.equal(new Set(SUBJECTS.map((x) => x.id)).size, 12);
   for (const x of SUBJECTS) for (const l of LANG_ORDER) assert.ok(x.name[l], `${x.id} ${l}`);
   assert.deepEqual([...LANG_ORDER].sort(), LANGS.map((l) => l.id).sort());
@@ -473,7 +473,8 @@ test("a lesson is scenes: a drawing and a spoken line, recorded once under the l
   const { LESSONS, lessonsOf, lessonLang, lineId, lineText } = await import("../lib/lessons.js");
   const { lineUrl } = await import("../lib/voice.js");
   const { voice } = await import("../worker/voice.js");
-  const art = (await import("node:fs")).readFileSync(new URL("../components/LessonArt.jsx", import.meta.url), "utf8");
+  const fs = await import("node:fs");
+  const art = ["../components/LessonArt.jsx", "../components/art/zero.jsx"].map((f) => fs.readFileSync(new URL(f, import.meta.url), "utf8")).join("\n");
   assert.equal(lessonsOf("nature", 1).length, 7);
   for (const l of LESSONS) {
     assert.ok(TRACKED.includes(`lesson:${l.id}`) && TRACKED.includes(`watched:${l.id}`));
@@ -497,4 +498,27 @@ test("a lesson is scenes: a drawing and a spoken line, recorded once under the l
   assert.equal(calls.length, 1, "made once, then read");
   assert.equal((await ask(lineUrl("hi", "man", "fire.99"))).status, 404);
   assert.equal((await ask(lineUrl("ta", "man", "fire.2"))).status, 404);
+});
+
+test("a chapter is told in one named voice, and its sums are right", async () => {
+  const { CHAPTERS, LESSONS, chaptersOf } = await import("../lib/lessons.js");
+  const { NARRATORS, inVoiceOf, notTheirWords } = await import("../lib/narrators.js");
+  assert.deepEqual(chaptersOf("number").map((c) => c.id), ["zero"]);
+  for (const c of CHAPTERS) {
+    const who = NARRATORS[c.by];
+    assert.ok(who && ["man", "woman"].includes(who.who), `${c.id}: a narrator`);
+    for (const l of LANG_ORDER) { assert.ok(inVoiceOf(c.by, l).includes(who.name[l]), l); assert.ok(notTheirWords(l)); }
+    for (const l of c.lessons) {
+      const whole = LESSONS.find((x) => x.id === l.id);
+      assert.equal(whole.by, c.by); assert.equal(whole.stage, c.stage);
+      assert.ok(l.name.hi && l.name.en);
+      for (const [sum, choices, good] of l.ask) {
+        assert.equal(choices.length, 3);
+        if (sum.includes("◻")) continue; // a sign to choose, not a sum
+        const value = (t) => Function(`return ${t.replaceAll("−", "-").replaceAll("×", "*").replaceAll("÷", "/")}`)() + 0; // + 0 turns −0 into 0
+        assert.equal(value(sum), value(choices[good]), `${l.id}: ${sum}`);
+        assert.equal(choices.filter((x) => value(x) === value(sum)).length, 1, `${l.id}: ${sum} has one right answer`);
+      }
+    }
+  }
 });

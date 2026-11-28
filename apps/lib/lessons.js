@@ -7,6 +7,17 @@
 //
 // The spirit (CLAUDE.md): a lesson shows and names. It never compares the learner with anyone and never hurries them.
 
+import { ZERO } from "./chapters/zero.js";
+
+/**
+ * Chapters, from stage 4 on, where the learner reads: a set of lessons on one topic, told in the voice of a great
+ * person of the field (lib/narrators.js). Their lessons are written (the line is shown under the drawing), are heard
+ * in the narrator's one voice, and end with a few sums to try. Each chapter lives in its own file in lib/chapters.
+ */
+export const CHAPTERS = [ZERO];
+export const chaptersOf = (subject) => CHAPTERS.filter((c) => c.subject === subject);
+const inChapter = CHAPTERS.flatMap((c) => c.lessons.map((l) => ({ ...l, subject: c.subject, stage: c.stage, by: c.by, chapter: c.id })));
+
 export const LESSONS = [
   // Stage 1, Nature: "The body and its five senses".
   {
@@ -95,6 +106,7 @@ export const LESSONS = [
       { art: "drink", say: { hi: "और हम साफ़ पानी पीते हैं। पानी सबको चाहिए।", en: "And we drink clean water. Everyone needs water." } },
     ],
   },
+  ...inChapter,
 ];
 
 export const LESSON_IDS = LESSONS.map((l) => l.id);

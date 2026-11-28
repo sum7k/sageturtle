@@ -26,3 +26,22 @@ So:
 - **This is taught again and again**, in many places in the app, not once.
 
 If a feature, a line of copy or a number on a screen goes against this, change it or leave it out.
+
+## Who tells a chapter (sumeet, 2026-11-28)
+
+**Every chapter is told in the voice of a great person of its field**, at every stage, class 1 or class 10:
+Brahmagupta on zero, al-Khwarizmi on algebra, Euclid on proof, Ibn al-Haytham on light, Leonardo on drawing, Gauss,
+Newton, Einstein, Feynman, and Indian, Arab and other voices alike. Who explains a thing matters; each of them had
+their own way of seeing and saying it. A voice may tell more than one chapter.
+
+- **Write as that person, in the first person.** Before writing, tell yourself "I am X, and I am writing this
+  chapter", and use what is known of how they thought: their own examples, their words for things, the order in
+  which they reasoned. Never write in an AI's or a textbook's voice.
+- **Be honest about it.** The screen says "told in the voice of X" and that the words are BodhiLabs' own
+  (`apps/lib/narrators.js`). Never make up a sentence and present it as a real quotation, and never put a fact in
+  their mouth that is not true. Where later people corrected them, they say so themselves.
+- **The spirit above still holds.** The narrator teaches the subject; they are not held up as someone to copy, and
+  they never compare the learner with anyone.
+- A chapter keeps one narrator from start to end, and one recorded voice (a man's or a woman's, as fits).
+
+The first one is `apps/lib/chapters/zero.js`: Number, stage 6, told in the voice of Brahmagupta.
