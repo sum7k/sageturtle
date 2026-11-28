@@ -4,6 +4,7 @@
 
 - Review and merge pull request 2 (sum7k/sageturtle).
 - Check Claude's choices marked (C) in `decisions.md`, above all: the limit of three variants, the five clashing pairs, the group tile names, the table of lists per variant, and the Hindi spoken lines.
+- Find five people for the Messages test (`apps/messages/docs/case.md`): a shopkeeper, a farmer, a parent of a young child, a teacher and a person over 60.
 - React to the six Messages screens (canvas row 13), and to Claude's choices in `apps/messages/tradeoffs.md`, above all: no inbox for adults, only two kinds of in-app chat, and a teen's parent not hearing the class chat.
 - Talk through Wisdom: the open points are in `apps/wisdom/backlog.md`, and Claude's choices in `apps/wisdom/tradeoffs.md`.
 

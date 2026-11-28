@@ -1,6 +1,6 @@
 # Messages: idea
 
-Step 1 of the SDLC, written 2026-11-28. The screens are in `docs/screens.md`, what it stores and calls is in
+Step 1 of the SDLC, written 2026-11-28. Why it should exist, its one number and its test are in `docs/case.md`. The screens are in `docs/screens.md`, what it stores and calls is in
 `docs/data-flows.md`, choices are in `tradeoffs.md` and parked work is in `backlog.md`.
 
 ## What it is

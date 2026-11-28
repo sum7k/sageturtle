@@ -67,6 +67,10 @@ As of 2026-11-28. (S) = decided by sumeet. (C) = chosen by Claude under the "dec
 - (S) The other person's number comes from Reach me in Me: one optional mobile number, never checked by OTP, and one app for messages. It is not the account (2026-11-28).
 - (C) A row has a handset (dialer) and the chosen app's mark (message). Telegram opens by number. A teen's Reach me is filled by the guardian, without Telegram. Groups (class chat, speak to all, class call) stay in the app.
 
+## How we work
+
+- (S) Step 1 of every app includes a one-page product case: problem, job per variant, non-goals, one number with guardrails, the riskiest assumption, and a test with 5 real people before building (2026-11-28). See root `docs/sdlc.md`.
+
 ## Messages
 
 Designed on 2026-11-28 (`apps/messages/`). Screens are not approved yet.
