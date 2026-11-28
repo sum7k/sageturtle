@@ -13,6 +13,7 @@ As of 2026-11-28. (S) = decided by sumeet. (C) = chosen by Claude under the "dec
 - (S) The app installs on the phone (PWA).
 - (S) Locked buttons are lightly greyed out, have no name, and show changing pictures ("put anything there"). A tap is only recorded, with which picture it was: the aim is to see which kinds of picture people press (2026-11-28).
 - (C) The pictures are 40 emoji; each phone sees ten, a different ten each day; showings are recorded too, so pictures are ranked by the share of people who tapped.
+- (S) The twelfth button is the joker of all apps (2026-11-28): same shape, no words, a joker on it, an empty app. A press shows something different each time, sometimes speaking, sometimes something else. (C) Eight surprises for now, each one big emoji over the whole screen; the press and what was shown are counted and listed in admin.
 - (S) Every tap is counted on Cloudflare, with distinct users. An admin panel is at bodhilabs.org/admin.
 - (S) Users are not asked what they want: the "What functionality would you want next?" ad and form were removed the same day they were added (2026-11-28). The spot stays reserved for advertisements later.
 - (S) After install the app should open by itself. (C) A page cannot do that, so the landing page shows one big "Open the app" button; the installed app starts at /app.

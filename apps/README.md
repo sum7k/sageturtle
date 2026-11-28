@@ -10,10 +10,12 @@ Until 2026-11-28 the product was called SageTurtle.
   picture tiles, one per language. A tap makes the tile say hello in that language; a second tap, or the gold tick,
   chooses it. One tile is picked in advance from the phone's language, or from the state the person is in
   (`firstGuess` in `lib/langs.js`). The drawings are placeholders, with no religious symbols.
-- **Home has eleven buttons** (`lib/buttons.js`). Only Book is open. The other ten are lightly greyed out and carry
+- **Home has twelve buttons** (`lib/buttons.js`). Only Book is open. The other ten are lightly greyed out and carry
   no name: each shows one picture out of a pool of 40, and each phone sees a different ten each day. A tap on one
   only gets counted, together with which pictures were shown, so the admin panel can rank pictures by the share of
   people who tapped them. Nobody is asked anything.
+- **The joker** is the twelfth button: an empty app with a joker card on it. A tap shows one surprise over the whole
+  screen (a mic, a dice, a balloon and so on), never the same one twice in a row. The tap and what was shown are counted.
 - **Book** (`lib/book.js`): a picture, a gold button that says the word, and three written words to choose from. A wrong
   word shakes and says itself; the right one turns green and the next picture comes. Twelve words per language. The
   letters are on a second page.

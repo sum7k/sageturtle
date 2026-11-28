@@ -1,5 +1,5 @@
 // The admin panel: one page of numbers, made on the server from the database. English only; it is for the owner.
-import { BOOK, ICONS, ICON_IDS } from "../lib/buttons.js";
+import { BOOK, ICONS, ICON_IDS, JOKER, SURPRISES, SURPRISE_IDS } from "../lib/buttons.js";
 import { LANGS } from "../lib/langs.js";
 import { VARIANTS } from "../lib/variants.js";
 
@@ -36,6 +36,9 @@ export async function adminData(db, now = Date.now()) {
       return { id, picture: ICONS[id], seen: shown.users, users: tapped.users, taps: tapped.taps, rate: shown.users ? tapped.users / shown.users : 0,
         seen_week: shown.users_week, users_week: tapped.users_week, taps_today: tapped.taps_today };
     }).sort((a, b) => b.rate - a.rate || b.users - a.users || b.taps - a.taps),
+    // The joker: how many people tapped it, and how often each surprise was shown.
+    joker: { ...zero, ...by[JOKER.id] },
+    surprises: SURPRISE_IDS.map((id) => ({ id, picture: SURPRISES[id], ...zero, ...by[`${JOKER.id}:${id}`] })),
     langs, variants, signups,
   };
 }
@@ -76,6 +79,10 @@ ${tile("Users (phones)", d.users.total)}${tile("Registered", d.users.registered)
     d.icons.map((x) => [`<span class="bar" style="width:${Math.round(x.rate * 80)}px"></span><span class="pic">${x.picture}</span>${esc(x.id)}`,
       num(x.users), num(x.seen), pct(x.rate), num(x.taps), num(x.users_week), num(x.seen_week), num(x.taps_today)]))}</div>
 <p class="muted">Each phone is shown ten of these ${ICON_IDS.length} pictures, a different ten each day. "Tapped by" and "Shown to" count each person once. The share is the fair way to compare pictures.</p></section>
+<section><h2>Joker</h2><div class="card">${table(["", "Users", "Taps", "Users, 7 days", "Taps, 7 days", "Users today", "Taps today"],
+    [[`<span class="pic">${JOKER.picture}</span>Tapped the joker`, num(d.joker.users), num(d.joker.taps), num(d.joker.users_week), num(d.joker.taps_week), num(d.joker.users_today), num(d.joker.taps_today)],
+      ...d.surprises.map((x) => [`<span class="pic">${x.picture}</span>Shown: ${esc(x.id)}`, num(x.users), num(x.taps), num(x.users_week), num(x.taps_week), num(x.users_today), num(x.taps_today)])])}</div>
+<p class="muted">The joker is the twelfth button. Each tap shows one surprise, never the same one twice in a row.</p></section>
 <section class="two">
 <div><h2>New users by day</h2><div class="card">${table(["Day", "Users"], d.signups.map((r) => [esc(r.day), num(r.users)]))}</div></div>
 <div><h2>Users by language</h2><div class="card">${table(["Language", "Users"], d.langs.map((r) => [esc(langName(r.lang)), num(r.users)]))}</div></div>

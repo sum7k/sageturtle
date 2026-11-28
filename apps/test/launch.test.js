@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { BOOK, ICONS, ICON_IDS, LOCKED, TRACKED, iconsFor } from "../lib/buttons.js";
+import { BOOK, ICONS, ICON_IDS, JOKER, LOCKED, SURPRISE_IDS, SURPRISES, TRACKED, iconsFor, surprise } from "../lib/buttons.js";
 import { openAppUrl } from "../lib/browser.js";
 import { LANGS, langById, guessLang, stateLang, firstGuess } from "../lib/langs.js";
 import { STR, t } from "../lib/strings.js";
@@ -215,4 +215,20 @@ test("counts from an unknown phone, for unknown things, or to a removed address 
   assert.deepEqual(await from({ country: "IN", regionCode: "MH" }), { state: "MH" });
   assert.deepEqual(await from({ country: "US", regionCode: "CA" }), { state: "" });
   assert.deepEqual(await from(undefined), { state: "" });
+});
+
+test("the joker shows a different surprise each time, and both are counted", () => {
+  assert.ok(SURPRISE_IDS.includes("speak"));
+  for (const id of SURPRISE_IDS) assert.ok(SURPRISES[id], id);
+  let last = null;
+  for (let i = 0; i < 200; i++) {
+    const next = surprise(last, (i * 0.37) % 1);
+    assert.ok(SURPRISE_IDS.includes(next));
+    assert.notEqual(next, last);
+    last = next;
+  }
+  assert.ok(SURPRISE_IDS.includes(surprise(null, 0.999999)));
+  assert.ok(TRACKED.includes(JOKER.id));
+  for (const id of SURPRISE_IDS) assert.ok(TRACKED.includes(`joker:${id}`));
+  assert.equal(addTap({}, "joker:speak")["joker:speak"], 1);
 });

@@ -112,6 +112,12 @@ h1, h2, p { margin: 0; }
 .block .emoji { font-size: 40px; line-height: 1; }
 .block.shake { animation: shake 0.3s ease; }
 @keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+/* the joker's surprise: one big picture over the whole screen; a tap anywhere closes it */
+.surprise { position: fixed; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center; border: 0; background: var(--sky); }
+.surprise .big { font-size: 160px; line-height: 1; animation: pop 0.35s ease; }
+.surprise .big.speak { animation: pop 0.35s ease, beat 1.2s ease-in-out 0.35s infinite; }
+@keyframes pop { from { transform: scale(0.3); opacity: 0; } }
+@keyframes beat { 50% { transform: scale(1.12); } }
 
 .wide { font-size: 18px; font-weight: 700; min-height: 64px; }
 .wide:disabled { opacity: 0.4; cursor: default; }

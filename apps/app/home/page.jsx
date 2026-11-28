@@ -6,19 +6,22 @@ import { useRouter } from "next/navigation";
 import Icon, { P } from "@/components/Icon";
 import { useMe } from "@/components/useMe";
 import { nextStep } from "@/lib/store";
-import { BOOK, ICONS, iconsFor } from "@/lib/buttons";
+import { BOOK, ICONS, JOKER, SURPRISES, iconsFor, surprise } from "@/lib/buttons";
 import { langById } from "@/lib/langs";
 import { t } from "@/lib/strings";
 import { tap, seen, sync, today as dayNow } from "@/lib/track";
 
 /**
- * Home: eleven buttons. Only Book is open. The other ten are greyed out, carry no name, and show a picture that
- * changes from day to day. A tap on one is only counted. Nobody is asked anything.
+ * Home: twelve buttons. Only Book is open. The next ten are greyed out, carry no name, and show a picture that
+ * changes from day to day. A tap on one is only counted. The twelfth is the joker: a tap shows one surprise,
+ * a different one each time, and what it showed is counted. Nobody is asked anything.
  */
 export default function Home() {
   const router = useRouter();
   const { me } = useMe();
   const [shake, setShake] = useState(null);
+  const [shown, setShown] = useState(null); // what the joker is showing now
+  const [last, setLast] = useState(null);
   const ready = me && !nextStep(me);
   const day = dayNow();
   const icons = useMemo(() => (ready ? iconsFor(me.username, day) : []), [ready, me?.username, day]);
@@ -47,7 +50,16 @@ export default function Home() {
             <span className="emoji" aria-hidden="true">{ICONS[id]}</span>
           </button>
         ))}
+        <button type="button" className="block locked joker" aria-label={t(lang, "soon")}
+          onClick={() => { const id = surprise(last); tap(JOKER.id); tap(`${JOKER.id}:${id}`); setLast(id); setShown(id); }}>
+          <span className="emoji" aria-hidden="true">{JOKER.picture}</span>
+        </button>
       </div>
+      {shown && (
+        <button type="button" className="surprise" aria-label={t(lang, "back")} onClick={() => setShown(null)}>
+          <span className={`big ${shown}`} aria-hidden="true">{SURPRISES[shown]}</span>
+        </button>
+      )}
     </main>
   );
 }
