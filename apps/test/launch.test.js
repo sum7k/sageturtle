@@ -1,26 +1,18 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { BUTTONS, TRACKED } from "../lib/buttons.js";
+import { BOOK, ICONS, ICON_IDS, LOCKED, TRACKED, iconsFor } from "../lib/buttons.js";
 import { openAppUrl } from "../lib/browser.js";
 import { LANGS, langById, guessLang, stateLang, firstGuess } from "../lib/langs.js";
 import { STR, t } from "../lib/strings.js";
 import { LETTERS, lettersFor, WORDS, WORD_KEYS, PICTURE, round, wordFor } from "../lib/book.js";
 import { SIGNS, LINES, lineFor } from "../lib/horoscope.js";
-import { addTap, subtract, profileOf } from "../lib/track.js";
+import { addTap, subtract, profileOf, today } from "../lib/track.js";
 import { VARIANTS, LISTS } from "../lib/variants.js";
 import { blank } from "../lib/store.js";
 import { handle, istDay } from "../worker/index.js";
 import { accessEmail } from "../worker/access.js";
 import { adminData, adminPage } from "../worker/admin.js";
 import { testDb } from "./d1.js";
-
-test("Home has eleven buttons, and only Book is open", () => {
-  assert.equal(BUTTONS.length, 11);
-  assert.deepEqual(BUTTONS.filter((b) => b.open).map((b) => b.id), ["book"]);
-  assert.deepEqual(BUTTONS.slice(0, 3).map((b) => b.id), ["book", "horoscope", "khabri"]);
-  for (const b of BUTTONS) assert.equal(!!b.href, !!b.open, b.id);
-  assert.equal(new Set(BUTTONS.map((b) => b.id)).size, 11);
-});
 
 test("eleven languages, English among them, and every word exists in every language", () => {
   assert.equal(LANGS.length, 11);
@@ -35,7 +27,7 @@ test("eleven languages, English among them, and every word exists in every langu
     assert.ok(LETTERS[l.id], `letters for ${l.id}`);
     assert.equal(new Set(lettersFor(l.id)).size, lettersFor(l.id).length, `no letter twice in ${l.id}`);
   }
-  assert.equal(t("xx", "send"), "Send");
+  assert.equal(t("xx", "today"), "Today");
 });
 
 test("the first screen guesses a language from the phone, then from the state, and every tile can say hello", () => {
@@ -73,14 +65,6 @@ test("Book shows a picture and three words, one of them right, and has every wor
   assert.equal(Object.keys(WORDS).length, 11);
 });
 
-test("every button, kind of work, list and sign has a word", () => {
-  for (const b of BUTTONS) assert.ok(STR.en[b.id], b.id);
-  for (const v of VARIANTS.filter((x) => x.adult)) assert.ok(STR.en[`v_${v.id}`], v.id);
-  for (const l of Object.keys(LISTS)) assert.ok(STR.en[`l_${l}`], l);
-  assert.equal(SIGNS.length, 12);
-  for (const s of SIGNS) assert.ok(STR.en[s.key], s.key);
-});
-
 test("a sign gets one line a day, and two signs do not share it", () => {
   const now = Date.UTC(2026, 10, 28, 6);
   assert.equal(lineFor("0", "en", now), lineFor("0", "en", now + 3600000));
@@ -91,21 +75,10 @@ test("a sign gets one line a day, and two signs do not share it", () => {
   assert.equal(LINES.hi.length, LINES.en.length);
 });
 
-test("taps wait on the phone and are taken off only when sent", () => {
-  let p = addTap({}, "earn");
-  p = addTap(p, "earn");
-  p = addTap(p, "book");
-  p = addTap(p, "nothing");
-  assert.deepEqual(p, { earn: 2, book: 1 });
-  assert.deepEqual(subtract({ earn: 3, book: 1 }, { earn: 2, book: 1 }), { earn: 1 });
-  const me = { ...blank(), uid: "", lang: "hi", pin: "221001", variants: ["farm"], name: "Asha" };
-  assert.deepEqual(profileOf(me), { id: undefined, lang: "hi", pin: "221001", variants: ["farm"] });
-});
-
 const NOW = Date.UTC(2026, 10, 28, 6); // 11:30 in India
 const env = () => ({ DB: testDb(), ASSETS: { fetch: async () => new Response("page") } });
 const post = (e, path, body, now = NOW) => handle(new Request(`https://bodhilabs.org${path}`, { method: "POST", body: JSON.stringify(body) }), e, now);
-const signUp = async (e, profile = { lang: "hi", pin: "221001", variants: ["farm"] }, now = NOW) => (await (await post(e, "/api/register", profile, now)).json()).id;
+const signUp = async (e, profile = { lang: "hi" }, now = NOW) => (await (await post(e, "/api/register", profile, now)).json()).id;
 
 test("the day changes at midnight in India", () => {
   assert.equal(istDay(Date.UTC(2026, 10, 28, 18, 29)), "2026-11-28");
@@ -127,52 +100,6 @@ test("a phone gets an id with only a language, a bad profile is refused, and a k
   assert.equal(d.users.total, 1);
   assert.equal(d.users.registered, 1);
   assert.deepEqual(d.langs.map((l) => [l.lang, l.users]), [["ta", 1]]);
-});
-
-test("taps are counted per button, and a person counts once however often they tap", async () => {
-  const e = env();
-  const a = await signUp(e);
-  const b = await signUp(e, { lang: "en", pin: "110001", variants: ["shop", "farm"] });
-  assert.equal((await post(e, "/api/tap", { user: a, taps: { earn: 3, book: 1 } })).status, 200);
-  assert.equal((await post(e, "/api/tap", { user: a, taps: { earn: 2 } })).status, 200);
-  assert.equal((await post(e, "/api/tap", { user: b, taps: { earn: 1, nothing: 9, events: 100000 } })).status, 200);
-  assert.equal((await post(e, "/api/tap", { user: b, taps: { earn: 4 } }, NOW - 3 * 86400000)).status, 200);
-  const d = await adminData(e.DB, NOW);
-  const earn = d.buttons.find((x) => x.button === "earn");
-  assert.deepEqual([earn.taps, earn.users, earn.taps_today, earn.users_today, earn.taps_week, earn.users_week], [10, 2, 6, 2, 10, 2]);
-  assert.equal(d.buttons.find((x) => x.button === "events").taps, 500);
-  assert.equal(d.buttons.find((x) => x.button === "messages").taps, 0);
-  assert.equal(d.buttons.length, TRACKED.length);
-  assert.equal(d.users.active_today, 1); // b's last tap in this test was sent with an older clock
-  assert.deepEqual(d.variants.map((v) => [v.variant, v.users]).sort(), [["farm", 2], ["shop", 1]]);
-});
-
-test("taps and answers from an unknown phone are refused", async () => {
-  const e = env();
-  assert.equal((await post(e, "/api/tap", { user: "00000000-0000-0000-0000-000000000000", taps: { earn: 1 } })).status, 404);
-  assert.equal((await post(e, "/api/wish", { user: "nobody", text: "a ration shop finder" })).status, 404);
-  const id = await signUp(e);
-  assert.equal((await post(e, "/api/tap", { user: id, taps: { nothing: 1 } })).status, 400);
-  assert.equal((await post(e, "/api/wish", { user: id, text: "   " })).status, 400);
-  assert.equal((await handle(new Request("https://bodhilabs.org/api/tap"), e, NOW)).status, 405);
-  assert.equal((await handle(new Request("https://bodhilabs.org/api/other"), e, NOW)).status, 404);
-  assert.equal(await (await handle(new Request("https://bodhilabs.org/home"), e, NOW)).text(), "page");
-  const from = async (cf) => (await handle(Object.assign(new Request("https://bodhilabs.org/api/where"), { cf }), e, NOW)).json();
-  assert.deepEqual(await from({ country: "IN", regionCode: "MH" }), { state: "MH" });
-  assert.deepEqual(await from({ country: "US", regionCode: "CA" }), { state: "" });
-  assert.deepEqual(await from(undefined), { state: "" });
-});
-
-test("an answer is saved, cut to size, and shown safely on the admin panel", async () => {
-  const e = env();
-  const id = await signUp(e);
-  assert.equal((await post(e, "/api/wish", { user: id, lang: "hi", text: "<script>alert(1)</script> मंडी के भाव" + "x".repeat(900) })).status, 200);
-  const d = await adminData(e.DB, NOW);
-  assert.equal(d.wishes.length, 1);
-  assert.equal(d.wishes[0].text.length, 500);
-  const html = await adminPage(e.DB, NOW, "owner@example.com");
-  assert.ok(html.includes("&lt;script&gt;") && !html.includes("<script>alert"));
-  assert.ok(html.includes("मंडी के भाव") && html.includes("owner@example.com"));
 });
 
 test("the admin panel is shut unless the request carries a good Cloudflare Access signature", async () => {
@@ -211,4 +138,81 @@ test("the Open the app button uses an Android intent, with the start page in the
   assert.ok(url.includes("S.browser_fallback_url=https%3A%2F%2Fbodhilabs.org%2Fapp;") && url.endsWith(";end"));
   assert.equal(openAppUrl("Mozilla/5.0 (Macintosh)", "https://bodhilabs.org"), "/app");
   assert.equal(openAppUrl(android, "http://localhost:8787"), "/app");
+});
+
+test("Home has Book and ten greyed pictures, which change by phone and by day", () => {
+  assert.equal(LOCKED, 10);
+  assert.ok(ICON_IDS.length >= 30);
+  for (const id of ICON_IDS) assert.ok(ICONS[id], id);
+  const a = iconsFor("bodhi11111", "2026-11-28");
+  assert.equal(a.length, 10);
+  assert.equal(new Set(a).size, 10);
+  assert.ok(a.every((id) => ICONS[id]));
+  assert.deepEqual(a, iconsFor("bodhi11111", "2026-11-28")); // the same all day
+  assert.notDeepEqual(a, iconsFor("bodhi11111", "2026-11-29"));
+  assert.notDeepEqual(a, iconsFor("bodhi22222", "2026-11-28"));
+  const shown = new Set();
+  for (let i = 0; i < 60; i++) for (const id of iconsFor(`phone${i}`, "2026-11-28")) shown.add(id);
+  assert.equal(shown.size, ICON_IDS.length, "every picture gets shown to someone");
+  assert.equal(today(Date.UTC(2026, 10, 28, 18, 31)), "2026-11-29");
+});
+
+test("every kind of work, list and sign has a word", () => {
+  for (const v of VARIANTS.filter((x) => x.adult)) assert.ok(STR.en[`v_${v.id}`], v.id);
+  for (const l of Object.keys(LISTS)) assert.ok(STR.en[`l_${l}`], l);
+  assert.equal(SIGNS.length, 12);
+  for (const s of SIGNS) assert.ok(STR.en[s.key], s.key);
+  assert.ok(STR.en[BOOK.id]);
+});
+
+test("taps wait on the phone and are taken off only when sent", () => {
+  let p = addTap({}, "icon:money");
+  p = addTap(p, "icon:money");
+  p = addTap(p, "book");
+  p = addTap(p, "seen:money");
+  p = addTap(p, "icon:nothing");
+  assert.deepEqual(p, { "icon:money": 2, book: 1, "seen:money": 1 });
+  assert.deepEqual(subtract({ book: 3, "icon:money": 1 }, { book: 2, "icon:money": 1 }), { book: 1 });
+  const me = { ...blank(), uid: "", lang: "hi", name: "Asha" };
+  assert.deepEqual(profileOf(me), { id: undefined, lang: "hi", pin: "", variants: [] });
+});
+
+test("a picture is ranked by the share of people who tapped it after being shown it", async () => {
+  const e = env();
+  const a = await signUp(e);
+  const b = await signUp(e, { lang: "en" });
+  const c = await signUp(e, { lang: "ta" });
+  for (const u of [a, b, c]) assert.equal((await post(e, "/api/tap", { user: u, taps: { "seen:money": 1, "seen:cricket": 1 } })).status, 200);
+  assert.equal((await post(e, "/api/tap", { user: a, taps: { "icon:money": 3, book: 1 } })).status, 200);
+  assert.equal((await post(e, "/api/tap", { user: a, taps: { "icon:money": 2 } })).status, 200);
+  assert.equal((await post(e, "/api/tap", { user: b, taps: { "icon:money": 1, "icon:cricket": 1, "icon:nothing": 9, "icon:tv": 100000 } })).status, 200);
+  const d = await adminData(e.DB, NOW);
+  const of = (id) => d.icons.find((x) => x.id === id);
+  assert.deepEqual([of("money").seen, of("money").users, of("money").taps], [3, 2, 6]);
+  assert.equal(Math.round(of("money").rate * 100), 67);
+  assert.equal(Math.round(of("cricket").rate * 100), 33);
+  assert.equal(of("tv").taps, 500);
+  assert.equal(of("tv").rate, 0); // tapped but never counted as shown
+  assert.equal(of("music").taps, 0);
+  assert.equal(d.icons[0].id, "money");
+  assert.equal(d.icons.length, ICON_IDS.length);
+  assert.deepEqual([d.book.users, d.book.taps], [1, 1]);
+  assert.equal(d.users.active_today, 3);
+  const html = await adminPage(e.DB, NOW, "owner@example.com");
+  assert.ok(html.includes("67%") && html.includes("💰") && html.includes("owner@example.com"));
+});
+
+test("counts from an unknown phone, for unknown things, or to a removed address are refused", async () => {
+  const e = env();
+  assert.equal((await post(e, "/api/tap", { user: "00000000-0000-0000-0000-000000000000", taps: { book: 1 } })).status, 404);
+  const id = await signUp(e);
+  assert.equal((await post(e, "/api/tap", { user: id, taps: { nothing: 1 } })).status, 400);
+  assert.equal((await post(e, "/api/wish", { user: id, text: "anything" })).status, 404);
+  assert.equal((await handle(new Request("https://bodhilabs.org/api/tap"), e, NOW)).status, 405);
+  assert.equal((await handle(new Request("https://bodhilabs.org/api/other"), e, NOW)).status, 404);
+  assert.equal(await (await handle(new Request("https://bodhilabs.org/home"), e, NOW)).text(), "page");
+  const from = async (cf) => (await handle(Object.assign(new Request("https://bodhilabs.org/api/where"), { cf }), e, NOW)).json();
+  assert.deepEqual(await from({ country: "IN", regionCode: "MH" }), { state: "MH" });
+  assert.deepEqual(await from({ country: "US", regionCode: "CA" }), { state: "" });
+  assert.deepEqual(await from(undefined), { state: "" });
 });

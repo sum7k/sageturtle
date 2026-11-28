@@ -1,61 +1,53 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Icon, { P } from "@/components/Icon";
 import { useMe } from "@/components/useMe";
-import { useNote } from "@/components/useNote";
 import { nextStep } from "@/lib/store";
-import { BUTTONS } from "@/lib/buttons";
+import { BOOK, ICONS, iconsFor } from "@/lib/buttons";
 import { langById } from "@/lib/langs";
 import { t } from "@/lib/strings";
-import { tap, sync } from "@/lib/track";
+import { tap, seen, sync, today as dayNow } from "@/lib/track";
 
-/** Home: the ad on top, then the eleven buttons. Only Book is open. A locked button shows a lock and counts the tap. */
+/**
+ * Home: eleven buttons. Only Book is open. The other ten are greyed out, carry no name, and show a picture that
+ * changes from day to day. A tap on one is only counted. Nobody is asked anything.
+ */
 export default function Home() {
   const router = useRouter();
   const { me } = useMe();
-  const { note, show } = useNote();
   const [shake, setShake] = useState(null);
   const ready = me && !nextStep(me);
+  const day = dayNow();
+  const icons = useMemo(() => (ready ? iconsFor(me.username, day) : []), [ready, me?.username, day]);
 
   useEffect(() => {
     if (me && nextStep(me)) router.replace("/start");
-    if (ready) sync(); // gives an id to a phone that chose its language without network
-  }, [me, ready, router]);
+    if (ready) { seen(icons, day); sync(); }
+  }, [me, ready, router, icons, day]);
   if (!ready) return <main className="screen" />;
 
   const lang = me.lang;
-  const today = new Intl.DateTimeFormat(langById(lang).locale, { weekday: "long", day: "numeric", month: "long" }).format(new Date());
-  const press = (b) => {
-    tap(b.id);
-    if (b.open) return router.push(b.href);
-    setShake(b.id);
-    show(t(lang, "soon"));
-  };
-
+  const date = new Intl.DateTimeFormat(langById(lang).locale, { weekday: "long", day: "numeric", month: "long" }).format(new Date());
   return (
     <main className="screen">
       <div className="head">
-        <div className="when"><b>{today}</b></div>
+        <div className="when"><b>{date}</b></div>
         <Link href="/start?step=language" className="round white" aria-label={t(lang, "language")}><Icon d={P.globe} size={26} /></Link>
       </div>
-      {/* This spot will carry advertisements. For now it asks what to build next. */}
-      <Link href="/wish" className="ad" onClick={() => tap("ad")}>
-        <h2>{t(lang, "ad_q")}</h2>
-        <span className="go">{t(lang, "ad_go")}<Icon d={P.next} size={20} sw={2.5} /></span>
-      </Link>
       <div className="blocks">
-        {BUTTONS.map((b, i) => (
-          <button key={b.id} type="button" className={`block t${i % 4}${b.open ? "" : " locked"}${shake === b.id ? " shake" : ""}`}
-            onClick={() => press(b)} onAnimationEnd={() => setShake(null)}>
-            {!b.open && <span className="pin"><Icon d={P.lock} size={16} sw={2.2} label={t(lang, "soon")} /></span>}
-            <Icon d={b.icon} size={30} sw={1.8} />{t(lang, b.id)}
+        <button type="button" className="block t0" onClick={() => { tap(BOOK.id); router.push(BOOK.href); }}>
+          <Icon d={BOOK.icon} size={30} sw={1.8} />{t(lang, "book")}
+        </button>
+        {icons.map((id) => (
+          <button key={id} type="button" className={`block locked${shake === id ? " shake" : ""}`} aria-label={t(lang, "soon")}
+            onClick={() => { tap(`icon:${id}`); setShake(id); }} onAnimationEnd={() => setShake(null)}>
+            <span className="emoji" aria-hidden="true">{ICONS[id]}</span>
           </button>
         ))}
       </div>
-      {note}
     </main>
   );
 }

@@ -12,7 +12,8 @@ CREATE TABLE users (
 CREATE INDEX users_created_day ON users (created_day);
 CREATE INDEX users_last_day ON users (last_day);
 
--- Taps, one row per person, button and day. Counting rows gives distinct users; adding `count` gives taps.
+-- Taps, one row per person, button and day. `button` is "book", "icon:<picture>" for a tap on a greyed picture,
+-- or "seen:<picture>" when the picture was shown on Home that day. Counting rows gives distinct users; adding `count` gives taps.
 CREATE TABLE taps (
   day TEXT NOT NULL,
   button TEXT NOT NULL,
@@ -22,7 +23,7 @@ CREATE TABLE taps (
 ) WITHOUT ROWID;
 CREATE INDEX taps_button ON taps (button, user_id);
 
--- Answers to "What functionality would you want next?".
+-- Answers to "What functionality would you want next?". No longer written since 2026-11-28: the question was removed.
 CREATE TABLE wishes (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   created_at INTEGER NOT NULL,

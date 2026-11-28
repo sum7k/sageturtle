@@ -10,20 +10,23 @@ Until 2026-11-28 the product was called SageTurtle.
   picture tiles, one per language. A tap makes the tile say hello in that language; a second tap, or the gold tick,
   chooses it. One tile is picked in advance from the phone's language, or from the state the person is in
   (`firstGuess` in `lib/langs.js`). The drawings are placeholders, with no religious symbols.
-- **Home has eleven buttons** (`lib/buttons.js`). Only Book is open. The other ten are locked: a tap shows a lock and
-  "Coming soon", and the tap is counted. The icons are placeholders.
+- **Home has eleven buttons** (`lib/buttons.js`). Only Book is open. The other ten are lightly greyed out and carry
+  no name: each shows one picture out of a pool of 40, and each phone sees a different ten each day. A tap on one
+  only gets counted, together with which pictures were shown, so the admin panel can rank pictures by the share of
+  people who tapped them. Nobody is asked anything.
 - **Book** (`lib/book.js`): a picture, a gold button that says the word, and three written words to choose from. A wrong
   word shakes and says itself; the right one turns green and the next picture comes. Twelve words per language. The
   letters are on a second page.
-- **The top of Home is the ad spot.** For now it asks "What functionality would you want next?" and opens a form (`/wish`).
 - **Words in eleven languages** (`lib/strings.js`): Hindi, English, Bengali, Marathi, Telugu, Tamil, Gujarati, Urdu,
   Kannada, Odia, Malayalam. The app does not speak, except the hello on a language tile and the words in Book, which
   use the phone's own voice.
 - **It installs as an app** (manifest, icons and `public/sw.js`) and opens without network once it has been opened.
+  The installed app starts at `/app`. A page cannot start an installed app, so after install the landing page turns
+  into one big "Open the app" button (an Android intent link, `openAppUrl` in `lib/browser.js`).
 - **Counting.** Choosing a language gives the phone an id on the server. Taps are counted against it. The server is
   told only the language (and the PIN code and work once a person registers), never a name or a number.
-- **Admin panel** at `/admin`: users, taps and distinct users per button, users by language and work, and the answers
-  from the form.
+- **Admin panel** at `/admin`: users, how many opened Book, each picture with shown, tapped and share, and users by
+  language and work.
 
 Built but not linked from Home yet (later releases): Horoscope, Khabri, Me and registration (lock, PIN code, work,
 alerts; `/start?step=register`).
@@ -39,8 +42,8 @@ The pages are static files (`next build` writes `out/`). Cloudflare serves them 
 | Table | One row per | Used for |
 | :--- | :--- | :--- |
 | `users` | phone that chose a language | users, new and active users; language; place and work once registered |
-| `taps` | person, button and day | taps (sum of `count`) and distinct users (count of people) |
-| `wishes` | answer to the form | the list on the admin panel |
+| `taps` | person, thing and day | taps (sum of `count`) and distinct users (count of people). The thing is `book`, `icon:<picture>` for a tap, or `seen:<picture>` for a showing |
+| `wishes` | (unused) | answers to a question that was removed on 2026-11-28 |
 
 Taps wait on the phone until they reach the server, so none is lost without network (`lib/track.js`).
 

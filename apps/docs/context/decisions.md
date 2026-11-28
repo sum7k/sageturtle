@@ -11,11 +11,12 @@ As of 2026-11-28. (S) = decided by sumeet. (C) = chosen by Claude under the "dec
 - (S) Book starts with picture-and-sound matching: a picture (such as a bird), a button that says the word, and the person picks the right written word.
 - (S) This version is for people who can see. People who are blind, deaf or mute get a separate app later.
 - (S) The app installs on the phone (PWA).
-- (S) Icons on the buttons are placeholders for now.
+- (S) Locked buttons are lightly greyed out, have no name, and show changing pictures ("put anything there"). A tap is only recorded, with which picture it was: the aim is to see which kinds of picture people press (2026-11-28).
+- (C) The pictures are 40 emoji; each phone sees ten, a different ten each day; showings are recorded too, so pictures are ranked by the share of people who tapped.
 - (S) Every tap is counted on Cloudflare, with distinct users. An admin panel is at bodhilabs.org/admin.
-- (S) The spot on Home where the khabar card was is for advertisements later. For now it asks "What functionality would you want next?" and opens a form.
+- (S) Users are not asked what they want: the "What functionality would you want next?" ad and form were removed the same day they were added (2026-11-28). The spot stays reserved for advertisements later.
+- (S) After install the app should open by itself. (C) A page cannot do that, so the landing page shows one big "Open the app" button; the installed app starts at /app.
 - (S) Text in 11 Indian languages, English among them. No voice. Media only where it truly adds value. People who cannot read are taught in Book.
-- (C) The eight locked buttons are Earnings, Reminders, Hobbies, Meetings, Messages, Discussions, Events, Directory, each with its name. Adverts and Wisdom wait.
 - (C) The 11 languages are the earlier twelve without Punjabi, which has the fewest speakers of the twelve.
 - (C) Taps and registrations are kept in Cloudflare D1; the admin panel is checked by Cloudflare Access. Details in `apps/tradeoffs.md`.
 - (C) The greeting and Book's words are said by the phone's own voice, not by recordings. The tile drawings are Claude's placeholders: Taj Mahal, ABC, Howrah Bridge, Gateway of India, Charminar, a dosa, a kite, a pen, an elephant, the Konark wheel, a palm and boat.

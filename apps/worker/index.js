@@ -1,8 +1,7 @@
 // The server side of BodhiLabs, one Cloudflare Worker. The app itself is static files; this answers only:
 //   GET  /api/where     the Indian state the request comes from, to pre-select a language
 //   POST /api/register  a phone chooses its language (or later adds its place and work)
-//   POST /api/tap       taps on Home's buttons
-//   POST /api/wish      an answer to "What functionality would you want next?"
+//   POST /api/tap       taps on Home's buttons, and which pictures were shown
 //   GET  /admin         the admin panel, behind Cloudflare Access
 import { TRACKED } from "../lib/buttons.js";
 import { LANGS } from "../lib/langs.js";
@@ -11,7 +10,6 @@ import { accessEmail } from "./access.js";
 import { adminPage } from "./admin.js";
 
 const MAX_BODY = 4096;
-const MAX_WISH = 500;
 const MAX_TAPS = 500; // the most taps on one button that one message may carry
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json", "cache-control": "no-store" } });
@@ -69,16 +67,6 @@ async function tap(req, env, now) {
   return json({ ok: true });
 }
 
-async function wish(req, env, now) {
-  const b = await body(req);
-  const text = typeof b?.text === "string" ? b.text.trim().slice(0, MAX_WISH) : "";
-  if (!text) return bad("bad request");
-  if (!(await knownUser(env.DB, b.user))) return bad("unknown user", 404);
-  const lang = LANGS.some((l) => l.id === b.lang) ? b.lang : "en";
-  await env.DB.prepare("INSERT INTO wishes (created_at, user_id, lang, text) VALUES (?, ?, ?, ?)").bind(now, b.user, lang, text).run();
-  return json({ ok: true });
-}
-
 async function admin(req, env, now) {
   const email = await accessEmail(req, env, now);
   if (!email) return new Response("Not allowed. The admin panel opens only through Cloudflare Access.", { status: 403, headers: { "cache-control": "no-store" } });
@@ -88,7 +76,7 @@ async function admin(req, env, now) {
 /** Cloudflare knows roughly where a request comes from. Only the state code is passed on, and nothing is saved. */
 const where = (req) => json({ state: req.cf?.country === "IN" ? String(req.cf.regionCode ?? "") : "" });
 
-const POSTS = { "/api/register": register, "/api/tap": tap, "/api/wish": wish };
+const POSTS = { "/api/register": register, "/api/tap": tap };
 
 export async function handle(req, env, now = Date.now()) {
   const { pathname } = new URL(req.url);

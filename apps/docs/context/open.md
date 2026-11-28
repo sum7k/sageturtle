@@ -27,10 +27,10 @@ Messages leaves two things to others: open groups go to Discussions, and calls i
 
 ## Built and not built (branch `dev`)
 
-Built for the first release: landing, the language screen with picture tiles and greetings, Home with 11 buttons (only
-Book open), Book's word matching and letters, the ad spot and its form, install as an app with offline opening, tap
-counts, and the admin panel. Words in 11 languages. Horoscope, Khabri, Me and registration are built but not linked.
-The server holds phones, taps and answers (Cloudflare D1). 33 tests pass.
+Built for the first release: landing, the language screen with picture tiles and greetings, Home with Book and ten greyed
+picture buttons, Book's word matching and letters, install as an app with offline opening and an "Open the app" button,
+counts of pictures shown and tapped, and the admin panel. Words in 11 languages. Horoscope, Khabri, Me and registration are built but not linked.
+The server holds phones and taps (Cloudflare D1). 36 tests pass.
 
 Not done:
 - **Deploy.** Not live yet. Needs `npm run deploy` from `apps/` with Cloudflare sign-in, and a Cloudflare Access application for `/admin` (steps in `apps/README.md`).

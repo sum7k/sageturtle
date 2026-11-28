@@ -3,6 +3,7 @@ import { load, update, nextStep } from "./store.js";
 import { TRACKED } from "./buttons.js";
 
 export const KEY = "bodhilabs.taps.v1";
+const SEEN = "bodhilabs.seen.v1"; // the day the pictures on Home were last counted as shown
 
 /** Add one tap to the waiting counts. Unknown buttons are ignored. */
 export function addTap(pending, button) {
@@ -60,14 +61,14 @@ export function tap(button) {
   sync();
 }
 
-/** Send an answer to "what do you want next". Returns true when it was saved. */
-export async function sendWish(text) {
+/** Today in India, as YYYY-MM-DD. The pictures on Home change with it. */
+export const today = (now = Date.now()) => new Date(now + 19800000).toISOString().slice(0, 10);
+
+/** Count that these pictures were shown, once per phone per day, so taps can be compared with showings. */
+export function seen(icons, day) {
   try {
-    await sync();
-    const me = load();
-    const res = await post("/api/wish", { user: me.uid, lang: me.lang, text });
-    return res.ok;
-  } catch {
-    return false;
-  }
+    if (!icons.length || localStorage.getItem(SEEN) === day) return;
+    localStorage.setItem(SEEN, day);
+  } catch { return; }
+  write(icons.reduce((p, id) => addTap(p, `seen:${id}`), read()));
 }
