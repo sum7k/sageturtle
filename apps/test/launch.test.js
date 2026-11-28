@@ -476,6 +476,7 @@ test("a lesson is scenes: a drawing and a spoken line, recorded once under the l
   const art = (await import("node:fs")).readFileSync(new URL("../components/LessonArt.jsx", import.meta.url), "utf8");
   assert.equal(lessonsOf("nature", 1).length, 7);
   for (const l of LESSONS) {
+    assert.ok(l.by.hi && l.by.en && ["man", "woman"].includes(l.who) && l.scenes[0].art === "teller" && l.scenes[0].say.hi.startsWith(`मैं ${l.by.hi} हूँ`), `${l.id}: told by a named person, who says so first`);
     assert.ok(TRACKED.includes(`lesson:${l.id}`) && TRACKED.includes(`watched:${l.id}`));
     for (const s of l.scenes) {
       assert.ok(s.say.hi && s.say.en, `${l.id}: every line in Hindi and English`);
