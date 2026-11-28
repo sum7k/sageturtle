@@ -19,9 +19,13 @@ Until 2026-11-28 the product was called SageTurtle.
   (`lib/lagna.js`); a subject opens only what was made for that stage (Nature's picture lessons at stage 1, the word
   game at stage 3, the chapter on zero at stage 6), so a learner who cannot read never meets written lessons.
   For review, "Open all stages" in the admin panel, or `/gyan?all=1`, opens every stage on that phone.
-- **The four boxes in the middle are the same on every level**: Learned (`app/past`), Now (`app/now`, what goes well
-  and what needs practice), Next (`app/next`) and Ask (`app/ask`). The first three read what the phone remembers of
-  the word game (`lib/learn.js`, kept on the phone). Ask takes a question said aloud (the browser's speech recognition) or typed, and first looks for
+- **The four boxes in the middle are the same on every level** (`lib/grid.js`): Me (`app/self`), Ask (`app/ask`),
+  Settings (`app/settings`) and the joker, an empty box that is only counted. Each page is opened with `?in=top`
+  from Home and `?in=gyan` inside Gyan, and shows a different side. Me: on Home the person (their name, kept on the
+  phone; signing in, family and backup come later); inside Gyan their own learning (the stage they are at, and from
+  stage 3 the words that go well, the ones to practise and the ones to come, from `lib/learn.js`). Settings
+  (`lib/prefs.js`): on Home the language and the place; inside Gyan which voice speaks and how fast. Ask: on Home a
+  question about the app, which goes straight to a person; inside Gyan it takes a question said aloud (the browser's speech recognition) or typed, and first looks for
   the answer in our own lessons, on the phone (`lib/find.js`: word matching over the lines of `lib/lessons.js`, no
   download, nothing sent). The line that fits is shown with its drawing and said in its recorded voice. When the
   lessons hold no sure answer, or the learner presses the talk button, the question goes to a person (`/api/ask`,

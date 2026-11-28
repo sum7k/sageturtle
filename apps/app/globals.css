@@ -126,7 +126,9 @@ h1, h2, p { margin: 0; }
 .cell.shake { animation: shake 0.3s ease; }
 .cell .dot { position: absolute; top: 8px; inset-inline-end: 8px; width: 12px; height: 12px; border-radius: 999px; background: #e5484d; }
 
-/* the four pages in the middle: learned, now, next, ask */
+/* the pages in the middle: me, ask, settings */
+.block.pick { min-height: 72px; background: var(--sky); } .block.pick .emoji { font-size: 30px; }
+.panel .dots i { background: var(--back); } .panel .dots i.on { background: var(--navy); } .panel .dots i.now { background: var(--gold); }
 .panel { background: var(--white); border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
 .panel h2 { font-size: 18px; }
 .panel .big { font-size: 28px; text-align: center; } .panel .big b { font-size: 44px; }

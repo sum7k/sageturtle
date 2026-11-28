@@ -59,7 +59,7 @@ export async function adminData(db, now = Date.now()) {
     subjects: SUBJECTS.map((x) => ({ id: x.id, picture: x.picture, name: x.name.en, ...zero, ...by[tapName("stage", x)] }))
       .sort((a, b) => b.users - a.users || b.taps - a.taps),
     // The four in the middle of every grid.
-    centre: CENTRE.map((c) => ({ id: c.id, picture: c.picture, name: c.name.en, ...zero, ...by[`centre:${c.id}`] })),
+    centre: CENTRE.map((c) => ({ id: c.id, picture: c.picture, name: c.name.en || "Joker (empty)", ...zero, ...by[`centre:${c.id}`] })),
     // Questions from the "?" box: those waiting for an answer, and the last ones answered.
     questions: { open: asked, done: answered },
     // Lives: which lives were shown, and how many people listened.
@@ -117,7 +117,7 @@ ${d.questions.done.length ? `<details><summary>Answered</summary>${d.questions.d
     ...d.subjects.map((x) => [`<span class="pic">${x.picture}</span>${esc(x.name)}`, num(x.users), num(x.taps), num(x.taps_today)]),
     ...d.centre.map((x) => [`<span class="pic">${x.picture}</span>${esc(x.name)} <span class="tag">middle</span>`, num(x.users), num(x.taps), num(x.taps_today)]),
   ])}</div>
-<p class="muted">A subject with nothing made for the stage only counts the press. Word here is a press where it was closed; the word game is counted in the steps above. The four marked "middle" are the boxes in the middle of every grid.</p></section>
+<p class="muted">A subject with nothing made for the stage only counts the press. Word here is a press where it was closed; the word game is counted in the steps above. The four marked "middle" are the boxes in the middle of every grid: Me, Ask, Settings and the empty joker.</p></section>
 <section><h2>Stages of Gyan</h2><div class="card">${table(["Stage", "People", "Presses", "Today"], d.stages.map((x) => [`Stage ${x.n}`, num(x.users), num(x.taps), num(x.taps_today)]))}</div>
 <p class="muted">A new learner has only stage 1 open. To look at any stage on this phone:
 <button type="button" onclick="localStorage.setItem('bodhilabs.allstages.v1','1');this.textContent='All stages are open on this phone'">Open all stages</button>

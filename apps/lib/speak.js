@@ -7,6 +7,7 @@
 // the phone's own voice speaks instead. A phone does not say whether a voice is a man's or a woman's: where the
 // voice's name tells, that voice is used; otherwise the same voice is played lower for the man and higher for the woman.
 import { langById } from "./langs.js";
+import { loadPrefs, sidesFor } from "./prefs.js";
 import { SARVAM_LANG, clipUrl, lifeUrl, lineUrl } from "./voice.js";
 
 const MAN = /\b(male|man|rishi|hemant|ravi|prabhat|madhur|valluvar|mohan|niranjan|manohar|gagan|sukant|midhun|salman|asad|bashkar)\b|-x-(hi[ce]|en[ce]|bn[b]|ta[d]|te[m]|gu[m]|kn[m]|ml[m]|mr[m]|ur[m])-/i;
@@ -42,6 +43,7 @@ function playClip(url) {
     player.onended = done;
     player.onerror = () => fail(new Error("no recording"));
     player.src = url;
+    player.playbackRate = loadPrefs().speed; // after src: a new source sets the rate back to 1
     player.play().catch(fail);
   });
 }
@@ -53,7 +55,7 @@ function speakPhone(text, locale, { voice, pitch }) {
     u.lang = locale;
     if (voice) u.voice = voice;
     u.pitch = pitch;
-    u.rate = 0.85;
+    u.rate = 0.85 * loadPrefs().speed;
     // Some phones never say that the voice has ended; then the length of the text decides.
     const late = setTimeout(done, 4000 + text.length * 160);
     late.unref?.();
@@ -73,7 +75,8 @@ export function say(text, lang = "en", done = () => {}) {
   const locale = langById(lang).locale;
   player?.pause();
   globalThis.speechSynthesis?.cancel();
-  const sides = pair(globalThis.speechSynthesis?.getVoices?.() ?? [], locale);
+  // Both voices, unless the learner kept one in Settings.
+  const sides = sidesFor(pair(globalThis.speechSynthesis?.getVoices?.() ?? [], locale), loadPrefs().voice);
   (async () => {
     for (const side of sides) {
       if (mine !== turn) return;
@@ -106,7 +109,7 @@ export function sayLife(life, lang, done = () => {}) {
   const text = life.text[lang];
   if (!text || (typeof Audio === "undefined" && !globalThis.speechSynthesis)) { done(); return false; }
   const locale = langById(lang).locale;
-  const side = pair(globalThis.speechSynthesis?.getVoices?.() ?? [], locale)[0];
+  const side = sidesFor(pair(globalThis.speechSynthesis?.getVoices?.() ?? [], locale), loadPrefs().voice)[0];
   (async () => {
     try {
       if (!SARVAM_LANG[lang] || typeof Audio === "undefined") throw new Error("no recording");

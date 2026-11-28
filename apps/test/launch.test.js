@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { BOOK, WORD, LIFE, TRACKED, tapName } from "../lib/buttons.js";
-import { AROUND, CENTRE, SAY } from "../lib/grid.js";
+import { AROUND, CENTRE, SAY, whereOf } from "../lib/grid.js";
+import { cleanPrefs, sidesFor } from "../lib/prefs.js";
 import { WORD_HOUSES } from "../lib/word.js";
 import { stageHouses, subjectsAt, doorOf, cleanStage, partsOf, stageAfter } from "../lib/stages.js";
 import { TOP } from "../lib/top.js";
@@ -174,8 +175,15 @@ test("every level is a grid of sixteen: twelve houses around and the same four i
   assert.deepEqual(AROUND[0], [4, 3]); // house 1 is just left of it
   assert.deepEqual([AROUND[2], AROUND[5], AROUND[8]], [[4, 1], [1, 1], [1, 4]]); // left along the bottom, up, across the top, down
   for (let i = 0; i < 12; i++) { const [a, b] = [AROUND[i], AROUND[(i + 1) % 12]]; assert.equal(Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]), 1); }
-  assert.deepEqual(CENTRE.map((c) => c.id), ["past", "now", "next", "ask"]);
-  for (const c of CENTRE) { assert.ok(TRACKED.includes(`centre:${c.id}`)); for (const l of LANG_ORDER) assert.ok(c.name[l], `${c.id} ${l}`); }
+  assert.deepEqual(CENTRE.map((c) => [c.id, c.at.join()]), [["self", "2,2"], ["ask", "2,3"], ["settings", "3,2"], ["joker", "3,3"]]);
+  for (const c of CENTRE) { assert.ok(TRACKED.includes(`centre:${c.id}`)); if (!c.empty) for (const l of LANG_ORDER) assert.ok(c.name[l], `${c.id} ${l}`); }
+  assert.deepEqual(CENTRE.filter((c) => c.empty).map((c) => c.id), ["joker"]); // the fourth is kept empty
+  assert.deepEqual(["top", "gyan", "stage"].map(whereOf), ["top", "gyan", "gyan"]); // a middle page knows where it was opened
+  // Settings: both voices unless the learner kept one; a broken store gives the defaults.
+  assert.deepEqual(cleanPrefs({ voice: "x", speed: 3 }), { voice: "both", speed: 1 });
+  assert.deepEqual(cleanPrefs({ voice: "woman", speed: 0.8 }), { voice: "woman", speed: 0.8 });
+  const two = [{ who: "man" }, { who: "woman" }];
+  assert.deepEqual([sidesFor(two, "both").length, sidesFor(two, "woman")], [2, [{ who: "woman" }]]);
   for (const [k, v] of Object.entries(SAY)) for (const l of LANG_ORDER) assert.ok(v[l], `${k} ${l}`);
   // Home, the top level: Gyan is open, Vartaman waits, ten boxes are empty; every press is counted.
   assert.equal(TOP.length, 12);
@@ -187,7 +195,7 @@ test("every level is a grid of sixteen: twelve houses around and the same four i
   // Every name is in the chosen language: English says Knowledge, not the Hindi word in English letters.
   assert.deepEqual([TOP[0].name.en, TOP[1].name.en, TOP[0].name.ta], ["Knowledge", "Present", "ஞானம்"]);
   const latin = /[A-Za-z]{3}/;
-  for (const l of LANGS.filter((x) => x.id !== "en")) for (const box of [...TOP.slice(0, 2), ...SUBJECTS, ...WORD_HOUSES, ...CENTRE]) assert.ok(!latin.test(box.name[l.id]), `${box.id} ${l.id}`);
+  for (const l of LANGS.filter((x) => x.id !== "en")) for (const box of [...TOP.slice(0, 2), ...SUBJECTS, ...WORD_HOUSES, ...CENTRE.filter((c) => !c.empty)]) assert.ok(!latin.test(box.name[l.id]), `${box.id} ${l.id}`);
   // Word's twelve houses are what Word holds at each stage; only Letters (stage 3) is built.
   assert.equal(WORD_HOUSES.length, 12);
   assert.deepEqual(WORD_HOUSES.map((h, i) => (h.open ? i + 1 : 0)).filter(Boolean), [3]);
@@ -302,7 +310,7 @@ test("taps wait on the phone and are taken off only when sent", () => {
 test("the admin panel shows which subjects are pressed, which lives are shown and how many are heard", async () => {
   const e = env();
   const a = await signUp(e), b = await signUp(e);
-  await post(e, "/api/tap", { user: a, taps: { "subject:number": 3, lives: 2, "life:einstein": 2, heard: 1, "centre:now": 1, word: 1, "stage:1": 2 } });
+  await post(e, "/api/tap", { user: a, taps: { "subject:number": 3, lives: 2, "life:einstein": 2, heard: 1, "centre:self": 1, word: 1, "stage:1": 2 } });
   await post(e, "/api/tap", { user: b, taps: { "subject:number": 1, book: 1, "life:leonardo": 1 } });
   const d = await adminData(e.DB, NOW);
   assert.equal(d.subjects.length, 12);
@@ -310,7 +318,7 @@ test("the admin panel shows which subjects are pressed, which lives are shown an
   assert.deepEqual(d.subjects.filter((x) => x.taps).map((x) => x.id).sort(), ["lives", "number", "word"]);
   assert.deepEqual(d.lives.map((l) => [l.id, l.taps]), [["einstein", 2], ["leonardo", 1], ["aryabhata", 0]]);
   assert.equal(d.heard.taps, 1);
-  assert.deepEqual(d.centre.map((c) => [c.id, c.users]), [["past", 0], ["now", 1], ["next", 0], ["ask", 0]]);
+  assert.deepEqual(d.centre.map((c) => [c.id, c.users]), [["self", 1], ["ask", 0], ["settings", 0], ["joker", 0]]);
   assert.deepEqual(d.stages.slice(0, 2).map((h) => [h.n, h.taps]), [[1, 2], [2, 0]]);
   assert.match(await adminPage(e.DB, NOW, "x"), /Stages of Gyan/);
   assert.deepEqual(d.top.slice(0, 3).map((x) => [x.n, x.id, x.name]), [[1, "gyan", "Knowledge"], [2, "vartaman", "Present"], [3, "top:3", "Empty box"]]);
