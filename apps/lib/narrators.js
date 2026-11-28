@@ -1,6 +1,6 @@
 // Every lesson is told by a great person of its field (sumeet, 2026-11-28; lib/lessons.js `by`, and CLAUDE.md).
 // These are the words the screen uses to say so honestly, for learners who read: "told in the voice of X", and that
-// the words are CubeGullak' own, not a quotation. A teller's name is written in Hindi and English so far.
+// the words are CubeGullak's own, not a quotation. A teller's name is written in Hindi and English so far.
 import { names } from "./subjects.js";
 
 // Written by Claude in the eleven Indian languages, not yet checked by a native speaker.
@@ -9,5 +9,5 @@ const NOT_THEIR_WORDS = names("Written by CubeGullak in this teacher's way of th
 
 /** "Told in the voice of Brahmagupta", in the learner's language. `by` is a lesson's or a chapter's teller. */
 export const inVoiceOf = (by, lang) => (IN_VOICE[lang] ?? IN_VOICE.en).replace("{x}", by[lang] ?? by.en);
-/** The honest line under it: these are CubeGullak' words, not the person's. */
+/** The honest line under it: these are CubeGullak's words, not the person's. */
 export const notTheirWords = (lang) => NOT_THEIR_WORDS[lang] ?? NOT_THEIR_WORDS.en;
