@@ -1,13 +1,15 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Bar from "@/components/Bar";
 import Icon, { P } from "@/components/Icon";
 import { useMe } from "@/components/useMe";
-import { LANGS } from "@/lib/langs";
+import Region from "@/components/Region";
+import { LANGS, langById, firstGuess } from "@/lib/langs";
+import { say } from "@/lib/speak";
 import { ADULT_VARIANTS, MAX_VARIANTS, togglePick } from "@/lib/variants";
-import { STEPS, nextStep } from "@/lib/store";
+import { STEPS, nextStep, nextRegistrationStep } from "@/lib/store";
 import { t } from "@/lib/strings";
 import { sync } from "@/lib/track";
 import { canLock, makeLock, askLock } from "@/lib/lock";
@@ -16,18 +18,46 @@ const Tick = ({ onClick, disabled }) => (
   <button type="button" className="round gold big" aria-label="Go on" disabled={disabled} onClick={onClick}><Icon d={P.tick} size={36} sw={3} /></button>
 );
 
+/**
+ * The first screen. Nobody is asked to read: each language is a picture, and a tap makes the tile say hello in that
+ * language. A second tap on the same tile, or the gold tick, chooses it. One tile is picked in advance from the
+ * phone's language and the state the person is in.
+ */
 function Language({ me, done }) {
   const [pick, setPick] = useState(me.lang);
+  const [order, setOrder] = useState(LANGS);
+  useEffect(() => {
+    if (me.lang) return;
+    let live = true;
+    const guess = (state) => {
+      const id = firstGuess([...(navigator.languages ?? [navigator.language])], state);
+      if (!live || !id) return;
+      setPick((p) => p || id);
+      setOrder([langById(id), ...LANGS.filter((l) => l.id !== id)]); // the guess comes first
+    };
+    guess("");
+    fetch("/api/where").then((r) => r.json()).then((w) => guess(w.state)).catch(() => {});
+    return () => { live = false; };
+  }, [me.lang]);
+  const choose = (id) => done((m) => { m.lang = id; });
+  const tap = (l) => {
+    if (pick === l.id && heard.current === l.id) return choose(l.id);
+    heard.current = l.id;
+    setPick(l.id);
+    say(l.hello, l.id);
+  };
+  const heard = useRef("");
   return (
     <>
       <div className="blocks">
-        {LANGS.map((l, i) => (
-          <button key={l.id} type="button" lang={l.id} className={`block lang t${i % 4}`} aria-pressed={pick === l.id}
-            onClick={() => setPick(l.id)}>{l.name}</button>
+        {order.map((l, i) => (
+          <button key={l.id} type="button" lang={l.id} className={`block lang t${i % 4}`} aria-pressed={pick === l.id} onClick={() => tap(l)}>
+            <Region lang={l.id} />{l.name}
+          </button>
         ))}
       </div>
       <div className="grow" />
-      <div className="foot"><Tick disabled={!pick} onClick={() => done((m) => { m.lang = pick; })} /></div>
+      <div className="foot"><Tick disabled={!pick} onClick={() => choose(pick)} /></div>
     </>
   );
 }
@@ -133,7 +163,8 @@ function Start() {
 
   useEffect(() => {
     if (!me || step) return;
-    const s = STEPS.includes(edit) ? edit : nextStep(me);
+    // ?step=register walks through registration; ?step=<name> opens one step again; with neither, only the language is asked.
+    const s = edit === "register" ? nextRegistrationStep(me) : STEPS.includes(edit) ? edit : nextStep(me);
     if (!s) return router.replace("/home");
     setStep(s);
   }, [me, edit, step, router]);
@@ -146,16 +177,16 @@ function Start() {
       fn(m);
       if (!m.username) m.username = "bodhi" + String(Math.floor(Math.random() * 90000) + 10000);
     });
-    // First run ends in registration. A later change of language, place or work is sent to the server too.
-    if (edit) { sync({ profile: true }); return router.replace("/me"); }
+    // The server learns the language at once, and the place and work when the person registers.
+    sync({ profile: true });
+    if (!edit || step === "language") return router.replace("/home");
     const i = STEPS.indexOf(step);
-    if (i === STEPS.length - 1) { sync(); return router.replace("/home"); }
+    if (edit !== "register" || i === STEPS.length - 1) return router.replace("/me");
     setStep(STEPS[i + 1]);
   };
-  const i = STEPS.indexOf(step);
   return (
     <main className="screen">
-      <Bar back={edit ? "/me" : undefined} onBack={!edit && i > 0 ? () => setStep(STEPS[i - 1]) : undefined} title={TITLE[step] && t(lang, TITLE[step])} />
+      <Bar back={edit ? (step === "language" ? "/home" : "/me") : undefined} title={TITLE[step] && t(lang, TITLE[step])} />
       {step === "variant" && <p className="sub">{t(lang, "variant_d")}</p>}
       <Screen key={step} me={me} done={done} lang={lang} />
     </main>

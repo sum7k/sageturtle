@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { VARIANTS, ADULT_VARIANTS, APPS, listsFor, LISTS, validCombo, togglePick, allCombos, CLASHES, MAX_VARIANTS } from "../lib/variants.js";
-import { blank, normalise, nextStep, STEPS } from "../lib/store.js";
+import { blank, normalise, nextStep, nextRegistrationStep, STEPS } from "../lib/store.js";
 import { pick, addWeight, blank as blankTaste, normalise as normTaste, OUTSIDE_EVERY } from "../lib/taste.js";
 import { browserKind } from "../lib/browser.js";
 import { KHABARS } from "../lib/khabars.js";
@@ -31,11 +31,14 @@ test("a variant shows only the lists that fit it", () => {
   for (const v of VARIANTS) for (const l of v.lists) assert.ok(LISTS[l], l);
 });
 
-test("first run goes language, lock, place, what you do, alerts", () => {
+test("Home needs only a language; registration then goes lock, place, what you do, alerts", () => {
   const me = blank();
-  const seen = [];
+  assert.equal(nextStep(me), "language");
+  me.lang = "hi";
+  assert.equal(nextStep(me), null);
+  const seen = ["language"];
   const fill = { language: ["lang", "hi"], lock: ["lock", "abc"], place: ["pin", "221001"], variant: ["variants", ["farm"]], alerts: ["alerts", "no"] };
-  for (let s = nextStep(me); s; s = nextStep(me)) { seen.push(s); me[fill[s][0]] = fill[s][1]; }
+  for (let s = nextRegistrationStep(me); s; s = nextRegistrationStep(me)) { seen.push(s); me[fill[s][0]] = fill[s][1]; }
   assert.deepEqual(seen, STEPS);
 });
 

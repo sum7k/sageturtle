@@ -1,4 +1,5 @@
-// The app is read, not heard. The one place that speaks is Book, where hearing a letter is how reading is taught.
+// The app is read, not heard, with two exceptions for people who cannot read yet: a language tile on the first
+// screen says hello in its language, and Book says a word or a letter, because hearing it is how reading is taught.
 // It uses the phone's own voice, which costs nothing and needs no network.
 import { langById } from "./langs.js";
 

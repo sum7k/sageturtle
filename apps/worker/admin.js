@@ -14,7 +14,7 @@ export async function adminData(db, now = Date.now()) {
   const week = day(now, 6);
   const all = (sql, ...args) => db.prepare(sql).bind(...args).all().then((r) => r.results);
   const [users, buttons, langs, variants, signups, wishes] = await Promise.all([
-    db.prepare(`SELECT COUNT(*) AS total, SUM(created_day = ?1) AS new_today, SUM(created_day >= ?2) AS new_week,
+    db.prepare(`SELECT COUNT(*) AS total, SUM(pin <> '') AS registered, SUM(created_day = ?1) AS new_today, SUM(created_day >= ?2) AS new_week,
       SUM(last_day = ?1) AS active_today, SUM(last_day >= ?2) AS active_week FROM users`).bind(today, week).first(),
     all(`SELECT button, SUM(count) AS taps, COUNT(DISTINCT user_id) AS users,
       SUM(CASE WHEN day = ?1 THEN count ELSE 0 END) AS taps_today, COUNT(DISTINCT CASE WHEN day = ?1 THEN user_id END) AS users_today,
@@ -29,7 +29,7 @@ export async function adminData(db, now = Date.now()) {
   const zero = { taps: 0, users: 0, taps_today: 0, users_today: 0, taps_week: 0, users_week: 0 };
   return {
     today,
-    users: { total: users?.total ?? 0, new_today: users?.new_today ?? 0, new_week: users?.new_week ?? 0, active_today: users?.active_today ?? 0, active_week: users?.active_week ?? 0 },
+    users: { total: users?.total ?? 0, registered: users?.registered ?? 0, new_today: users?.new_today ?? 0, new_week: users?.new_week ?? 0, active_today: users?.active_today ?? 0, active_week: users?.active_week ?? 0 },
     buttons: TRACKED.map((id) => ({ ...zero, ...by[id], button: id, open: BUTTONS.find((b) => b.id === id)?.open ?? true })),
     langs, variants, signups, wishes,
   };
@@ -64,7 +64,7 @@ th{font-size:13px;color:var(--muted);font-weight:600}.n{text-align:right;font-va
 </style></head><body><main>
 <header><h1>BodhiLabs admin</h1><span class="muted">${esc(d.today)} (India) · ${esc(email)}</span></header>
 <section class="tiles">
-${tile("Registered users", d.users.total)}${tile("New today", d.users.new_today)}${tile("New in 7 days", d.users.new_week)}${tile("Active today", d.users.active_today)}${tile("Active in 7 days", d.users.active_week)}
+${tile("Users (phones)", d.users.total)}${tile("Registered", d.users.registered)}${tile("New today", d.users.new_today)}${tile("New in 7 days", d.users.new_week)}${tile("Active today", d.users.active_today)}${tile("Active in 7 days", d.users.active_week)}
 </section>
 <section><h2>Buttons, by distinct users</h2><div class="card">${table(
     ["Button", "Users", "Taps", "Users, 7 days", "Taps, 7 days", "Users today", "Taps today"],

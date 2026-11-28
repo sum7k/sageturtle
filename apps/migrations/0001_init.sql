@@ -1,12 +1,13 @@
--- Who has registered. No name and no phone number: only what the app needs to count and to group people.
+-- One row per phone that chose a language. No name and no phone number: only what the app needs to count and to group people.
+-- `pin` and `variants` are empty until the person registers.
 CREATE TABLE users (
   id TEXT PRIMARY KEY,
   created_at INTEGER NOT NULL,   -- milliseconds
   created_day TEXT NOT NULL,     -- YYYY-MM-DD in India's time
   last_day TEXT NOT NULL,        -- the last day this person tapped anything
   lang TEXT NOT NULL,
-  pin TEXT NOT NULL,             -- six digit PIN code of their place
-  variants TEXT NOT NULL         -- JSON list, such as ["farm","shop"]
+  pin TEXT NOT NULL,             -- six digit PIN code of their place, or ''
+  variants TEXT NOT NULL         -- JSON list, such as ["farm","shop"], or []
 );
 CREATE INDEX users_created_day ON users (created_day);
 CREATE INDEX users_last_day ON users (last_day);

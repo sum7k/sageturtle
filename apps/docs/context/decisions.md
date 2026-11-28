@@ -5,16 +5,21 @@ As of 2026-11-28. (S) = decided by sumeet. (C) = chosen by Claude under the "dec
 ## Launch plan (2026-11-28)
 
 - (S) The product is BodhiLabs (bodhilabs.org), renamed from SageTurtle. The GitHub repository stays `sum7k/sageturtle`, branch `dev`.
-- (S) Apps are made and released one by one. Home has 11 buttons. The first row is open: Book (a study app that teaches reading; a book icon), Horoscope, Khabri. The other eight are locked: a tap shows a lock and is counted.
+- (S) Apps are made and released one by one, each built and put live on its own. Home has 11 buttons. First release: only Book (a study app that teaches reading; a book icon) is open. Horoscope and Khabri, the rest of the first row, open next. Locked buttons show a lock and count the tap.
+- (S) No login at the start: the person may not be able to read. Registration comes later.
+- (S) The first screen picks the language without reading: 11 drawn tiles, one per language (cartoon or line drawings of a place, food or dress; no religious symbols). A tap plays a short greeting in that language; a second tap chooses. One tile is pre-selected from the phone's language and the person's state.
+- (S) Book starts with picture-and-sound matching: a picture (such as a bird), a button that says the word, and the person picks the right written word.
+- (S) This version is for people who can see. People who are blind, deaf or mute get a separate app later.
+- (S) The app installs on the phone (PWA).
 - (S) Icons on the buttons are placeholders for now.
 - (S) Every tap is counted on Cloudflare, with distinct users. An admin panel is at bodhilabs.org/admin.
-- (S) A simple registration is required before Home.
 - (S) The spot on Home where the khabar card was is for advertisements later. For now it asks "What functionality would you want next?" and opens a form.
 - (S) Text in 11 Indian languages, English among them. No voice. Media only where it truly adds value. People who cannot read are taught in Book.
 - (C) The eight locked buttons are Earnings, Reminders, Hobbies, Meetings, Messages, Discussions, Events, Directory, each with its name. Adverts and Wisdom wait.
 - (C) The 11 languages are the earlier twelve without Punjabi, which has the fewest speakers of the twelve.
 - (C) Taps and registrations are kept in Cloudflare D1; the admin panel is checked by Cloudflare Access. Details in `apps/tradeoffs.md`.
-- (C) Book v1 is the letters of the person's language; a tap shows a letter large and the phone's own voice says it. Horoscope v1 is a sign and one line of gentle advice a day.
+- (C) The greeting and Book's words are said by the phone's own voice, not by recordings. The tile drawings are Claude's placeholders: Taj Mahal, ABC, Howrah Bridge, Gateway of India, Charminar, a dosa, a kite, a pen, an elephant, the Konark wheel, a palm and boat.
+- (C) Book has 12 words per language and three choices a round; pictures are emoji. Horoscope v1 (built, not open) is a sign and one line of gentle advice a day.
 
 ## Platform
 

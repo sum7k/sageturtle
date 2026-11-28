@@ -1,5 +1,6 @@
 // The server side of BodhiLabs, one Cloudflare Worker. The app itself is static files; this answers only:
-//   POST /api/register  a phone finishes first run (or changes its language, place or work)
+//   GET  /api/where     the Indian state the request comes from, to pre-select a language
+//   POST /api/register  a phone chooses its language (or later adds its place and work)
 //   POST /api/tap       taps on Home's buttons
 //   POST /api/wish      an answer to "What functionality would you want next?"
 //   GET  /admin         the admin panel, behind Cloudflare Access
@@ -36,9 +37,11 @@ async function register(req, env, now) {
   const b = await body(req);
   if (!b) return bad("bad request");
   const lang = LANGS.some((l) => l.id === b.lang) ? b.lang : null;
-  const pin = /^\d{6}$/.test(b.pin ?? "") ? b.pin : null;
-  const variants = Array.isArray(b.variants) && validCombo(b.variants) && b.variants.every((v) => VARIANTS.find((x) => x.id === v)?.adult) ? b.variants : null;
-  if (!lang || !pin || !variants) return bad("bad profile");
+  // There is no login at the start, so a phone first has only a language. Place and work arrive with registration.
+  const pin = !b.pin ? "" : /^\d{6}$/.test(b.pin) ? b.pin : null;
+  const none = !Array.isArray(b.variants) || !b.variants.length;
+  const variants = none ? [] : validCombo(b.variants) && b.variants.every((v) => VARIANTS.find((x) => x.id === v)?.adult) ? b.variants : null;
+  if (!lang || pin === null || !variants) return bad("bad profile");
   const day = istDay(now);
   // A phone that already has an id is changing its profile, not registering again.
   if (b.id && (await knownUser(env.DB, b.id))) {
@@ -82,11 +85,15 @@ async function admin(req, env, now) {
   return new Response(await adminPage(env.DB, now, email), { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex" } });
 }
 
+/** Cloudflare knows roughly where a request comes from. Only the state code is passed on, and nothing is saved. */
+const where = (req) => json({ state: req.cf?.country === "IN" ? String(req.cf.regionCode ?? "") : "" });
+
 const POSTS = { "/api/register": register, "/api/tap": tap, "/api/wish": wish };
 
 export async function handle(req, env, now = Date.now()) {
   const { pathname } = new URL(req.url);
   if (pathname === "/admin" || pathname === "/admin/") return req.method === "GET" ? admin(req, env, now) : bad("not allowed", 405);
+  if (pathname === "/api/where") return where(req);
   if (POSTS[pathname]) return req.method === "POST" ? POSTS[pathname](req, env, now) : bad("not allowed", 405);
   if (pathname.startsWith("/api/") || pathname.startsWith("/admin/")) return bad("not found", 404);
   return env.ASSETS.fetch(req);

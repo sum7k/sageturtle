@@ -3,7 +3,7 @@
 ## Waiting on sumeet
 
 - Deploy BodhiLabs and set up Cloudflare Access for `/admin` (`apps/README.md`).
-- Say what Book and Horoscope should hold beyond the first version.
+- Look at the 11 language drawings and say which to change.
 - Check Claude's choices marked (C) in `decisions.md`, above all: the limit of three variants, the five clashing pairs, the group tile names and the table of lists per variant.
 - Find five people for the Messages test (`apps/messages/docs/case.md`): a shopkeeper, a farmer, a parent of a young child, a teacher and a person over 60.
 - React to the six Messages screens (canvas row 13), and to Claude's choices in `apps/messages/tradeoffs.md`, above all: no inbox for adults, only two kinds of in-app chat, and a teen's parent not hearing the class chat.
@@ -27,14 +27,16 @@ Messages leaves two things to others: open groups go to Discussions, and calls i
 
 ## Built and not built (branch `dev`)
 
-Built for the launch: landing, first run (registration), Home with 11 buttons (Book, Horoscope and Khabri open, eight locked),
-the ad spot and its form, Book v1, Horoscope v1, the Khabri deck, Me, tap counts, and the admin panel. Words in 11 languages.
-State is on the phone; the server holds registrations, taps and answers (Cloudflare D1). 31 tests pass.
+Built for the first release: landing, the language screen with picture tiles and greetings, Home with 11 buttons (only
+Book open), Book's word matching and letters, the ad spot and its form, install as an app with offline opening, tap
+counts, and the admin panel. Words in 11 languages. Horoscope, Khabri, Me and registration are built but not linked.
+The server holds phones, taps and answers (Cloudflare D1). 33 tests pass.
 
 Not done:
 - **Deploy.** Not live yet. Needs `npm run deploy` from `apps/` with Cloudflare sign-in, and a Cloudflare Access application for `/admin` (steps in `apps/README.md`).
 - The ten Indian languages were written by Claude and are not checked by native speakers. Khabars are English only. Horoscope lines are English and Hindi only.
-- Book and Horoscope are first versions; what they should really hold is open.
+- The greeting and Book's words use the phone's own voice. Some phones have no voice for some languages (Odia above all), and then nothing is heard. Recorded sound files would fix it.
+- The 11 language drawings are placeholders. Book has only 12 words.
 - The server does not check the passkey yet, and an account cannot move to a new phone.
 - Nothing stops fake registrations yet (a check such as Turnstile comes when needed).
 - The eight locked apps, code scanning, family profiles, child control, the class, remove ads.

@@ -12,7 +12,7 @@ import { langById } from "@/lib/langs";
 import { t } from "@/lib/strings";
 import { tap, sync } from "@/lib/track";
 
-/** Home: the ad on top, then the eleven buttons. The first row is open. A locked button shows a lock and counts the tap. */
+/** Home: the ad on top, then the eleven buttons. Only Book is open. A locked button shows a lock and counts the tap. */
 export default function Home() {
   const router = useRouter();
   const { me } = useMe();
@@ -22,7 +22,7 @@ export default function Home() {
 
   useEffect(() => {
     if (me && nextStep(me)) router.replace("/start");
-    if (ready) sync(); // registers a phone that finished first run without network
+    if (ready) sync(); // gives an id to a phone that chose its language without network
   }, [me, ready, router]);
   if (!ready) return <main className="screen" />;
 
@@ -38,8 +38,8 @@ export default function Home() {
   return (
     <main className="screen">
       <div className="head">
-        <div className="when"><b>{today}</b><span>{me.pin}</span></div>
-        <Link href="/me" className="round white" aria-label={t(lang, "name")} onClick={() => tap("me")}><Icon d={P.person} size={26} /></Link>
+        <div className="when"><b>{today}</b></div>
+        <Link href="/start?step=language" className="round white" aria-label={t(lang, "language")}><Icon d={P.globe} size={26} /></Link>
       </div>
       {/* This spot will carry advertisements. For now it asks what to build next. */}
       <Link href="/wish" className="ad" onClick={() => tap("ad")}>

@@ -1,9 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { BUTTONS, TRACKED } from "../lib/buttons.js";
-import { LANGS, langById, guessLang } from "../lib/langs.js";
+import { LANGS, langById, guessLang, stateLang, firstGuess } from "../lib/langs.js";
 import { STR, t } from "../lib/strings.js";
-import { LETTERS, lettersFor } from "../lib/book.js";
+import { LETTERS, lettersFor, WORDS, WORD_KEYS, PICTURE, round, wordFor } from "../lib/book.js";
 import { SIGNS, LINES, lineFor } from "../lib/horoscope.js";
 import { addTap, subtract, profileOf } from "../lib/track.js";
 import { VARIANTS, LISTS } from "../lib/variants.js";
@@ -13,9 +13,9 @@ import { accessEmail } from "../worker/access.js";
 import { adminData, adminPage } from "../worker/admin.js";
 import { testDb } from "./d1.js";
 
-test("Home has eleven buttons, and only the first row is open: Book, Horoscope, Khabri", () => {
+test("Home has eleven buttons, and only Book is open", () => {
   assert.equal(BUTTONS.length, 11);
-  assert.deepEqual(BUTTONS.filter((b) => b.open).map((b) => b.id), ["book", "horoscope", "khabri"]);
+  assert.deepEqual(BUTTONS.filter((b) => b.open).map((b) => b.id), ["book"]);
   assert.deepEqual(BUTTONS.slice(0, 3).map((b) => b.id), ["book", "horoscope", "khabri"]);
   for (const b of BUTTONS) assert.equal(!!b.href, !!b.open, b.id);
   assert.equal(new Set(BUTTONS.map((b) => b.id)).size, 11);
@@ -35,6 +35,41 @@ test("eleven languages, English among them, and every word exists in every langu
     assert.equal(new Set(lettersFor(l.id)).size, lettersFor(l.id).length, `no letter twice in ${l.id}`);
   }
   assert.equal(t("xx", "send"), "Send");
+});
+
+test("the first screen guesses a language from the phone, then from the state, and every tile can say hello", () => {
+  for (const l of LANGS) assert.ok(l.hello.trim(), l.id);
+  assert.equal(stateLang("MH"), "mr");
+  assert.equal(stateLang("tn"), "ta");
+  assert.equal(stateLang("XX"), "");
+  const all = LANGS.flatMap((l) => l.states);
+  assert.equal(new Set(all).size, all.length, "a state has one language");
+  assert.equal(firstGuess(["ta-IN", "en-IN"], "KA"), "ta"); // a phone set to an Indian language says the most
+  assert.equal(firstGuess(["en-IN", "bn"], "KA"), "bn");
+  assert.equal(firstGuess(["en-IN"], "KA"), "kn"); // an English phone: the state decides
+  assert.equal(firstGuess(["en-US"], ""), "en");
+  assert.equal(firstGuess(["fr-FR"], ""), "");
+});
+
+test("Book shows a picture and three words, one of them right, and has every word in every language", () => {
+  assert.equal(WORD_KEYS.length, 12);
+  for (const k of WORD_KEYS) assert.ok(PICTURE[k], k);
+  for (const l of LANGS) {
+    const words = WORD_KEYS.map((k) => wordFor(l.id, k));
+    assert.ok(words.every((w) => w?.trim()), l.id);
+    assert.equal(new Set(words).size, 12, `no word twice in ${l.id}`);
+  }
+  const place = [0, 0, 0];
+  for (let n = 0; n < 120; n++) {
+    const r = round(n);
+    assert.equal(r.answer, WORD_KEYS[n % 12]);
+    assert.equal(new Set(r.choices).size, 3, `round ${n}`);
+    assert.ok(r.choices.includes(r.answer), `round ${n}`);
+    place[r.choices.indexOf(r.answer)]++;
+  }
+  assert.deepEqual(round(5), round(5));
+  assert.ok(place.every((c) => c >= 30), "the right word is not always in the same place");
+  assert.equal(Object.keys(WORDS).length, 11);
 });
 
 test("every button, kind of work, list and sign has a word", () => {
@@ -76,9 +111,10 @@ test("the day changes at midnight in India", () => {
   assert.equal(istDay(Date.UTC(2026, 10, 28, 18, 31)), "2026-11-29");
 });
 
-test("registration gives an id, refuses a bad profile, and a known phone keeps its id", async () => {
+test("a phone gets an id with only a language, a bad profile is refused, and a known phone keeps its id", async () => {
   const e = env();
-  const id = await signUp(e);
+  const id = await signUp(e, { lang: "hi", pin: "", variants: [] });
+  assert.equal((await adminData(e.DB, NOW)).users.registered, 0);
   assert.match(id, /^[0-9a-f-]{36}$/);
   assert.equal((await post(e, "/api/register", { lang: "xx", pin: "221001", variants: ["farm"] })).status, 400);
   assert.equal((await post(e, "/api/register", { lang: "hi", pin: "12", variants: ["farm"] })).status, 400);
@@ -88,6 +124,7 @@ test("registration gives an id, refuses a bad profile, and a known phone keeps i
   assert.equal(again.id, id);
   const d = await adminData(e.DB, NOW);
   assert.equal(d.users.total, 1);
+  assert.equal(d.users.registered, 1);
   assert.deepEqual(d.langs.map((l) => [l.lang, l.users]), [["ta", 1]]);
 });
 
@@ -119,6 +156,10 @@ test("taps and answers from an unknown phone are refused", async () => {
   assert.equal((await handle(new Request("https://bodhilabs.org/api/tap"), e, NOW)).status, 405);
   assert.equal((await handle(new Request("https://bodhilabs.org/api/other"), e, NOW)).status, 404);
   assert.equal(await (await handle(new Request("https://bodhilabs.org/home"), e, NOW)).text(), "page");
+  const from = async (cf) => (await handle(Object.assign(new Request("https://bodhilabs.org/api/where"), { cf }), e, NOW)).json();
+  assert.deepEqual(await from({ country: "IN", regionCode: "MH" }), { state: "MH" });
+  assert.deepEqual(await from({ country: "US", regionCode: "CA" }), { state: "" });
+  assert.deepEqual(await from(undefined), { state: "" });
 });
 
 test("an answer is saved, cut to size, and shown safely on the admin panel", async () => {

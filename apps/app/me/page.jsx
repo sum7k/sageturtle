@@ -26,7 +26,7 @@ export default function Me() {
   const count = (l) => (me.people[l] ?? []).length;
   const settings = [
     { href: "/start?step=language", label: t(lang, "language"), icon: P.talk, value: langById(lang).name },
-    { href: "/start?step=variant", label: t(lang, "work"), icon: P.grid, value: t(lang, `v_${me.variant}`) + (me.variants.length > 1 ? ` +${me.variants.length - 1}` : "") },
+    { href: "/start?step=variant", label: t(lang, "work"), icon: P.grid, value: (me.variant ? t(lang, `v_${me.variant}`) : "") + (me.variants.length > 1 ? ` +${me.variants.length - 1}` : "") },
     { href: "/start?step=place", label: t(lang, "place"), icon: P.pin, value: me.pin },
     { href: "/start?step=alerts", label: t(lang, "alerts"), icon: P.bell, value: <Icon d={me.alerts === "yes" ? P.tick : P.cross} size={18} sw={3} /> },
     { href: "/start?step=lock", label: t(lang, "lock"), icon: P.finger, value: <Icon d={me.lock && me.lock !== "none" ? P.tick : P.cross} size={18} sw={3} /> },

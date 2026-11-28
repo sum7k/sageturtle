@@ -5,20 +5,28 @@ Until 2026-11-28 the product was called SageTurtle.
 
 ## What is live in this build
 
-- **Home has eleven buttons** (`lib/buttons.js`). The first row is open: Book, Horoscope, Khabri. The other eight are
-  locked: a tap shows a lock and "Coming soon", and the tap is counted. The icons are placeholders.
+- **No login at the start.** A person who cannot read yet must be able to get in.
+- **The first screen is the language**, chosen without reading (`app/start/page.jsx`, `components/Region.jsx`): eleven
+  picture tiles, one per language. A tap makes the tile say hello in that language; a second tap, or the gold tick,
+  chooses it. One tile is picked in advance from the phone's language, or from the state the person is in
+  (`firstGuess` in `lib/langs.js`). The drawings are placeholders, with no religious symbols.
+- **Home has eleven buttons** (`lib/buttons.js`). Only Book is open. The other ten are locked: a tap shows a lock and
+  "Coming soon", and the tap is counted. The icons are placeholders.
+- **Book** (`lib/book.js`): a picture, a gold button that says the word, and three written words to choose from. A wrong
+  word shakes and says itself; the right one turns green and the next picture comes. Twelve words per language. The
+  letters are on a second page.
 - **The top of Home is the ad spot.** For now it asks "What functionality would you want next?" and opens a form (`/wish`).
-- **Registration is first run**: language, lock, PIN code, what you do, khabar alerts. At the end the server gives the
-  phone an id. The server is told the language, PIN code and work, never a name or a number.
-- **The lock is the account**: a passkey opened by fingerprint, face or the phone's PIN. No phone number, no OTP.
 - **Words in eleven languages** (`lib/strings.js`): Hindi, English, Bengali, Marathi, Telugu, Tamil, Gujarati, Urdu,
-  Kannada, Odia, Malayalam. No voice. The one exception is Book, where the phone's own voice says a letter.
-- **Book** (v1): the letters of the person's language. **Horoscope** (v1): pick a sign, read one line a day.
-- **Khabri**: one khabar at a time, read whole on its card. Swipe left to like, right for not for me. Say khabar, not
-  "news". No em dashes. True, with sources shown.
-- **Me**: name, lists of people, settings, Reach me. Calls and messages are handed off by plain links (`lib/reach.js`).
-- **Admin panel** at `/admin`: registered and active users, taps and distinct users per button, users by language and
-  work, and the answers from the form.
+  Kannada, Odia, Malayalam. The app does not speak, except the hello on a language tile and the words in Book, which
+  use the phone's own voice.
+- **It installs as an app** (manifest, icons and `public/sw.js`) and opens without network once it has been opened.
+- **Counting.** Choosing a language gives the phone an id on the server. Taps are counted against it. The server is
+  told only the language (and the PIN code and work once a person registers), never a name or a number.
+- **Admin panel** at `/admin`: users, taps and distinct users per button, users by language and work, and the answers
+  from the form.
+
+Built but not linked from Home yet (later releases): Horoscope, Khabri, Me and registration (lock, PIN code, work,
+alerts; `/start?step=register`).
 
 Rules kept for later apps: app names are one word and a noun; a person can hold up to three kinds of work
 (`lib/variants.js`).
@@ -30,7 +38,7 @@ The pages are static files (`next build` writes `out/`). Cloudflare serves them 
 
 | Table | One row per | Used for |
 | :--- | :--- | :--- |
-| `users` | registered phone | registered, new and active users; language and work |
+| `users` | phone that chose a language | users, new and active users; language; place and work once registered |
 | `taps` | person, button and day | taps (sum of `count`) and distinct users (count of people) |
 | `wishes` | answer to the form | the list on the admin panel |
 

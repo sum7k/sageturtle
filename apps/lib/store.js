@@ -23,9 +23,16 @@ export function normalise(raw) {
   return out;
 }
 
-/** The first set-up step that is not done yet, or null when first run is complete. */
+/**
+ * What must be done before Home opens, or null. Only the language: there is no login at the start,
+ * because a person who cannot read yet must reach Book first.
+ */
 export function nextStep(me) {
-  if (!me.lang) return "language";
+  return me.lang ? null : "language";
+}
+
+/** The first step of registration that is not done yet, or null. Registration comes later, from Me. */
+export function nextRegistrationStep(me) {
   if (!me.lock) return "lock";
   if (!me.pin) return "place";
   if (!me.variants.length) return "variant";

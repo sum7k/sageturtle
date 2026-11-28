@@ -18,7 +18,7 @@ export function subtract(pending, sent) {
   }
   return out;
 }
-/** What the server is told about a person. No name and no phone number. */
+/** What the server is told about a phone. No name and no phone number. PIN code and work are empty until registration. */
 export const profileOf = (me) => ({ id: me.uid || undefined, lang: me.lang, pin: me.pin, variants: me.variants });
 
 const read = () => { try { return JSON.parse(localStorage.getItem(KEY)) ?? {}; } catch { return {}; } };
@@ -28,7 +28,7 @@ const post = (path, body) => fetch(path, { method: "POST", headers: { "content-t
 let busy = false;
 let again = false;
 
-/** Register the person if the server does not know them yet, then send the waiting taps. Safe to call often. */
+/** Give this phone an id if the server does not know it yet, then send the waiting taps. Safe to call often. */
 export async function sync({ profile = false } = {}) {
   if (busy) { again = true; return; }
   busy = true;
