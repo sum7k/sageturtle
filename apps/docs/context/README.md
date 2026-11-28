@@ -1,19 +1,20 @@
-# SageTurtle apps: context
+# BodhiLabs apps: context
 
 Written on 2026-11-26 at the end of the design chat, so that a new chat can start fresh. Read this folder first.
+On 2026-11-28 the product was renamed from SageTurtle to BodhiLabs and the launch plan changed; see the top of `decisions.md`.
 
-- `README.md` (this file): what SageTurtle is, where everything lives, how to start.
+- `README.md` (this file): what BodhiLabs is, where everything lives, how to start.
 - `decisions.md`: every decision so far, and who made it.
 - `open.md`: what is waiting, what is not designed, what is not built, and what comes next.
 
-## What SageTurtle is
+## What BodhiLabs is
 
 One installable web app (a PWA) that holds thirteen apps for people in India: Wisdom, Khabri (khabar), Learn, Earn, Reminders,
 Hobbies, Meetings, Messages, Discussions, Events, Yellow Pages (directory), Advertise, and Me. Who the person is decides
 what each app is called and what it does. There are 11 variants: Kids, Teens, and nine adult ones (Student, Looking for a
 job, Office job, Shop or business, Daily work, Farming, Home, Teacher, Retired).
 
-sumeet is the single owner of SageTurtle (sageturtle.me), to be a One Person Company. Surya is a product, not a company.
+sumeet is the single owner of BodhiLabs (bodhilabs.org, before that SageTurtle at sageturtle.me), to be a One Person Company. Surya is a product, not a company.
 The old company name Broadvale is being removed (root `backlog.md`).
 
 ## Where things live
@@ -29,7 +30,7 @@ The old company name Broadvale is being removed (root `backlog.md`).
 | Messages (idea, six screens, data and flows; not built) | `apps/messages/` |
 | Choices and their cost | `apps/tradeoffs.md`, `apps/shell/tradeoffs.md`, `apps/wisdom/tradeoffs.md`, `apps/messages/tradeoffs.md` |
 | Parked work | `apps/backlog.md`, `apps/shell/backlog.md`, `apps/wisdom/backlog.md`, `apps/messages/backlog.md`, root `backlog.md` |
-| Code | github.com/sum7k/sageturtle, folder `apps/` (Next.js). First slice is pull request 2, branch `claude/project-thread-cb35su` |
+| Code | github.com/sum7k/sageturtle, branch `dev`, folder `apps/` (Next.js pages, a Cloudflare Worker in `apps/worker/`) |
 | Old Khabri site (reference only) | github.com/sum7k/Khabri |
 
 The folder `/Users/sumeet/SageTurtle` on sumeet's computer holds the docs and is not a git repository. The code is only
@@ -52,5 +53,5 @@ read for guidance. Never read or print `.env`.
 
 ## How to start a new chat
 
-For software: "Continue from pull request 2 in sum7k/sageturtle. Read apps/README.md and apps/docs/context first."
+For software: "Continue on dev in sum7k/sageturtle. Read apps/README.md and apps/docs/context first."
 For design: "Read apps/docs/context, then design <app> on the shell canvas."

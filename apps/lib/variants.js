@@ -1,7 +1,7 @@
 // Who the person is decides what each app is called and which apps and lists they see.
 // Names are one word and a noun, never a verb. The design map is the source: apps/docs/variant-map.html.
 
-/** The ten apps that get a tile on Home, in order. Khabri has its own card and Me opens from the round picture. */
+/** The ten apps that are named per variant. Home shows the fixed buttons of lib/buttons.js until these apps open. */
 export const APPS = ["learn", "earn", "reminders", "hobbies", "meetings", "messages", "discussions", "events", "directory", "advertise"];
 
 export const APP_ICON = {

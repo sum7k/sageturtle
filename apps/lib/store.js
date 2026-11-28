@@ -1,13 +1,13 @@
-// What this phone knows about the person. Kept on the phone for now; the shared backend will hold it later.
+// What this phone knows about the person. The server is told only the language, PIN code and variants (lib/track.js).
 import { blankReach, normaliseReach } from "./reach.js";
 
-export const KEY = "sageturtle.me.v1";
+export const KEY = "bodhilabs.me.v1";
 export const STEPS = ["language", "lock", "place", "variant", "alerts"];
 
 export function blank() {
-  // `variants` is everything the person does; `variant` is the first of them. `tiles` is how they arranged Home.
-  // `reach` is how others may call or message this person outside SageTurtle; it is not the account.
-  return { v: 1, lang: "", lock: "", pin: "", variants: [], variant: "", alerts: "", name: "", username: "", people: {}, reach: blankReach(), tiles: { order: [], pinned: [], hidden: [] } };
+  // `variants` is everything the person does; `variant` is the first of them. `uid` is the id the server gave at registration.
+  // `sign` is the person's sign in Horoscope. `reach` is how others may call or message this person outside BodhiLabs; it is not the account.
+  return { v: 1, uid: "", lang: "", lock: "", pin: "", variants: [], variant: "", alerts: "", name: "", username: "", sign: "", people: {}, reach: blankReach() };
 }
 
 export function normalise(raw) {
@@ -18,8 +18,6 @@ export function normalise(raw) {
   out.variants = Array.isArray(raw.variants) ? [...new Set(raw.variants.filter((x) => typeof x === "string" && x))] : [];
   if (out.variant && !out.variants.includes(out.variant)) out.variants.unshift(out.variant); // from the days of one variant
   if (!out.variants.includes(out.variant)) out.variant = out.variants[0] ?? "";
-  const strs = (x) => (Array.isArray(x) ? [...new Set(x.filter((s) => typeof s === "string"))] : []);
-  out.tiles = { order: strs(raw.tiles?.order), pinned: strs(raw.tiles?.pinned), hidden: strs(raw.tiles?.hidden) };
   out.reach = normaliseReach(raw.reach);
   if (!/^\d{6}$/.test(out.pin)) out.pin = "";
   return out;

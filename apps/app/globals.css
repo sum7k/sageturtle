@@ -90,3 +90,41 @@ h1, h2, p { margin: 0; }
 .band { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 8px; border-radius: 28px; background: var(--white); }
 .band .block { min-height: 84px; font-size: 17px; }
 .code { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 18px; border-radius: 28px; background: var(--white); font-weight: 700; }
+
+/* words on screens */
+.bar .gap { width: 48px; flex: none; }
+.title { flex: 1 1 auto; text-align: center; font-size: 20px; line-height: 1.25; font-weight: 700; }
+.title.start { text-align: start; font-size: 24px; flex: none; }
+.sub { font-size: 15px; color: var(--muted); text-align: center; }
+.brand { font-size: 32px; font-weight: 700; }
+.block small { font-size: 12px; font-weight: 600; color: var(--muted); }
+.note { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(20px); padding: 10px 20px; border-radius: 999px; background: var(--navy); color: var(--white); font-weight: 700; opacity: 0; pointer-events: none; transition: opacity 0.15s ease, transform 0.15s ease; white-space: nowrap; }
+.note.on { opacity: 1; transform: translateX(-50%); }
+
+/* the ad spot on Home */
+.ad { display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 28px; background: var(--navy); color: var(--white); }
+.ad h2 { font-size: 22px; line-height: 1.3; font-weight: 700; }
+.ad .go { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 999px; background: var(--gold); color: var(--navy); font-weight: 700; }
+.ad.plain { background: var(--white); color: var(--navy); }
+.ad.plain .sub { text-align: start; }
+
+/* locked buttons */
+.block.locked > svg, .block.locked { color: var(--muted); }
+.block.locked { background: var(--white); }
+.block.shake { animation: shake 0.3s ease; }
+@keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+/* the form */
+.box { width: 100%; padding: 16px; border: 3px solid transparent; border-radius: 22px; background: var(--white); font: inherit; color: var(--navy); resize: vertical; }
+.box:focus { outline: none; border-color: var(--navy); }
+.wide { font-size: 18px; font-weight: 700; min-height: 64px; }
+.wide:disabled { opacity: 0.4; cursor: default; }
+
+/* book and horoscope */
+.letter { height: 180px; border-radius: 28px; background: var(--white); font-size: 110px; line-height: 1; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.letters { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+.letters button { height: 52px; border-radius: 16px; border: 3px solid transparent; background: var(--white); font-size: 24px; font-weight: 700; }
+.letters button[aria-pressed="true"] { border-color: var(--navy); background: var(--gold); }
+.glyph { font-size: 30px; line-height: 1; }
+.glyph.big { font-size: 64px; }
+.block.sign { min-height: 150px; font-size: 20px; }

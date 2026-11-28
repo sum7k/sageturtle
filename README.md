@@ -1,12 +1,6 @@
-# sageturtle
-Base repository for all my professional work
+# BodhiLabs
 
-## Website
+The code of BodhiLabs (bodhilabs.org), which was called SageTurtle until 2026-11-28. The repository keeps its old name.
 
-All code lives in `software/`. A static placeholder landing page is in `software/public/`, served by a
-Cloudflare Worker (static assets only, config in `software/wrangler.jsonc`) at https://sageturtle.me
-and https://www.sageturtle.me.
-
-Deploy manually with `cd software && npx wrangler deploy`, or let Cloudflare Workers Builds deploy on
-every push to `main` (set the build's root directory to `software`). Copy `software/.env.example` to
-`software/.env` for local deploy credentials; `.env` is gitignored.
+Everything is in `apps/`: one installable web app on Cloudflare. Start with `apps/README.md`.
+Work happens on the `dev` branch. The old placeholder landing page is in `.trash/software/`.

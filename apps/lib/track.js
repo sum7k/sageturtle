@@ -1,0 +1,73 @@
+// Registration and tap counts. Taps wait on the phone until they reach the server, so none is lost without network.
+import { load, update, nextStep } from "./store.js";
+import { TRACKED } from "./buttons.js";
+
+export const KEY = "bodhilabs.taps.v1";
+
+/** Add one tap to the waiting counts. Unknown buttons are ignored. */
+export function addTap(pending, button) {
+  if (!TRACKED.includes(button)) return pending;
+  return { ...pending, [button]: (pending[button] ?? 0) + 1 };
+}
+/** What still waits after `sent` has reached the server. Taps made while sending are kept. */
+export function subtract(pending, sent) {
+  const out = {};
+  for (const [b, n] of Object.entries(pending)) {
+    const left = n - (sent[b] ?? 0);
+    if (left > 0) out[b] = left;
+  }
+  return out;
+}
+/** What the server is told about a person. No name and no phone number. */
+export const profileOf = (me) => ({ id: me.uid || undefined, lang: me.lang, pin: me.pin, variants: me.variants });
+
+const read = () => { try { return JSON.parse(localStorage.getItem(KEY)) ?? {}; } catch { return {}; } };
+const write = (p) => { try { localStorage.setItem(KEY, JSON.stringify(p)); } catch {} };
+const post = (path, body) => fetch(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body), keepalive: true });
+
+let busy = false;
+let again = false;
+
+/** Register the person if the server does not know them yet, then send the waiting taps. Safe to call often. */
+export async function sync({ profile = false } = {}) {
+  if (busy) { again = true; return; }
+  busy = true;
+  try {
+    let me = load();
+    if (nextStep(me)) return;
+    if (!me.uid || profile) {
+      const res = await post("/api/register", profileOf(me));
+      if (!res.ok) return;
+      const { id } = await res.json();
+      me = update((m) => { m.uid = id; });
+    }
+    const sent = read();
+    if (!Object.keys(sent).length) return;
+    const res = await post("/api/tap", { user: me.uid, taps: sent });
+    if (res.ok) write(subtract(read(), sent));
+    else if (res.status === 404) update((m) => { m.uid = ""; }); // the server forgot this person: register again next time
+  } catch {
+    // no network: the taps stay on the phone
+  } finally {
+    busy = false;
+    if (again) { again = false; sync(); }
+  }
+}
+
+/** Count one tap. */
+export function tap(button) {
+  write(addTap(read(), button));
+  sync();
+}
+
+/** Send an answer to "what do you want next". Returns true when it was saved. */
+export async function sendWish(text) {
+  try {
+    await sync();
+    const me = load();
+    const res = await post("/api/wish", { user: me.uid, lang: me.lang, text });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}

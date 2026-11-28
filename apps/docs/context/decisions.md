@@ -2,23 +2,36 @@
 
 As of 2026-11-28. (S) = decided by sumeet. (C) = chosen by Claude under the "decide when clear" rule, open to change.
 
+## Launch plan (2026-11-28)
+
+- (S) The product is BodhiLabs (bodhilabs.org), renamed from SageTurtle. The GitHub repository stays `sum7k/sageturtle`, branch `dev`.
+- (S) Apps are made and released one by one. Home has 11 buttons. The first row is open: Book (a study app that teaches reading; a book icon), Horoscope, Khabri. The other eight are locked: a tap shows a lock and is counted.
+- (S) Icons on the buttons are placeholders for now.
+- (S) Every tap is counted on Cloudflare, with distinct users. An admin panel is at bodhilabs.org/admin.
+- (S) A simple registration is required before Home.
+- (S) The spot on Home where the khabar card was is for advertisements later. For now it asks "What functionality would you want next?" and opens a form.
+- (S) Text in 11 Indian languages, English among them. No voice. Media only where it truly adds value. People who cannot read are taught in Book.
+- (C) The eight locked buttons are Earnings, Reminders, Hobbies, Meetings, Messages, Discussions, Events, Directory, each with its name. Adverts and Wisdom wait.
+- (C) The 11 languages are the earlier twelve without Punjabi, which has the fewest speakers of the twelve.
+- (C) Taps and registrations are kept in Cloudflare D1; the admin panel is checked by Cloudflare Access. Details in `apps/tradeoffs.md`.
+- (C) Book v1 is the letters of the person's language; a tap shows a letter large and the phone's own voice says it. Horoscope v1 is a sign and one line of gentle advice a day.
+
 ## Platform
 
 - (S) A PWA. The website's landing page asks for one thing: Install.
 - (S) One backend for all variants. Only config, names and theme differ.
-- (S) Voice first. Reading and typing are optional.
-- (S) Twelve languages on the first screen: Hindi, English, Bengali, Marathi, Telugu, Tamil, Gujarati, Urdu, Kannada, Odia, Malayalam, Punjabi.
+- (S) Text first, no voice (2026-11-28; before that it was voice first).
+- (S) Eleven languages on the first screen. (C) Hindi, English, Bengali, Marathi, Telugu, Tamil, Gujarati, Urdu, Kannada, Odia, Malayalam.
 - (S) No phone number and no OTP. The fingerprint (a passkey) is the whole account. (C) The phone's own PIN is the fallback.
 - (S) Free with ads for adults. 1,200 rupees a year removes ads, paid by UPI through Dodo Payments. Kids are free with no ads. (C) Teens see no ads.
-- (S) No ads on Home. No ads on a card whose main content is a player.
+- (S) Home has one ad spot on top (2026-11-28; before that Home had no ads). No ads on a card whose main content is a player.
 - (S) Age check is postponed (in `apps/backlog.md`).
 
 ## The interface
 
-- (S) No written text as instruction. Pictures, icons, colour, motion and voice. The landing page has no words at all and shows, by browser, where to tap to install.
-- (S) Inner screens have no headings and no button words. Text that is shown follows the chosen language.
-- (C) Text is kept only for language names, numbers, names of people, places and apps, and content such as a khabar.
-- (C) A tap speaks and selects. The gold tick goes on. Every icon-only control has an accessibility label.
+- (S) Screens use words in the chosen language (2026-11-28; before that there was no written text and every screen spoke).
+- (C) Words are few: a name under each icon, a short heading on a screen. The landing page follows the browser's language until one is chosen.
+- (C) Every icon-only control has an accessibility label.
 - (S) Khabri's theme for everything: sky `#eaf4ff`, navy `#14174a`, gold `#ffc531`, tints `#fff0bf #ffe3dc #ddf3e4 #e9e4ff`, Anek Latin and Source Serif 4, sun-and-hill art, round cards.
 
 ## Variants and names
@@ -35,7 +48,10 @@ As of 2026-11-28. (S) = decided by sumeet. (C) = chosen by Claude under the "dec
 ## Home
 
 - (C) Order of first run: landing, language, lock, PIN code, what you do, khabar alerts, Home.
-- (C) Home: date and place, the Khabri card, app tiles three in a row, a gold mic as the bottom centre cell. No bottom bar. Me opens from the round picture.
+- (C) Home: date and place, the ad spot, eleven buttons three in a row. No bottom bar, no mic. Me opens from the round picture.
+
+The four lines below describe Home after all apps open. They are not in the launch build.
+
 - (S) One tile per app. Where the person's variants call the app by different names, the tile opens into those versions (Earnings opens into Mandi and Leads). With one name it opens straight away.
 - (C) Closed group tiles are named Learning, Earnings, Reminders, Hobbies, Meetings, Messages, Discussions, Events, Directory, Adverts.
 - (S) Default tile order, by Cheiro's numbers on a phone keypad (2026-11-27): Earnings, Wisdom, Meetings; Discussions, Learning, Hobbies; Messages, Reminders, Events; Directory, the mic, Adverts. Learning is the centre. People can still rearrange.
@@ -76,7 +92,7 @@ As of 2026-11-28. (S) = decided by sumeet. (C) = chosen by Claude under the "dec
 Designed on 2026-11-28 (`apps/messages/`). Screens are not approved yet.
 
 - (C) Messages is the door to people: the lists from Me with hand-off buttons, one screen for every adult variant. The variant sets the tile's name and which list comes first.
-- (C) No inbox and no unread count for adults, because SageTurtle cannot see outside apps. People are ordered by who was last reached.
+- (C) No inbox and no unread count for adults, because BodhiLabs cannot see outside apps. People are ordered by who was last reached.
 - (C) Only two kinds of chat live inside the app: a child with a guardian, and a class. Open groups belong to Discussions.
 - (C) An in-app message is a voice note, a sticker or typed text. No photos, files or transcripts yet.
 - (C) The owner of a child's account hears all the child's chats. A kid's flag tells the owner.

@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bodhilabs",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-11-01",
+  // The app is static files in ./out (made by `npm run build`). They are served without running the Worker.
+  // Only /api and /admin run the Worker, so the cost follows taps, not page views.
+  "assets": {
+    "directory": "./out",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*", "/admin", "/admin/*"]
+  },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "bodhilabs", "database_id": "ed3d9f94-b443-44dc-8275-a27a384a19b6", "migrations_dir": "migrations" }
+  ],
+  // Cloudflare Access for /admin. Fill both in after making the Access application; until then /admin answers 403.
+  "vars": {
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": ""
+  },
+  // Cloudflare creates the DNS records and certificates for these automatically.
+  "routes": [
+    { "pattern": "bodhilabs.org", "custom_domain": true },
+    { "pattern": "www.bodhilabs.org", "custom_domain": true }
+  ],
+  "observability": { "enabled": true }
+}

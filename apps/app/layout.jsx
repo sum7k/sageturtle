@@ -1,9 +1,9 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "SageTurtle",
-  description: "SageTurtle",
-  appleWebApp: { capable: true, title: "SageTurtle", statusBarStyle: "default" },
+  title: "BodhiLabs",
+  description: "BodhiLabs",
+  appleWebApp: { capable: true, title: "BodhiLabs", statusBarStyle: "default" },
 };
 export const viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: "#eaf4ff" };
 

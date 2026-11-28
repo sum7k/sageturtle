@@ -1,6 +1,6 @@
 // The reader's taste, learned quietly on the phone. A swipe left means "I like this", a swipe right "not for me".
 // A topic swiped away comes less often but never disappears. About one card in five comes from outside the known taste.
-export const KEY = "sageturtle.taste.v1";
+export const KEY = "bodhilabs.taste.v1";
 export const SIGNAL = { like: 2, pass: -2, share: 4 };
 const MAX = 40;
 const MIN = -20;

@@ -6,7 +6,7 @@ import Bar from "@/components/Bar";
 import Icon, { P } from "@/components/Icon";
 import { useMe } from "@/components/useMe";
 import { REACH_APPS, cleanNumber, blankReach } from "@/lib/reach";
-import { say, sayLine } from "@/lib/speak";
+import { t } from "@/lib/strings";
 
 const NAME = { whatsapp: "WhatsApp", telegram: "Telegram", sms: "SMS" };
 
@@ -23,16 +23,15 @@ export default function ReachMe() {
   if (!me) return <main className="screen" />;
 
   const add = (d) => setPhone((p) => (p.length < 10 ? p + d : p));
-  const pick = (a) => { setApp(a); say(NAME[a], me.lang); };
   const ok = cleanNumber(phone) && app;
   const done = (reach) => { change((m) => { m.reach = reach; }); router.replace("/me"); };
   return (
     <main className="screen">
-      <Bar back="/me" speakKey="reach" lang={me.lang} />
-      <div className="number" aria-label="My mobile number" role="group"><Icon d={P.phone} size={26} />{phone.replace(/(\d{5})(\d+)/, "$1 $2")}</div>
+      <Bar back="/me" title={t(me.lang, "reach_t")} />
+      <div className="number" aria-label={t(me.lang, "reach_t")} role="group"><Icon d={P.phone} size={26} />{phone.replace(/(\d{5})(\d+)/, "$1 $2")}</div>
       <div className="blocks">
         {REACH_APPS.map((a) => (
-          <button key={a} type="button" className="block" aria-pressed={app === a} aria-label={NAME[a]} onClick={() => pick(a)}>
+          <button key={a} type="button" className="block" aria-pressed={app === a} aria-label={NAME[a]} onClick={() => setApp(a)}>
             <span className={`round ${a}`}><Icon d={P[a]} size={26} /></span>{NAME[a]}
           </button>
         ))}

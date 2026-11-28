@@ -8,7 +8,8 @@ import { useMe } from "@/components/useMe";
 import { LANGS } from "@/lib/langs";
 import { ADULT_VARIANTS, MAX_VARIANTS, togglePick } from "@/lib/variants";
 import { STEPS, nextStep } from "@/lib/store";
-import { say, sayLine, line } from "@/lib/speak";
+import { t } from "@/lib/strings";
+import { sync } from "@/lib/track";
 import { canLock, makeLock, askLock } from "@/lib/lock";
 
 const Tick = ({ onClick, disabled }) => (
@@ -22,7 +23,7 @@ function Language({ me, done }) {
       <div className="blocks">
         {LANGS.map((l, i) => (
           <button key={l.id} type="button" lang={l.id} className={`block lang t${i % 4}`} aria-pressed={pick === l.id}
-            onClick={() => { setPick(l.id); say(line("language", l.id), l.id); }}>{l.name}</button>
+            onClick={() => setPick(l.id)}>{l.name}</button>
         ))}
       </div>
       <div className="grow" />
@@ -31,7 +32,7 @@ function Language({ me, done }) {
   );
 }
 
-function Lock({ done }) {
+function Lock({ done, lang }) {
   const [busy, setBusy] = useState(false);
   const set = async () => {
     if (busy) return;
@@ -47,13 +48,14 @@ function Lock({ done }) {
   };
   return (
     <div className="grow center">
+      <p className="sub">{t(lang, "lock_d")}</p>
       <button type="button" className="round gold huge" aria-label="Set fingerprint or face" onClick={set}><Icon d={P.finger} size={80} sw={1.4} /></button>
       <button type="button" className="round white big" aria-label="Use my phone's PIN" onClick={set}><Icon d={P.keypad} size={36} sw={3.5} /></button>
     </div>
   );
 }
 
-function Place({ me, done, lang }) {
+function Place({ me, done }) {
   const [pin, setPin] = useState(me.pin);
   const add = (d) => setPin((p) => (p.length < 6 ? p + d : p));
   return (
@@ -64,7 +66,7 @@ function Place({ me, done, lang }) {
       <div className="grow" />
       <div className="keys">
         {"123456789".split("").map((d) => <button key={d} type="button" onClick={() => add(d)}>{d}</button>)}
-        <button type="button" aria-label="Find my place" onClick={() => sayLine("soon", lang)}><Icon d={P.pin} size={28} /></button>
+        <span />
         <button type="button" onClick={() => add("0")}>0</button>
         <button type="button" aria-label="Erase" onClick={() => setPin((p) => p.slice(0, -1))}><Icon d={P.erase} size={28} /></button>
       </div>
@@ -78,7 +80,6 @@ function Variant({ me, done, lang }) {
   const [picks, setPicks] = useState(me.variants);
   const toggle = (v) => {
     setPicks((p) => togglePick(p, v.id)); // adding one drops what clashes with it; a fourth is refused
-    say(v.label, lang);
   };
   const go = async () => {
     // Changing what you do asks for the lock again. The first choice does not.
@@ -93,7 +94,7 @@ function Variant({ me, done, lang }) {
       <div className="blocks">
         {ADULT_VARIANTS.map((v, i) => (
           <button key={v.id} type="button" className={`block t${i % 4}${picks.length >= MAX_VARIANTS && !picks.includes(v.id) ? " dim" : ""}`} aria-pressed={picks.includes(v.id)} onClick={() => toggle(v)}>
-            <Icon d={v.icon} size={32} sw={1.8} />{v.label}
+            <Icon d={v.icon} size={32} sw={1.8} />{t(lang, `v_${v.id}`)}
           </button>
         ))}
       </div>
@@ -111,7 +112,7 @@ function Alerts({ done }) {
   };
   return (
     <>
-      <div className="grow center"><span className="round white huge"><Icon d={P.bell} size={80} sw={1.4} label="A bell brings a khabar card" /></span></div>
+      <div className="grow center"><span className="round white huge"><Icon d={P.bell} size={80} sw={1.4} /></span></div>
       <div className="foot">
         <button type="button" className="round white big" aria-label="Not now" onClick={() => done((m) => { m.alerts = "no"; })}><Icon d={P.cross} size={32} sw={2.5} /></button>
         <Tick onClick={yes} />
@@ -120,6 +121,8 @@ function Alerts({ done }) {
   );
 }
 
+// The words on top of each step. The language step has none: every language shows its own name.
+const TITLE = { lock: "lock_t", place: "place_t", variant: "variant_t", alerts: "alerts_t" };
 const SCREENS = { language: Language, lock: Lock, place: Place, variant: Variant, alerts: Alerts };
 
 function Start() {
@@ -141,17 +144,19 @@ function Start() {
   const done = (fn) => {
     change((m) => {
       fn(m);
-      if (!m.username) m.username = "turtle" + String(Math.floor(Math.random() * 90000) + 10000);
+      if (!m.username) m.username = "bodhi" + String(Math.floor(Math.random() * 90000) + 10000);
     });
-    if (edit) return router.replace("/me");
+    // First run ends in registration. A later change of language, place or work is sent to the server too.
+    if (edit) { sync({ profile: true }); return router.replace("/me"); }
     const i = STEPS.indexOf(step);
-    if (i === STEPS.length - 1) return router.replace("/home");
+    if (i === STEPS.length - 1) { sync(); return router.replace("/home"); }
     setStep(STEPS[i + 1]);
   };
   const i = STEPS.indexOf(step);
   return (
     <main className="screen">
-      <Bar back={edit ? "/me" : undefined} onBack={!edit && i > 0 ? () => setStep(STEPS[i - 1]) : undefined} speakKey={step} lang={lang} />
+      <Bar back={edit ? "/me" : undefined} onBack={!edit && i > 0 ? () => setStep(STEPS[i - 1]) : undefined} title={TITLE[step] && t(lang, TITLE[step])} />
+      {step === "variant" && <p className="sub">{t(lang, "variant_d")}</p>}
       <Screen key={step} me={me} done={done} lang={lang} />
     </main>
   );

@@ -6,29 +6,29 @@ import Icon, { P } from "@/components/Icon";
 import Art from "@/components/Art";
 import { KHABARS } from "@/lib/khabars";
 import { load, save, pick, addWeight, SIGNAL } from "@/lib/taste";
-import { say, stop } from "@/lib/speak";
+import { load as loadMe } from "@/lib/store";
+import { langById } from "@/lib/langs";
+import { t } from "@/lib/strings";
 
 const FAR = 90; // how far a card must travel to count as a swipe
 
-/** One khabar at a time, read whole on its card. Swipe left to like, swipe right for not for me. No buttons for it. */
+/** One khabar at a time, read whole on its card. Swipe left to like, swipe right for not for me. */
 export default function Khabri() {
   const [k, setK] = useState(null);
   const [drag, setDrag] = useState(0);
   const [fly, setFly] = useState(null);
-  const [speaking, setSpeaking] = useState(false);
+  const [lang, setLang] = useState("en");
   const start = useRef(null);
   const opened = useRef(0);
 
   useEffect(() => {
     setK(pick(KHABARS, load()));
+    setLang(loadMe().lang || "en");
     opened.current = Date.now();
-    return stop;
   }, []);
 
   const swipe = (dir) => {
     if (fly || !k) return;
-    stop();
-    setSpeaking(false);
     setFly(dir);
     const t = load();
     addWeight(t, k.topic, dir === "left" ? SIGNAL.like : SIGNAL.pass);
@@ -72,10 +72,6 @@ export default function Khabri() {
     else setDrag(0);
   };
 
-  const listen = () => {
-    if (speaking) { stop(); return setSpeaking(false); }
-    setSpeaking(say([k.title, k.dek, ...k.paras].join(" "), "en", () => setSpeaking(false)));
-  };
   const share = async () => {
     try {
       if (navigator.share) await navigator.share({ title: k.title, text: k.dek, url: location.href });
@@ -84,14 +80,14 @@ export default function Khabri() {
     } catch {}
   };
 
-  const today = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "long" }).format(new Date());
+  const today = new Intl.DateTimeFormat(langById(lang).locale, { day: "numeric", month: "long" }).format(new Date());
   const x = fly ? (fly === "left" ? -1 : 1) * 600 : drag;
   const liking = fly === "left" || drag < 0;
   return (
     <main className="screen deck">
       <header className="bar">
         <Link href="/home" className="round white" aria-label="Home"><Icon d={P.home} /></Link>
-        <b style={{ fontSize: 15 }}>{today}</b>
+        <b style={{ fontSize: 15 }}>{t(lang, "khabri")} · {today}</b>
         <Link href="/me" className="round white" aria-label="Me"><Icon d={P.person} size={26} /></Link>
       </header>
       {k && (
@@ -106,18 +102,18 @@ export default function Khabri() {
               <h1>{k.title}</h1>
               <p className="dek">{k.dek}</p>
               <div className="row" style={{ justifyContent: "flex-start" }}>
-                <button type="button" className="round gold" aria-label={speaking ? "Stop" : "Listen"} aria-pressed={speaking} onClick={listen}><Icon d={speaking ? P.cross : P.speak} size={22} /></button>
                 <button type="button" className="round" aria-label="Share" onClick={share}><Icon d={P.share} size={22} /></button>
               </div>
               {k.paras.map((p, i) => <p key={i} className="para">{p}</p>)}
               <div className="sources">
-                <Icon d={P.book} size={20} label="Sources" />
+                <b>{t(lang, "sources")}</b>
                 {k.sources.map((s) => <a key={s.url} href={s.url} target="_blank" rel="noopener">{s.name}</a>)}
               </div>
             </div>
           </article>
         </div>
       )}
+      <p className="sub">{t(lang, "swipe")}</p>
       <p className="sr" aria-live="polite">{fly ? (fly === "left" ? "You like this. Next khabar." : "Not for you. Next khabar.") : ""}</p>
     </main>
   );

@@ -1,4 +1,4 @@
-// One-to-one calls and messages are not carried by SageTurtle. A tap hands the person off, by a plain link,
+// One-to-one calls and messages are not carried by BodhiLabs. A tap hands the person off, by a plain link,
 // to the phone's dialer or to the app the other person chose in Reach me. No APIs and no fees.
 
 /** The apps a person can choose for messages. WhatsApp has no link that starts a call, so a call always uses the dialer. */
