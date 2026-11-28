@@ -27,15 +27,39 @@ export const stageHouses = (at, all = false) => Array.from({ length: STAGES }, (
   id: `stage:${i + 1}`, n: i + 1, picture: String(i + 1), name: { en: "" }, open: all || i + 1 <= at ? `/stage?n=${i + 1}` : undefined,
 }));
 
-// The subjects that have a page of lessons (app/<subject>/page.jsx reads ?stage=).
-const PAGES = { nature: "/nature", number: "/number" };
-
 /** Where a subject leads at a stage, or null when nothing is made for that stage yet. */
 export function doorOf(subject, stage) {
   if (subject === "lives") return `/life?stage=${stage}`; // a life can be heard at every stage
   if (subject === "word") return stage === READS_FROM ? BOOK.href : null; // the word game is written words: stage 3
-  return PAGES[subject] && lessonsOf(subject, stage).length ? `${PAGES[subject]}?stage=${stage}` : null;
+  return lessonsOf(subject, stage).length ? `/subject?s=${subject}&stage=${stage}` : null;
 }
+
+// Gyan is a cube of twelves (sumeet, 2026-11-28): twelve stages, twelve subjects in each, twelve lessons in each
+// subject at a stage. A lesson house is one unit; it may hold several parts (lessons of lib/lessons.js that carry
+// the same `house`), so a whole school year fits. A lesson with no `house` takes the next free one, in order.
+export const HOUSES = 12;
+
+/** The twelve lesson houses of a subject at a stage: for each, its parts in order (an empty list when nothing is made). */
+export function unitsOf(subject, stage, lessons = LESSONS) {
+  const houses = Array.from({ length: HOUSES }, () => []);
+  let next = 0;
+  for (const l of lessons.filter((x) => x.subject === subject && x.stage === stage)) {
+    const h = l.house ? l.house - 1 : next;
+    if (h >= 0 && h < HOUSES) houses[h].push(l);
+    next = Math.max(next, h + 1);
+  }
+  return houses;
+}
+
+/** The twelve lesson houses as boxes for the grid. A house is done when every part of it was seen to the end. */
+export const lessonHouses = (subject, stage, seenIds = []) => unitsOf(subject, stage).map((parts, i) => ({
+  id: `unit:${subject}:${stage}:${i + 1}`,
+  lesson: parts[0]?.id,
+  picture: parts[0]?.picture ?? "",
+  name: parts[0] && stage >= READS_FROM ? parts[0].name : { en: "" }, // nothing written before a learner reads
+  open: parts.length ? `/lesson?s=${subject}&stage=${stage}&h=${i + 1}` : undefined,
+  done: parts.length > 0 && parts.every((p) => seenIds.includes(p.id)),
+}));
 
 /** The twelve houses of a stage: the subjects, turned by the rising sign, each open only if it holds something there. */
 export const subjectsAt = (stage, lagna) => ring(lagna).map((s) => ({ ...s, open: doorOf(s.id, stage) ?? undefined }));
@@ -71,17 +95,17 @@ export function stageAfter(at, done, lessons = LESSONS) {
   return now;
 }
 
-const seen = () => { try { const v = JSON.parse(localStorage.getItem(SEEN)); return Array.isArray(v) ? v.filter((x) => typeof x === "string") : []; } catch { return []; } };
+export const seenLessons = () => { try { const v = JSON.parse(localStorage.getItem(SEEN)); return Array.isArray(v) ? v.filter((x) => typeof x === "string") : []; } catch { return []; } };
 /** Look at what is done on this phone and move the learner up if their stage is finished. Returns their stage. */
 export function moveUp() {
-  const done = [...seen().map((id) => `lesson:${id}`), ...Object.keys(loadLearn()).map((k) => `word:${k}`)];
+  const done = [...seenLessons().map((id) => `lesson:${id}`), ...Object.keys(loadLearn()).map((k) => `word:${k}`)];
   const at = loadStage(), now = stageAfter(at, done);
   if (now !== at) { try { localStorage.setItem(KEY, String(now)); } catch {} }
   return now;
 }
 /** A lesson was seen to its end. */
 export function markSeen(id) {
-  const list = seen();
+  const list = seenLessons();
   if (!list.includes(id)) { try { localStorage.setItem(SEEN, JSON.stringify([...list, id])); } catch {} }
   return moveUp();
 }

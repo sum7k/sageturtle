@@ -128,6 +128,7 @@ export const LESSONS = [
   ...inChapter,
 ];
 
+// A lesson may carry `house: n` (1 to 12): lessons with the same house are parts of one unit (lib/stages.js unitsOf).
 export const LESSON_IDS = LESSONS.map((l) => l.id);
 export const lessonById = (id) => LESSONS.find((l) => l.id === id) ?? null;
 export const lessonsOf = (subject, stage) => LESSONS.filter((l) => l.subject === subject && (stage === undefined || l.stage === stage));

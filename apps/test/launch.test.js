@@ -4,7 +4,7 @@ import { BOOK, WORD, LIFE, TRACKED, tapName } from "../lib/buttons.js";
 import { AROUND, CENTRE, SAY, whereOf } from "../lib/grid.js";
 import { cleanPrefs, sidesFor } from "../lib/prefs.js";
 import { WORD_HOUSES } from "../lib/word.js";
-import { stageHouses, subjectsAt, doorOf, cleanStage, partsOf, stageAfter } from "../lib/stages.js";
+import { stageHouses, subjectsAt, doorOf, cleanStage, partsOf, stageAfter, unitsOf, lessonHouses } from "../lib/stages.js";
 import { TOP } from "../lib/top.js";
 import { mark, report } from "../lib/learn.js";
 import { shouldLook, afterLook } from "../lib/ask.js";
@@ -214,10 +214,22 @@ test("Gyan is walked by stage: only the learner's stage and those behind it open
   assert.deepEqual([cleanStage("6"), cleanStage("0"), cleanStage("13"), cleanStage("x"), cleanStage(null)], [6, 1, 1, 1, 1]);
   // Stage 1: nothing is read. Nature has its picture lessons, a life can be heard, and nothing else is open.
   const open = (stage) => subjectsAt(stage, 0).filter((x) => x.open).map((x) => [x.id, x.open]);
-  assert.deepEqual(open(1), [["nature", "/nature?stage=1"], ["lives", "/life?stage=1"]]);
+  assert.deepEqual(open(1), [["nature", "/subject?s=nature&stage=1"], ["lives", "/life?stage=1"]]);
   assert.deepEqual(open(2), [["lives", "/life?stage=2"]]);
   assert.deepEqual(open(3), [["word", "/book"], ["lives", "/life?stage=3"]]); // written words begin here
-  assert.deepEqual(open(6), [["number", "/number?stage=6"], ["lives", "/life?stage=6"]]); // the chapter on zero
+  assert.deepEqual(open(6), [["number", "/subject?s=number&stage=6"], ["lives", "/life?stage=6"]]); // the chapter on zero
+  // A cube of twelves: inside a subject at a stage, twelve lesson houses; stage 1 Nature has seven made.
+  const houses = lessonHouses("nature", 1, ["body"]);
+  assert.equal(houses.length, 12);
+  assert.equal(houses.filter((h) => h.open).length, 7);
+  assert.deepEqual([houses[0].open, houses[0].done, houses[1].done, houses[7].open], ["/lesson?s=nature&stage=1&h=1", true, false, undefined]);
+  assert.ok(houses.every((h) => !h.name.en), "nothing written at stage 1");
+  assert.equal(lessonHouses("number", 6)[0].name.en, "Zero is a number");
+  assert.deepEqual([tapName("subject", houses[0]), tapName("subject", houses[9])], ["lesson:body", "unit:empty"]);
+  assert.ok(TRACKED.includes("unit:empty"));
+  // A house can hold several parts: lessons that name the same house.
+  const L = (id, house) => ({ id, subject: "x", stage: 2, house });
+  assert.deepEqual(unitsOf("x", 2, [L("a"), L("b", 4), L("c", 4), L("d")]).slice(0, 5).map((h) => h.map((l) => l.id)), [["a"], [], [], ["b", "c"], ["d"]]);
   assert.equal(doorOf("number", 1), null, "a child at stage 1 never meets the written chapter of stage 6");
   assert.equal(doorOf("nature", 6), null);
   // No lesson of stage 1 or 2 shows a written line, and every lesson belongs to one stage.

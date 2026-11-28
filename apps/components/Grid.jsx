@@ -33,6 +33,7 @@ export default function Grid({ level, houses, lang, first = -1 }) {
           onClick={() => press(box)} onAnimationEnd={() => setShake(null)}>
           {box.picture && <span className="emoji" aria-hidden="true">{box.picture}</span>}
           {nameOf(box, lang) && <span className="name">{nameOf(box, lang)}</span>}
+          {box.done && <i className="done" aria-label="Seen">✓</i>}
         </button>
       ))}
       {CENTRE.map((c) => (

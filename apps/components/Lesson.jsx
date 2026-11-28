@@ -22,7 +22,7 @@ const LEAST = 3500; // a scene stays at least this long, so the drawing is seen 
  * A lesson of a chapter (stage 4 on, lib/lessons.js CHAPTERS) is for a learner who reads: the line is also written
  * under the drawing, the screen says whose voice the chapter is told in, and after the last scene come a few sums to try (components/Practice.jsx).
  */
-export default function Lesson({ lesson, lang, onClose }) {
+export default function Lesson({ lesson, lang, onClose, onEnded }) {
   const [at, setAt] = useState(0);
   const [held, setHeld] = useState(false);
   const [ended, setEnded] = useState(false);
@@ -42,12 +42,12 @@ export default function Lesson({ lesson, lang, onClose }) {
       timer = setTimeout(() => {
         if (!alive) return;
         if (at < last) setAt(at + 1);
-        else { tap(`watched:${lesson.id}`); markSeen(lesson.id); setEnded(true); }
+        else { tap(`watched:${lesson.id}`); markSeen(lesson.id); setEnded(true); onEnded?.(); }
       }, Math.max(REST, least - (Date.now() - began)));
     };
     sayLine(lineId(lesson, at), line, heardIn, who.current, go);
     return () => { alive = false; clearTimeout(timer); hush(); };
-  }, [at, held, ended, lesson, heardIn, last, line, least]);
+  }, [at, held, ended, lesson, heardIn, last, line, least]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const to = (n) => { setEnded(false); setHeld(false); setAt(Math.max(0, Math.min(last, n))); };
   return (
