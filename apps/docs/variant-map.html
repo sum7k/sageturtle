@@ -1,0 +1,391 @@
+<title>BodhiLabs Variant Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;500;600;700&family=Source+Serif+4:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column; a picker (app or variant) drives an 11-row list; reference tables scroll inside their own box. */
+:root{
+  --bg:#eaf4ff; --surface:#ffffff; --ink:#14174a; --muted:#3d4273; --line:#d9dcf0;
+  --accent:#14174a; --accent-ink:#ffffff; --accent-soft:#fff0bf;
+  --marigold:#14174a; --marigold-soft:#ffc531;
+  --display:"Anek Latin","Trebuchet MS",system-ui,sans-serif;
+  --body:"Anek Latin","Noto Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d0f33; --surface:#171a4f; --ink:#eaf4ff; --muted:#b3b9e6; --line:#2b2f6e;
+    --accent:#ffc531; --accent-ink:#14174a; --accent-soft:#2b2f6e;
+    --marigold:#14174a; --marigold-soft:#ffc531; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d0f33; --surface:#171a4f; --ink:#eaf4ff; --muted:#b3b9e6; --line:#2b2f6e;
+  --accent:#ffc531; --accent-ink:#14174a; --accent-soft:#2b2f6e;
+  --marigold:#14174a; --marigold-soft:#ffc531; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5}
+.wrap{max-width:960px;margin:0 auto;padding-block:2.5rem 4rem;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:3rem}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(2rem,6vw,3rem);font-weight:700;letter-spacing:-.02em}
+h2{font-size:1.5rem;font-weight:700}
+h3{font-size:1.05rem;font-weight:500}
+p{margin:0;max-width:65ch}
+.lede{color:var(--muted);font-size:1.1rem;margin-top:.75rem}
+.eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);font-weight:600}
+section{display:flex;flex-direction:column;gap:1rem;min-width:0}
+.note{color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:var(--surface);align-self:flex-start}
+.seg button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:600;padding:.35rem 1rem;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chips button{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:.95rem;padding:.3rem .8rem;border-radius:8px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--ink);font-weight:600}
+button:focus-visible{outline:3px solid #1f4fb5;outline-offset:2px}
+.kh{background:#eaf4ff;color:#14174a;border-radius:28px;padding:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.kh-card{background:#fff;border-radius:28px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.kh-art{position:relative;height:150px}
+.kh-art svg{display:block;width:100%;height:100%}
+.kh-kind{position:absolute;left:14px;top:14px;background:#fff;border-radius:999px;padding:3px 12px;font-weight:600;font-size:.9rem}
+.kh-body{padding:16px 18px 20px;display:flex;flex-direction:column;gap:12px}
+.kh-body h3{font-size:1.5rem;font-weight:700;color:#14174a}
+.kh-dek{font-family:"Source Serif 4",Georgia,serif;color:#2b2f5e;font-size:1.05rem}
+.kh-listen{display:inline-flex;align-items:center;gap:10px;align-self:flex-start;background:#eaf4ff;border-radius:999px;padding:6px 18px 6px 6px;font-weight:600}
+.kh-listen i{width:32px;height:32px;border-radius:999px;background:#14174a;display:flex;align-items:center;justify-content:center}
+.kh-levels{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kh-levels span{border:1.5px solid #d9dcf0;border-radius:16px;padding:8px 12px;font-weight:700;font-size:.95rem}
+.kh-levels .on{background:#14174a;border-color:#14174a;color:#fff}
+.kh-side{display:flex;flex-direction:column;gap:14px;min-width:0}
+.kh-side b{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:#3d4273}
+.kh-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kh-tile{border-radius:22px;padding:14px 16px;font-weight:600;font-size:1.1rem;min-height:64px}
+.kh-sw{display:flex;flex-wrap:wrap;gap:6px}
+.kh-sw span{width:34px;height:34px;border-radius:999px;border:1px solid #d9dcf0}
+.kh-pills{display:flex;flex-wrap:wrap;gap:8px}
+.kh-pill{border-radius:999px;padding:8px 18px;font-weight:600;border:1.5px solid #14174a;background:#fff}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.panel-head{padding:1rem 1.1rem;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:.5rem}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem;margin:0}
+.facts div{min-width:0}
+.facts dt{font-size:.75rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600}
+.facts dd{margin:0;font-size:.95rem}
+.rows{list-style:none;margin:0;padding:0}
+.rows li{display:grid;grid-template-columns:11rem 1fr;gap:1rem;padding:.7rem 1.1rem;border-top:1px solid var(--line)}
+.rows li:first-child{border-top:0}
+.rows .k{font-family:var(--display);font-weight:500}
+.rows .v{min-width:0}
+.nm{display:block;font-weight:600;color:var(--accent)}
+.k small{display:block;color:var(--muted);font-family:var(--body);font-size:.8rem;font-weight:400}
+.off{display:inline-block;background:var(--marigold-soft);color:var(--marigold);font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:.05rem .45rem;border-radius:4px;margin-right:.4rem}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:.95rem}
+th,td{text-align:left;vertical-align:top;padding:.65rem .8rem;border-top:1px solid var(--line)}
+thead th{border-top:0;font-size:.75rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+tbody th{font-family:var(--display);font-weight:500;white-space:nowrap}
+.mods{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem}
+.mod{border-top:3px solid var(--accent);padding-top:.75rem;display:flex;flex-direction:column;gap:.5rem;min-width:0}
+.mod ul,.open{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:.35rem}
+.open{max-width:65ch}
+@media (max-width:560px){.rows li{grid-template-columns:1fr;gap:.15rem}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">BodhiLabs design map</div>
+    <h1>13 apps, 11 kinds of user</h1>
+    <p class="lede">Each app keeps one core job. The variant decides what content it leads with, how it speaks, what is hidden, and how the screen is laid out. Everything is voice first, and language and location then tune every variant.</p>
+  </header>
+
+  <section>
+    <h2>What each app becomes</h2>
+    <p class="note">Pick an app to see it across all 11 variants, or pick a variant to see its 13 apps. Every variant has its own app names, shown in bold colour. They are working titles in English and would be localised.</p>
+    <div class="seg" role="group" aria-label="View">
+      <button id="mode-app" aria-pressed="true">By app</button>
+      <button id="mode-variant" aria-pressed="false">By variant</button>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="panel">
+      <div class="panel-head" id="panel-head"></div>
+      <ul class="rows" id="rows"></ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Variant profiles</h2>
+    <p class="note">Tone, safety and UI belong mostly to the variant, so they are set once here and apply across all 13 apps.</p>
+    <div class="scroll"><table>
+      <thead><tr><th>Variant</th><th>Tone</th><th>Safety and permissions</th><th>UI</th></tr></thead>
+      <tbody id="profiles"></tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Family account</h2>
+    <p class="note">Decided: every account belongs to an adult. Kids and Teens exist only as profiles that the adult creates inside their own Me app. A child can never sign up alone.</p>
+    <div class="panel"><ul class="rows">
+      <li><span class="k">Owner</span><span class="v">An adult, paying or not. Children are never asked to prove their age.</span></li>
+      <li><span class="k">Child profiles</span><span class="v">The owner creates each one and picks Kids or Teens from the child's age. Creating the profile is the parent's consent.</span></li>
+      <li><span class="k">Approval</span><span class="v">Switching on, changing or removing a child's profile needs the owner's biometric, even on the child's own phone.</span></li>
+      <li><span class="k">Payment</span><span class="v">Kids and Teens profiles are free and never show ads.</span></li>
+    </ul></div>
+  </section>
+
+  <section>
+    <h2>Guardians</h2>
+    <p class="note">Parent is no longer a variant. Guardian is a role that any adult variant can hold, so a salaried parent, a homemaker and a teacher can all be guardians of the same child.</p>
+    <div class="panel"><ul class="rows">
+      <li><span class="k">Adding guardians</span><span class="v">A parent sets up the child's account and is the first guardian. The parent can add a teacher or other trusted adults, and remove them at any time. The child can see who their guardians are.</span></li>
+      <li><span class="k">Messages</span><span class="v">The child can message their guardians and nobody else. Parents can see these chats, and every chat has a report button. A kid is never handed off to WhatsApp, Telegram or the phone: calls and messages stay inside the app.</span></li>
+      <li><span class="k">Teachers</span><span class="v">A verified teacher sees their class list and can message only the children whose parents added them.</span></li>
+    </ul></div>
+  </section>
+
+  <section>
+    <h2>Me, the 13th app</h2>
+    <p class="note">Me holds who the user is. The other 12 apps read from it, so nothing is entered twice.</p>
+    <div class="panel"><ul class="rows">
+      <li><span class="k">Holds</span><span class="v">Profile and username, the lists of people, child control, plus the variant, language, location, birthday and subscription.</span></li>
+      <li><span class="k">Family</span><span class="v">Guardian links and child control live here. Messages and shared Reminders use them.</span></li>
+      <li><span class="k">Lists of people</span><span class="v">Separate lists, shown below. Messages, Meetings, Hobbies and Events read from them.</span></li>
+      <li><span class="k">Reach me</span><span class="v">Decided: one optional mobile number and one app for messages: WhatsApp, Telegram or SMS. The number is not the account and is never checked by OTP. It is used only to open a chat or a call for people in the lists. A guardian fills it for a teen. Kids have none.</span></li>
+      <li><span class="k">Calls and messages</span><span class="v">One-to-one talk is handed off by a plain link, with no APIs and no fees: the phone's dialer for a call, and WhatsApp, Telegram or SMS for a message, whichever that person chose. WhatsApp has no link that starts a call. Groups, such as the class chat, stay inside the app. This holds for Messages and Meetings in every adult variant until in-app calls are built.</span></li>
+      <li><span class="k">Work details</span><span class="v">Skills feed Earn, and a business card feeds Yellow Pages and Advertise.</span></li>
+    </ul></div>
+  </section>
+
+  <section>
+    <h2>Kinds of person</h2>
+    <p class="note">A person can hold more than one variant. A kind of person is one allowed combination of variants. With the rules below there are 97 kinds: 11 with one variant, 31 with two and 55 with three.</p>
+    <div class="panel"><ul class="rows">
+      <li><span class="k">Children</span><span class="v">Kids and Teens always stand alone. They are profiles an adult makes and never mix with another variant. That is 2 kinds.</span></li>
+      <li><span class="k">At most three</span><span class="v">An adult holds one, two or three of the nine adult variants, so a Home tile opens into at most three versions.</span></li>
+      <li><span class="k">Pairs that clash</span><span class="v">Looking for a job with Office job. Retired with Office job. Retired with Looking for a job. Teacher with Office job, because teaching is the job. Student with Retired.</span></li>
+      <li><span class="k">Everything else mixes</span><span class="v">For example Farming with Shop, Home with Daily work, Teacher with Farming, Retired with Shop.</span></li>
+      <li><span class="k">Without the limit of three</span><span class="v">The same clashes alone would give 193 kinds. With no rules at all there would be 2,047.</span></li>
+    </ul></div>
+  </section>
+
+  <section>
+    <h2>Lists of people</h2>
+    <p class="note">A person keeps separate lists, because each has its own trust and its own things to share. A variant shows only the lists that fit it. One person can be in more than one list. People join a list only by scanning each other's code, so strangers cannot find anyone.</p>
+    <div class="scroll"><table>
+      <thead><tr><th>Variant</th><th>Family</th><th>Friends</th><th>Work</th><th>Trade</th><th>Neighbours</th><th>Class</th></tr></thead>
+      <tbody><tr><td><b>Kids (6 to 12)</b></td><td>Guardians only</td><td></td><td></td><td></td><td></td><td>Through guardians</td></tr><tr><td><b>Teens (13 to 17)</b></td><td>Yes</td><td>Yes</td><td></td><td></td><td></td><td>Classmates and teachers</td></tr><tr><td><b>College students</b></td><td>Yes</td><td>Yes</td><td></td><td></td><td></td><td>Batch and teachers</td></tr><tr><td><b>Job seekers</b></td><td>Yes</td><td>Yes</td><td>Past colleagues and referrers</td><td></td><td></td><td></td></tr><tr><td><b>Salaried professionals</b></td><td>Yes</td><td>Yes</td><td>Colleagues</td><td></td><td>Yes</td><td></td></tr><tr><td><b>Business owners and shopkeepers</b></td><td>Yes</td><td>Yes</td><td>Staff</td><td>Customers and suppliers</td><td>Yes</td><td></td></tr><tr><td><b>Gig and daily-wage workers</b></td><td>Yes</td><td>Yes</td><td></td><td>Payers and contractors</td><td>Yes</td><td></td></tr><tr><td><b>Farmers and rural users</b></td><td>Yes</td><td>Yes</td><td></td><td>Buyers and input sellers</td><td>Yes</td><td></td></tr><tr><td><b>Homemakers</b></td><td>Yes</td><td>Yes</td><td></td><td></td><td>Yes</td><td></td></tr><tr><td><b>Teachers</b></td><td>Yes</td><td>Yes</td><td>Staffroom</td><td></td><td>Yes</td><td>The classes they teach</td></tr><tr><td><b>Retired and senior citizens</b></td><td>Yes</td><td>Yes</td><td></td><td></td><td>Yes</td><td></td></tr></tbody>
+    </table></div>
+    <div class="panel" style="margin-top:1rem"><ul class="rows">
+      <li><span class="k">The class</span><span class="v">One shared group, seen through each role. The teacher makes it and people join by the class code.</span></li>
+      <li><span class="k">Teacher</span><span class="v">Sees the students, speaks to the whole class, gives homework and starts calls. Messages stop outside office hours. For kids, the message goes to the parents.</span></li>
+      <li><span class="k">Parent</span><span class="v">Any adult variant. The class sits under the child, not in the parent's own lists. The parent's fingerprint lets a teacher in. Other parents of the class are visible.</span></li>
+      <li><span class="k">Kid and teen</span><span class="v">A kid manages nothing: the teacher is one of the guardians, and classmates cannot be messaged. A teen sees classmates and a class chat that the teacher can see.</span></li>
+    </ul></div>
+  </section>
+
+  <section>
+    <h2>News, pushed</h2>
+    <p class="note">News is called Khabri in every variant. It is the one name that binds all the variants together. News comes to the user without being asked for. It builds on the existing Khabri project. The aim is that a person gets the good, latest content here and no longer needs to dig for it in social networks.</p>
+    <div class="panel"><ul class="rows">
+      <li><span class="k">More than news</span><span class="v">Each variant's feed mixes its news with the best new things for that age group, such as hit music and videos. This is added to the news topics already listed for each variant.</span></li>
+      <li><span class="k">Kids News</span><span class="v">Children get news made for children, plus songs, videos and the latest kids content.</span></li>
+      <li><span class="k">Playing media</span><span class="v">Videos play in the embedded YouTube player. YouTube Kids is a separate app, so for Kids we embed normal YouTube videos that are marked made for kids and hand-picked, with tracking turned off as YouTube requires. Nothing is behind a paywall, which respects YouTube's rule against charging to watch an embedded video. Adult variants also get music in the embedded Spotify player, alongside YouTube. Kids and Teens get YouTube only.</span></li>
+      <li><span class="k">How a khabar is made</span><span class="v">1. Topics arrive from the chosen X handles. 2. Khabri picks the ones worth telling. 3. It gathers the facts from permitted sources. 4. It writes the khabar from scratch, in four levels, so a bright reader of any age finds a level that suits them. 5. It produces the khabar in the 12 languages, as text and audio. 6. It pushes the khabar to the variants it fits. Khabri's existing pipeline is reused for steps 2 to 4.</span></li>
+      <li><span class="k">Feed</span><span class="v">One khabar at a time on a card, as in Khabri today. A swipe says like or not for me, and the feed learns from it. The variant sets the starting topics.</span></li>
+      <li><span class="k">From Khabri</span><span class="v">Already built: the card deck, taste learning, four reading levels, a pipeline that finds and writes khabars every half hour, and Dodo payments for ads.</span></li>
+      <li><span class="k">To add</span><span class="v">Khabri writes in English only, learns taste without an account, and carries only positive news. BodhiLabs needs 12 languages, taste tied to the account and variant, and practical items such as mandi prices and job alerts.</span></li>
+      <li><span class="k">Sources</span><span class="v">Indian news, plus global nature, science and health. No site crawling and no paid news API. Topics come from X handles. Facts come from sources that permit reuse: government press releases, open government data and Wikipedia. Khabri's pipeline will be limited to these.</span></li>
+      <li><span class="k">X handles</span><span class="v">Khabri follows about 20 chosen handles: a handful of Indian news outlets, plus global nature, science and health accounts. It reads their posts through X's paid API, with a cap of 10,000 posts or about 50 US dollars a month, and no scraping. A post is only a pointer to a topic. X's terms do not allow rewriting, translating or summarising the post itself.</span></li>
+      <li><span class="k">Spotify rules</span><span class="v">The Spotify player is shown unaltered, with no ad on or over it, and never in Kids or Teens.</span></li>
+      <li><span class="k">Trust</span><span class="v">Every khabar names its source and its date.</span></li>
+    </ul></div>
+  </section>
+
+  <section>
+    <h2>Wisdom, quotations as stories</h2>
+    <p class="note">Wisdom is the top centre tile on Home, right above Learning, and has the same name in every variant. It is designed now and built last. Its screens are on the shell canvas.</p>
+    <div class="panel"><ul class="rows">
+      <li><span class="k">What it holds</span><span class="v">A list of quotations, one new each day. Each is shown word for word with its source.</span></li>
+      <li><span class="k">The story</span><span class="v">Under each quotation is a short moral science story, ending in one line of moral. It can be read or heard.</span></li>
+      <li><span class="k">Per variant</span><span class="v">The same quotation has a different story for each variant, set in that person's own life. A person with several variants can change between their stories.</span></li>
+      <li><span class="k">Kept simple</span><span class="v">A heart keeps a quotation. There are no ads, no comments and no scores.</span></li>
+      <li><span class="k">Scale</span><span class="v">Nothing is written per person. Each story is made once for a variant and a language, checked, and served as a saved file.</span></li>
+      <li><span class="k">Not decided</span><span class="v">Which traditions are covered, where the quotations come from and who checks them. These are in the Wisdom backlog.</span></li>
+    </ul></div>
+  </section>
+
+  <section>
+    <h2>Look and feel, from Khabri</h2>
+    <p class="note">Khabri's theme carries over to all 13 apps. This page now uses its colours and type. The sample below is drawn with Khabri's own values.</p>
+    <div class="kh" aria-label="Sample of the Khabri look">
+      <div class="kh-card">
+        <div class="kh-art"><svg viewBox="0 0 358 232" preserveAspectRatio="xMidYMid slice" style="background:#ffe3dc" aria-hidden="true"><circle cx="262" cy="86" r="58" fill="#ffc531"/><path d="M0 176 Q90 120 190 170 T358 150 V232 H0 Z" fill="#14174a"/></svg><span class="kh-kind">Read</span></div>
+        <div class="kh-body">
+          <h3>Today, in Sriharikota, a new rocket stood ready</h3>
+          <p class="kh-dek">A sample card. One khabar, whole, on one card.</p>
+          <span class="kh-listen"><i><svg width="16" height="16" viewBox="0 0 24 24" fill="#ffffff" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></i>Listen</span>
+          <div class="kh-levels"><span>Novice</span><span class="on">Beginner</span><span>Intermediate</span><span>Advanced</span></div>
+        </div>
+      </div>
+      <div class="kh-side">
+        <b>App tiles</b>
+        <div class="kh-tiles">
+          <div class="kh-tile" style="background:#ffc531">News</div>
+          <div class="kh-tile" style="background:#ddf3e4">Learn</div>
+          <div class="kh-tile" style="background:#fff0bf">Earn</div>
+          <div class="kh-tile" style="background:#e9e4ff">Messages</div>
+          <div class="kh-tile" style="background:#ffe3dc">Events</div>
+          <div class="kh-tile" style="background:#14174a;color:#ffffff">Me</div>
+        </div>
+        <b>Colours</b>
+        <div class="kh-sw"><span style="background:#eaf4ff"></span><span style="background:#14174a"></span><span style="background:#ffc531"></span><span style="background:#fff0bf"></span><span style="background:#ffe3dc"></span><span style="background:#ddf3e4"></span><span style="background:#e9e4ff"></span></div>
+        <b>Buttons</b>
+        <div class="kh-pills"><span class="kh-pill" style="background:#ffc531;border-color:#ffc531">Install</span><span class="kh-pill" style="background:#14174a;color:#ffffff">Continue</span><span class="kh-pill">Later</span></div>
+      </div>
+    </div>
+    <div class="panel"><ul class="rows">
+      <li><span class="k">Colours</span><span class="v">Sky blue ground, navy ink, gold for the one main action, and four soft tints (cream, peach, mint, lilac). Each app gets a tint, so an app can be found by colour without reading.</span></li>
+      <li><span class="k">Type</span><span class="v">Anek for headings and labels, Source Serif for reading text. Anek has matching fonts for nine Indian scripts, which covers 11 of the 12 languages. Urdu needs a separate font.</span></li>
+      <li><span class="k">Drawn pictures</span><span class="v">Every card has a sun and a hill drawn in code, in that card's colours. No photos are needed, so there is nothing to license and pages stay light on slow phones.</span></li>
+      <li><span class="k">Cards and pills</span><span class="v">One white card with large round corners, a second card peeking behind it, round pill buttons at least 44 px tall, and swipe left or right. These suit a voice-first app with few choices on screen.</span></li>
+      <li><span class="k">Listen button</span><span class="v">Khabri's Listen pill reads a card aloud. It becomes the standard control on every screen of every app.</span></li>
+      <li><span class="k">Bare frame</span><span class="v">No logo, no title and no bottom bar. A thin date line leads home and one round button opens Me.</span></li>
+      <li><span class="k">To add</span><span class="v">Khabri has no night colours, so the night version on this page is new. Each variant can shift the tints, for example brighter for Kids and calmer with larger type for Seniors.</span></li>
+    </ul></div>
+  </section>
+
+  <section>
+    <h2>Modifiers</h2>
+    <p class="note">These do not create new variants. They apply to whichever variant the user is in. Onboarding asks only for a language, a PIN code and a variant, in that order.</p>
+    <div class="mods">
+      <div class="mod"><h3>Language</h3><ul>
+        <li>The first onboarding screen shows 12 blocks, one per language, each written in its own script. The user taps one.</li>
+        <li>The 12 are Hindi, English, Bengali, Marathi, Telugu, Tamil, Gujarati, Urdu, Kannada, Odia, Malayalam and Punjabi.</li>
+        <li>The choice sets the UI, the voice and the news language.</li>
+        <li>It can be changed later in Me.</li>
+      </ul></div>
+      <div class="mod"><h3>Location</h3><ul>
+        <li>Taken once as a PIN code, or from the phone's location with permission. The user never sees a city tier.</li>
+        <li>It changes content only: listings, events, mandi prices and local news.</li>
+        <li>Where listings are thin, nearby widens to the nearest town.</li>
+        <li>Low data and offline modes switch on where the network is weak.</li>
+      </ul></div>
+      <div class="mod"><h3>Voice first, for everyone</h3><ul>
+        <li>This is a rule for the whole app and not a setting. Nobody is asked whether they can read.</li>
+        <li>Every screen can be heard, and every input can be spoken.</li>
+        <li>Reading and typing are optional and stay one tap away, for quiet or public places.</li>
+        <li>Icons, pictures and numbers carry meaning so a screen works without reading.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>One backend, many variants</h2>
+    <p class="note">Decided: the backend is the same for every variant. A variant is a set of settings on top of it.</p>
+    <div class="panel"><ul class="rows">
+      <li><span class="k">Shared</span><span class="v">The 13 apps, their data, the news store, accounts, guardian links and voice pipeline are built once and serve everyone.</span></li>
+      <li><span class="k">Per variant</span><span class="v">App names, icons and theme, tone of prompts, default topics and sources, which apps are on, and safety rules. An app that is off for a variant is hidden, not shown locked.</span></li>
+      <li><span class="k">Safety</span><span class="v">Rules for Kids and Teens are checked by the backend on every request, so they hold even if the screen is bypassed.</span></li>
+      <li><span class="k">New variant</span><span class="v">Adding one later, as happened with Teachers, means writing a new settings file and not new code.</span></li>
+    </ul></div>
+  </section>
+
+  <section>
+    <h2>Free with ads, or subscribe</h2>
+    <p class="note">Decided: adults can use every app without paying. Free use is paid for by ads. A subscription of 1,200 rupees a year gives the option to remove them.</p>
+    <div class="panel"><ul class="rows">
+      <li><span class="k">Free</span><span class="v">All 13 apps, with ads. The ads come from BodhiLabs's own Advertise app, as Khabri sells them today.</span></li>
+      <li><span class="k">Subscribed</span><span class="v">The same 13 apps, with the option to turn ads off.</span></li>
+      <li><span class="k">Kids and Teens</span><span class="v">Free, and never shown ads.</span></li>
+      <li><span class="k">Where ads go</span><span class="v">Never in News, never in Wisdom, and never on or over a YouTube or Spotify player.</span></li>
+    </ul></div>
+  </section>
+
+  <section>
+    <h2>Install and first run</h2>
+    <p class="note">BodhiLabs is a PWA. The steps below are the agreed flow.</p>
+    <div class="panel"><ul class="rows">
+      <li><span class="k">Website</span><span class="v">Opening the site shows a landing page that explains the app. The only action on it is Install.</span></li>
+      <li><span class="k">Install</span><span class="v">Install adds the PWA to the device. On Android and desktop Chrome the button can open the install prompt. On iPhone the browser gives no install prompt, so the page has to show the Share then Add to Home Screen steps.</span></li>
+      <li><span class="k">Onboarding</span><span class="v">The first screen is 12 language blocks. Then comes the PIN code. Then one screen of 9 picture blocks, where an adult picks their variant.</span></li>
+      <li><span class="k">First open</span><span class="v">The app asks the user to set up biometrics before anything else. In a PWA this is a passkey, unlocked by fingerprint or face. On a phone with no sensor, the device PIN is the fallback.</span></li>
+      <li><span class="k">Subscription</span><span class="v">Optional. All apps are free with ads. Removing ads costs 1,200 rupees a year, paid by scanning a UPI QR code through Dodo Payments.</span></li>
+      <li><span class="k">Payment fees</span><span class="v">Dodo's listed India rate is 4% plus 15 US cents, with 0.5% more for subscriptions. On 1,200 rupees a year that is about 67 rupees, assuming 85 rupees to the dollar. Recurring UPI charges confirm about 48 hours after the charge date.</span></li>
+      <li><span class="k">Age check</span><span class="v">None for now. Child profiles can only be created by an adult owner.</span></li>
+      <li><span class="k">Variant change</span><span class="v">A person can hold any number of variants, for example a farmer who also runs a shop. Home shows one tile per app. Where the person's variants call an app by different names, the tile carries the app's own name and opens into those versions, for example Earnings opens into Mandi and Leads. A long press lets the person keep a tile on top, move it or hide it. Adding or removing a variant asks for biometrics again. For a child's profile it must be the owner's biometric, so a child cannot leave Kids or Teens on their own.</span></li>
+    </ul></div>
+  </section>
+</div>
+
+<script>
+const APPS=["Wisdom","News","Learn","Earn","Reminders","Hobbies","Meetings","Messages","Discussions","Events","Yellow Pages","Advertise","Me"];
+const VARS=[
+ {n:"Kids (6 to 12)",tone:"Playful and encouraging, very simple words",safe:"Parent-linked account. Only guardians can contact the child. No ads, no payments. Daily time limits.",ui:"Big pictures and icons, voice, few choices per screen"},
+ {n:"Teens (13 to 17)",tone:"Friendly and respectful, never childish",safe:"Parental consent. Private by default, strangers blocked, no ads, no real money.",ui:"Modern and quick, dark mode, light personalisation"},
+ {n:"College students",tone:"Casual, like a helpful senior",safe:"Verified internships and recruiters. Easy harassment reporting.",ui:"Dense and fast, customisable home"},
+ {n:"Job seekers",tone:"Supportive and practical",safe:"Verified recruiters. Clear warnings never to pay for a job.",ui:"Deadlines first, trackers, low data use"},
+ {n:"Salaried professionals",tone:"Crisp and professional",safe:"Work and personal kept apart. Fine privacy controls.",ui:"Calendar-centred, dense, quiet hours"},
+ {n:"Business owners and shopkeepers",tone:"Direct and businesslike",safe:"Business verification. Payment fraud alerts.",ui:"Dashboard with quick actions, ledger-style lists"},
+ {n:"Gig and daily-wage workers",tone:"Plain, respectful, to the point",safe:"Verified payers. Location shared only with consent. Help with wage disputes.",ui:"Voice first, big buttons, works offline on low-end phones"},
+ {n:"Farmers and rural users",tone:"Local, respectful, practical",safe:"Verified buyers and input sellers. Advice only from trusted sources.",ui:"Voice and photo first, offline, home screen follows the crop season"},
+ {n:"Homemakers",tone:"Warm and respectful, never patronising",safe:"Women-only spaces. Phone number hidden by default. Scam and fake-forward flags.",ui:"Simple, voice notes, regional language first"},
+ {n:"Teachers",tone:"Respectful and collegial",safe:"School verification. Can reach a child only after a parent adds them as guardian. Office hours on chats.",ui:"Class list, bulk actions, timetable-centred"},
+ {n:"Retired and senior citizens",tone:"Polite and patient",safe:"Fraud protection. A trusted family contact. Confirm twice before any payment.",ui:"Large text, high contrast, few steps, read-aloud, one-tap call"}
+];
+// M[app][variant]
+const M=[
+ ["A quotation told as a picture story from a child's world of school, play and home. Heard first, in three big pictures. No sharing","Stories about friends, exams, the phone and doing right when nobody is watching","Stories about hostel life, money from home, ambition and honesty in exams","Stories about patience, rejection, effort without a result and refusing shortcuts","Stories about duty at the office, credit and blame, anger and time for family","Stories about fair weight, credit, keeping one's word and rivals in the market","Short stories, heard more than read, about dignity in work, honest pay and helping a fellow worker","Stories about the field and the season: sharing water, debt and patience with a crop","Stories about the household, neighbours, thrift and work that nobody sees","Stories about a teacher's duty and fairness between students, fit to retell in class","Stories about letting go, health, grandchildren and peace, in large print and read aloud"],
+ ["News made for children, with songs, videos and the latest kids content, all hand-picked","Exam news, sports, tech and careers explained simply, with fact-check tags","Campus, internship, exam and policy news with short explainers","Job notifications, exam dates, results and hiring trends","Morning brief on business, your industry, tax and city commute","Market prices, GST and policy changes, local trade news","Fuel prices, platform rule changes, weather, traffic and labour schemes as short audio","Mandi prices, weather, scheme announcements and pest alerts","Local news, prices, health, government schemes and entertainment","Education policy, board circulars, exam schedules, training and school news","Large-print headlines read aloud: pension, health, devotional and local news"],
+ ["Reading, maths and rhyme games that follow the school syllabus","Board exam prep, doubt solving, coding and spoken English","Skill courses, certificates, placement prep and shared notes","Government exam prep, interview practice, resume building, spoken English","Short upskilling courses, leadership and personal finance","Bookkeeping, GST, digital payments and selling online","Short videos on driving rules, app use, basic English and saving money","Crop practices, soil health and new techniques as video and voice","Cooking, tailoring, starting a home business, digital and money basics","Lesson plans, teaching methods, subject refreshers and required training","Safe smartphone and UPI use, health, yoga, scriptures and new hobbies"],
+ ["Off for real money. Pocket-money goals and saving lessons run by a parent","Money basics, contests and scholarships. No paid work","Internships, freelancing, tutoring and campus gigs","Job listings, walk-ins, verified recruiters and an application tracker","Side income, investing basics, job switches and referrals","Customer leads, bulk orders, loans and government schemes","Daily work nearby, verified payers, payment tracking and an earnings summary","Sell produce, compare mandi prices, subsidies and equipment rental","Home-based work, selling homemade goods, self-help groups and tuitions","Tuitions, exam duty, content writing and teaching vacancies","Pension tracking, safe savings, part-time teaching or consulting, fraud warnings"],
+ ["Homework, bedtime and brushing with sticker rewards, set by parents","Timetable, exam dates, tuition and form deadlines","Assignments, fees, exam forms and internship deadlines","Application deadlines, exam dates, interview slots and document renewals","Bills, EMIs, tax dates, meetings and family occasions","GST filing, supplier payments, customer credit dues and licence renewals","Voice reminders for shifts, EMIs, vehicle insurance and licence renewal","Sowing, irrigation, spraying, loan and crop insurance dates, tied to weather","Gas booking, bills, school fees, festivals and fasts, medicines","Timetable, lesson plans, marks entry, exam duty and parent meeting dates","Medicines, doctor visits, pension life certificate and bills. Family can set and see them"],
+ ["Drawing, crafts, stories and music with guided activities","Music, sports, coding, art and gaming clubs in moderated groups","Clubs, fests, photography, music and travel groups","Low-cost hobbies, fitness and stress relief","Weekend activities, fitness, travel and classes nearby","Fitness, local clubs and cricket groups that fit around shop hours","Cricket, music and local groups that fit into breaks","Folk music, local sports, devotional groups and village activities","Cooking, gardening, crafts, rangoli and mehndi, with options to share and sell","Reading circles, music, crafts and activities to bring into class","Bhajans, gardening, walking groups, reading and pilgrimage travel"],
+ ["Online classes and family video calls with parent-approved contacts only","Study groups and tuition classes with known contacts only","Project groups, club meetings, webinars and mentor calls","Interview calls, mock interviews and counselling sessions","Work meetings with calendar sync, notes and action items","Supplier, customer and staff calls with simple scheduling","Audio-first, low-data calls with payers and crew","Expert advice calls, cooperative and panchayat meetings, with audio fallback","Self-help group, school and housing society meetings, family calls","Online classes, parent-teacher meetings and staff meetings","One-tap family video calls, doctor consultations and satsang"],
+ ["Voice notes and stickers with each guardian, inside the app. The parent hears every chat. Never handed off","Friends, family and classmates, handed off to the phone or WhatsApp. The class chat stays inside the app and the teacher sees it","Friends first, handed off. The class chat of the batch stays inside the app","Past colleagues and referrers first, handed off. Recruiter chats wait for Earnings","Colleagues first, then family and friends as separate lists, handed off","Customers and suppliers first, then staff, handed off","Payers and contractors first, handed off by one tap","Buyers and input sellers first, then family and neighbours, handed off","Family first, then friends and neighbours, handed off. Chats with their own children stay inside the app","Each class first. Speak to the whole class; for kids the notice goes to the parents. Office hours hold back alerts","Family first, in larger rows, handed off. Chats with grandchildren stay inside the app"],
+ ["Off. Replaced by a moderated Ask a Teacher corner","Moderated study and interest forums. No private contact from strangers","Campus, career, exam and tech forums, anonymous option for sensitive topics","Exam and interview experiences, company reviews and peer support","Industry, career, money and city forums","Trade-wise groups, supplier reviews, tax and compliance Q&A","Worker forums by city and platform on rates, rights and tips, with voice posts","Crop-wise and district-wise Q&A with experts. Post a photo of the crop problem","Recipes, health, savings and local issues, with women-only spaces","Staff room forums by subject and board, sharing worksheets and tips","Health, pension, devotional and local community threads, kept simple"],
+ ["School events, competitions and camps. A parent does the booking","Competitions, olympiads, sports trials and fests","Fests, hackathons, workshops and job fairs","Job fairs, walk-in drives and free training camps","Conferences, meetups, concerts and weekend events","Trade fairs, exhibitions, association meets and local haats","Local melas, health and welfare camps, labour card registration drives","Kisan melas, mandi days, training and scheme camps","Festivals, community functions, exhibitions and health camps","School calendar, competitions, training workshops and education fairs","Religious events, health camps, senior club meets and pilgrimages"],
+ ["Off. Parents search from their own account","Tuitions, coaching, libraries and sports academies","Hostels and PGs, mess, coaching, printing and repair","Coaching, verified placement agencies, PGs and document services","Home services, doctors, repairs and rentals","List your business. Find suppliers, wholesalers, transporters and accountants","List yourself as a plumber, driver or electrician. Find mechanics and fuel","Seed and fertiliser shops, tractor rental, vets, cold storage and soil labs","Grocers, tailors, domestic help, doctors, tutors and beauty services","Book and stationery shops, printers, lab suppliers and training centres","Doctors, pharmacies that deliver, caregivers, priests and bank helpers, with one-tap call"],
+ ["Off. Kids are not shown ads either","Off for commercial ads. School event and club posters only","Promote events, tutoring and freelance services on small budgets","Promote your profile and skills to recruiters, with a free tier","Sell or rent items, promote a side business, list property","Local ads by pin code, offers and festival campaigns from simple templates","A free service card with ratings. Make the ad by voice","List produce, livestock and equipment for nearby buyers","Promote a home business such as tiffin, tailoring or tuitions to the neighbourhood","Promote tuitions and classes, announce school admissions and events","Rent out property, offer tutoring or consulting, with assisted ad creation"],
+ ["Picture, nickname and list of guardians. A parent controls everything else","Profile, friends, class and privacy settings. Changes need a parent's consent","Profile, college and course, skills, friends and clubs","Profile that doubles as a resume: education, skills, documents and preferred jobs","Profile, employer and role, family, and the work and personal split","Personal profile plus a business card: shop name, category, hours and location","Profile with skills, service area, ratings and a verified badge","Profile with village, land and crops, family and cooperative membership","Profile, family and children, neighbourhood groups and privacy controls","Profile, school, subjects and classes, and the students they are guardian of","Profile, family, a trusted contact and health details for emergencies"]
+];
+// N[app][variant]: the app's name inside each variant
+const N=[
+ ["Wisdom","Wisdom","Wisdom","Wisdom","Wisdom","Wisdom","Wisdom","Wisdom","Wisdom","Wisdom","Wisdom"],
+ ["Khabri","Khabri","Khabri","Khabri","Khabri","Khabri","Khabri","Khabri","Khabri","Khabri","Khabri"],
+ ["Games","Lessons","Skills","Exams","Courses","Growth","Skills","School","Lessons","Training","Lessons"],
+ ["Piggy","Scholarships","Gigs","Jobs","Money","Leads","Work","Mandi","Income","Income","Pension"],
+ ["Day","Timetable","Deadlines","Dates","Planner","Dues","Alerts","Calendar","Diary","Planner","Medicines"],
+ ["Fun","Clubs","Societies","Hobbies","Weekends","Breaks","Leisure","Fun","Pastimes","Interests","Leisure"],
+ ["Classes","Rooms","Groups","Interviews","Meetings","Calls","Calls","Calls","Meetups","Classes","Calls"],
+ ["Guardians","Chats","Chats","Recruiters","Inbox","Customers","Voice","Messages","Family","Parents","Family"],
+ ["Questions","Forums","Forums","Experiences","Circles","Trade","Talks","Chaupal","Circle","Staffroom","Community"],
+ ["Contests","Contests","Fests","Fairs","Events","Fairs","Camps","Melas","Functions","Calendar","Gatherings"],
+ ["Hidden","Coaching","Campus","Guides","Services","Suppliers","Card","Farms","Nearby","Resources","Helpers"],
+ ["Hidden","Posters","Promos","Portfolio","Offers","Ads","Ad","Listings","Shop","Ads","Listings"],
+ ["Me","Me","Me","Me","Me","Me","Me","Me","Me","Me","Me"]
+];
+const $=id=>document.getElementById(id);
+let mode="app",sel={app:0,variant:0};
+function cell(t){
+  if(t.startsWith("Off")){const r=t.replace(/^Off( for [a-z ]+)?\.?\s*/,(m,g)=>g?g.trim().replace(/^for /,"")+". ":"");
+    return '<span class="off">Off</span>'+(t.startsWith("Off for")?t.slice(4):t.replace(/^Off\.\s*/,""));}
+  return t;
+}
+function render(){
+  const list=mode==="app"?APPS:VARS.map(v=>v.n), cur=sel[mode];
+  $("mode-app").setAttribute("aria-pressed",mode==="app");
+  $("mode-variant").setAttribute("aria-pressed",mode==="variant");
+  $("chips").innerHTML=list.map((n,i)=>`<button data-i="${i}" aria-pressed="${i===cur}">${n}</button>`).join("");
+  if(mode==="app"){
+    $("panel-head").innerHTML=`<h3>${APPS[cur]} for each variant</h3>`;
+    $("rows").innerHTML=VARS.map((v,j)=>`<li><span class="k">${v.n}</span><span class="v"><span class="nm">${N[cur][j]}</span>${cell(M[cur][j])}</span></li>`).join("");
+  }else{
+    const v=VARS[cur];
+    $("panel-head").innerHTML=`<h3>${v.n}</h3><dl class="facts"><div><dt>Tone</dt><dd>${v.tone}</dd></div><div><dt>Safety</dt><dd>${v.safe}</dd></div><div><dt>UI</dt><dd>${v.ui}</dd></div></dl>`;
+    $("rows").innerHTML=APPS.map((a,i)=>`<li><span class="k">${N[i][cur]}<small>${a}</small></span><span class="v">${cell(M[i][cur])}</span></li>`).join("");
+  }
+}
+$("chips").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;sel[mode]=+b.dataset.i;render();});
+$("mode-app").addEventListener("click",()=>{mode="app";render();});
+$("mode-variant").addEventListener("click",()=>{mode="variant";render();});
+$("profiles").innerHTML=VARS.map(v=>`<tr><th scope="row">${v.n}</th><td>${v.tone}</td><td>${v.safe}</td><td>${v.ui}</td></tr>`).join("");
+render();
+</script>

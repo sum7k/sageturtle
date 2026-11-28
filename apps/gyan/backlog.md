@@ -1,0 +1,21 @@
+# Gyan: backlog
+
+- Check every date in the map when its step is written.
+- Recheck the class column against the new class 9 NCERT books and class 8 social science Part 2; again when class 10 books change in 2027-28.
+- Design how numbers are shown and worked before zero arrives (stages 1 to 5).
+- Faster placement, so a well-read person is not asked 150 questions.
+- Write the steps and the question bank for each stage, in 11 languages. Start with stage 1.
+- The letter order and first words for each of the 11 languages.
+- How a do step is shown without voice or video, or where media is worth it (a pot, a posture, a note).
+- Product case (`docs/case.md`) and screens, as the SDLC asks.
+- Rename in the launch build and the design map: Book to Gyan, Khabri to Vartaman, Horoscope to Bhavishya; and the lock on Vartaman until stage 7.
+- The three names in the other ten languages.
+- शब्द: house 3 lesson list for Hindi first (akshara order, vowel-sign grid, words made only of taught aksharas), then the other ten languages.
+- शब्द: checking a child's reading aloud by voice, in 11 languages.
+- शब्द: names of the 12 houses in the other ten languages.
+- Lessons: after sumeet's review of the first three (Nature: fire, senses, animals), write the rest of stage 1, subject by subject, then the lines in the other ten languages.
+- Lessons: the "hear the word, tap the picture" check after a lesson.
+- Ask: try the small model at bodhilabs.org/lab on a real Android phone and on a Mac; decide when it may download (Wi-Fi only, asked first, or never).
+- Ask: move Transformers.js and the model files to Cloudflare R2; an embedding model for meaning (multilingual-e5-small, 118 MB) if word matching misses too much.
+- Ask: search the Lives too; load lines stage by stage when more stages are written; show ask:found, ask:near and ask:none in /admin.
+- Ask: run the phone's model in a web worker; show cloud answers used (`cloud` in taps) in /admin; a KV namespace of its own for kept answers.

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Listening</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#14174a;text-decoration:none}a:hover{color:#14174a}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 24px; background: #14174a; color: #ffffff; font-family: system-ui, sans-serif">
+  <div style="align-self: stretch; display: flex; justify-content: flex-end">
+    <a href="Home.dc.html" aria-label="Stop and go back" style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 999px; background: #2a2e6e">
+      <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: none; stroke: #ffffff; stroke-width: 2.5; stroke-linecap: round"><path d="M6 6l12 12 M18 6L6 18"></path></svg>
+    </a>
+  </div>
+  <div style="flex-grow: 1"></div>
+  <div role="img" aria-label="Sound is being heard" style="display: flex; align-items: center; gap: 8px; height: 96px">
+    <sc-for list="{{bars}}" as="bar" hint-placeholder-count="11">
+      <div style="width: 10px; height: {{bar.h}}px; border-radius: 999px; background: #ffc531"></div>
+    </sc-for>
+  </div>
+  <p style="margin: 0; max-width: 300px; text-align: center; font-family: 'Source Serif 4', Georgia, serif; font-size: 26px; line-height: 1.35; font-weight: 600">[What the person is saying]</p>
+  <div style="flex-grow: 1"></div>
+  <div style="display: flex; align-items: center; justify-content: center; width: 232px; height: 232px; border-radius: 999px; background: #20245e">
+    <div style="display: flex; align-items: center; justify-content: center; width: 176px; height: 176px; border-radius: 999px; background: #3a3470">
+      <a href="Home.dc.html" aria-label="Done speaking" style="display: flex; align-items: center; justify-content: center; width: 120px; height: 120px; border-radius: 999px; background: #ffc531">
+        <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 56px; height: 56px; fill: none; stroke: #14174a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z M6 11a6 6 0 0 0 12 0 M12 17v4"></path></svg>
+      </a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { bars: [22, 46, 30, 68, 92, 56, 84, 40, 64, 28, 18].map(function (h) { return { h: h }; }) };
+}
+}
+</script>
+</body>
+</html>

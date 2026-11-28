@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Khabri: a khabar to watch</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#14174a;text-decoration:none}a:hover{color:#14174a}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; padding: 16px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; background: #eaf4ff; color: #14174a; font-family: 'Anek Latin', system-ui, sans-serif">
+  <div style="display: flex; align-items: center; justify-content: space-between">
+    <a href="Home.dc.html" aria-label="Home" style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 999px; background: #ffffff"><svg aria-hidden="true" viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: none; stroke: #14174a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M4 11l8-7 8 7 M6 10v10h12V10 M10 20v-6h4v6"></path></svg></a>
+    <span style="font-size: 15px; font-weight: 700">26 November</span>
+    <a href="Me.dc.html" aria-label="Me and my family" style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 999px; background: #ffffff"><svg aria-hidden="true" viewBox="0 0 24 24" style="width: 26px; height: 26px; fill: none; stroke: #14174a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4.500 20a7.500 7.500 0 0 1 15 0"></path></svg></a>
+  </div>
+  <div style="position: relative; flex-grow: 1; display: flex; flex-direction: column">
+    <div aria-hidden="true" style="position: absolute; left: 12px; right: 12px; top: 10px; bottom: -8px; border-radius: 28px; background: #d5e6f8"></div>
+    <div style="position: relative; flex-grow: 1; display: flex; flex-direction: column; border-radius: 28px; overflow: hidden; background: #ffffff; box-shadow: 0 6px 20px rgba(20, 23, 74, 0.10)">
+    <div style="position: relative; height: 201px; background: #14174a; display: flex; align-items: center; justify-content: center">
+      <span style="display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 999px; background: #ffc531"><svg aria-hidden="true" viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #14174a; stroke: #14174a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M8 5v14l11-7z"></path></svg></span>
+    </div>
+    <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 12px; padding: 18px">
+      <h1 style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 23px; line-height: 1.25; font-weight: 600">[Title of a khabar to watch]</h1>
+      <p style="margin: 0; font-size: 16px; line-height: 1.4; color: #3d4175">[One line about the video]</p>
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <div style="display: flex; gap: 8px"><button type="button" aria-label="Listen" style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 0; border: 0; border-radius: 999px; background: #ffc531"><svg aria-hidden="true" viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: none; stroke: #14174a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M4 10v4h3l5 4V6L7 10H4z M16 9a4 4 0 0 1 0 6 M18.5 6.5a8 8 0 0 1 0 11"></path></svg></button><button type="button" aria-label="Share" style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 0; border: 0; border-radius: 999px; background: #eaf4ff"><svg aria-hidden="true" viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: none; stroke: #14174a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M12 15V4 M8 8l4-4 4 4 M5 13v6h14v-6"></path></svg></button></div>
+      </div>
+      <p style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 17px; line-height: 1.5">[The same khabar in text. It starts with the easiest part.]</p>
+      <p style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 17px; line-height: 1.5">[Each paragraph after it adds more detail.]</p>
+      <div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 72px; background: linear-gradient(rgba(255, 255, 255, 0), #ffffff)"></div>
+    </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Home in night colours</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#eef1ff;text-decoration:none}a:hover{color:#eef1ff}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; gap: 16px; background: #0d0f33; color: #eef1ff; font-family: 'Anek Latin', system-ui, sans-serif">
+  <div style="display: flex; align-items: center; justify-content: space-between">
+    <div style="display: flex; flex-direction: column">
+      <span style="font-size: 17px; font-weight: 700">Thursday, 26 November</span>
+      <span style="font-size: 14px; color: #b9bfe6">Varanasi</span>
+    </div>
+    <a href="Me.dc.html" aria-label="Me and my family" style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 999px; background: #171a4f">
+      <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 26px; height: 26px; fill: none; stroke: #eef1ff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4.500 20a7.500 7.500 0 0 1 15 0"></path></svg>
+    </a>
+  </div>
+  <div style="border-radius: 28px; overflow: hidden; background: #171a4f">
+    <div style="height: 88px; background: #20245e">
+      <svg aria-hidden="true" viewBox="0 0 342 88" style="display: block; width: 342px; height: 88px">
+        <circle cx="262" cy="44" r="24" style="fill: #eef1ff"></circle>
+        <circle cx="272" cy="38" r="22" style="fill: #20245e"></circle>
+        <circle cx="60" cy="24" r="2" style="fill: #ffc531"></circle>
+        <circle cx="130" cy="16" r="1.600" style="fill: #ffc531"></circle>
+        <circle cx="196" cy="30" r="2" style="fill: #ffc531"></circle>
+        <path d="M0 88 V62 C60 36 122 38 180 58 C232 74 290 66 342 46 V88 Z" style="fill: #1f4a3a"></path>
+      </svg>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px; padding: 16px">
+      <span style="align-self: flex-start; padding: 4px 12px; border-radius: 999px; background: #ffc531; color: #14174a; font-size: 14px; font-weight: 700">Khabri</span>
+      <p style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 20px; line-height: 1.35; font-weight: 600">[Today's top khabar for you]</p>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+        <button type="button" aria-label="Listen" style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 0; border: 0; border-radius: 999px; background: #2a2e6e">
+          <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: none; stroke: #eef1ff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M4 10v4h3l5 4V6L7 10H4z M16 9a4 4 0 0 1 0 6 M18.5 6.5a8 8 0 0 1 0 11"></path></svg>
+        </button>
+        <a href="Khabri.dc.html" aria-label="Open Khabri" style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 0; border: 0; border-radius: 999px; background: #eef1ff">
+          <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: none; stroke: #14174a; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12h14 M13 6l6 6-6 6"></path></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+    <sc-for list="{{apps}}" as="app" hint-placeholder-count="10">
+      <button type="button" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; height: 96px; padding: 6px; border: 0; border-radius: 22px; background: {{app.bg}}; color: #eef1ff">
+        <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 30px; height: 30px; fill: none; stroke: #eef1ff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="{{ app.d }}"></path></svg>
+        <span style="font-size: 14px; line-height: 1.15; font-weight: 700; text-align: center">{{app.label}}</span>
+      </button>
+    </sc-for>
+    <a href="Listening.dc.html" aria-label="Press and speak" style="grid-column: span 2; display: flex; align-items: center; justify-content: center; height: 96px; border-radius: 999px; background: #ffc531">
+      <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 32px; height: 32px; fill: none; stroke: #14174a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z M6 11a6 6 0 0 0 12 0 M12 17v4"></path></svg>
+    </a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+var tints = ['#1f4a3a', '#5a2f2a', '#34306b', '#564a1e'];
+var list = [
+['School', 'M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4z M5 17a3 3 0 0 1 3-3h10'],
+['Mandi', 'M7 5h10 M7 9h10 M7 5h3a4 4 0 0 1 0 8H7l7 7'],
+['Calendar', 'M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4'],
+['Fun', 'M12 3l2.700 5.700 6.300.800-4.600 4.300 1.200 6.200L12 17l-5.600 3 1.200-6.200L3 9.500l6.300-.800L12 3z'],
+['Calls', 'M3 7h12v10H3z M15 10.500l6-3v9l-6-3'],
+['Messages', 'M4 5h16v11H9l-5 4V5z'],
+['Chaupal', 'M3 4h12v8H8l-5 4V4z M9 14v2h7l5 4V8h-4'],
+['Melas', 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z M12 7v5l3 3'],
+['Farms', 'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14z M20 20l-4-4'],
+['Listings', 'M4 10v4h3l8 4V6L7 10H4z M18 9v6']
+];
+return {
+apps: list.map(function (a, i) { return { label: a[0], d: a[1], bg: tints[i % 4] }; })
+};
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wisdom</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#14174a;text-decoration:none}a:hover{color:#14174a}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; padding: 16px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; background: #eaf4ff; color: #14174a; font-family: 'Anek Latin', system-ui, sans-serif">
+  <div style="display: flex; align-items: center; justify-content: space-between">
+    <a href="Home.dc.html" aria-label="Home" style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 999px; background: #ffffff"><svg aria-hidden="true" viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: none; stroke: #14174a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M4 11l8-7 8 7 M6 10v10h12V10 M10 20v-6h4v6"></path></svg></a>
+    <span style="font-size: 15px; font-weight: 700">26 November</span>
+    <a href="Me.dc.html" aria-label="Me and my family" style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 999px; background: #ffffff"><svg aria-hidden="true" viewBox="0 0 24 24" style="width: 26px; height: 26px; fill: none; stroke: #14174a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4.500 20a7.500 7.500 0 0 1 15 0"></path></svg></a>
+  </div>
+  <div style="display: flex; flex-direction: column; border-radius: 28px; overflow: hidden; background: #ffffff; box-shadow: 0 6px 20px rgba(20, 23, 74, 0.10)">
+    <div style="position: relative; height: 120px; background: #fff0bf">
+      <svg aria-hidden="true" viewBox="0 0 358 120" preserveAspectRatio="xMidYMid slice" style="display: block; width: 358px; height: 120px"><circle cx="262" cy="56" r="38" style="fill: #ffc531"></circle><path d="M0 92 Q90 52 190 86 T358 72 V120 H0 Z" style="fill: #bfe6cc"></path></svg>
+      <span style="position: absolute; left: 14px; bottom: 12px; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 999px; background: #ffffff"><svg aria-hidden="true" viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: none; stroke: #14174a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M12 3.500c1.800 2 2.700 3.400 2.700 4.800a2.700 2.700 0 0 1-5.400 0c0-1.400.900-2.800 2.700-4.800z M3 13h18c0 4-4 7-9 7s-9-3-9-7z"></path></svg></span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px; padding: 18px">
+      <p style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 21px; line-height: 1.3; font-weight: 600">[Today's quotation, in the reader's language]</p>
+      <p style="margin: 0; font-size: 15px; line-height: 1.4; color: #3d4175">[Who said it, or the book it is from]</p>
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <button type="button" aria-label="Listen" style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 0; border: 0; border-radius: 999px; background: #ffc531"><svg aria-hidden="true" viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: none; stroke: #14174a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M4 10v4h3l5 4V6L7 10H4z M16 9a4 4 0 0 1 0 6 M18.5 6.5a8 8 0 0 1 0 11"></path></svg></button>
+        <a href="Wisdom-Story.dc.html" aria-label="Open the story" style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 999px; background: #14174a"><svg aria-hidden="true" viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: none; stroke: #ffffff; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12h14 M13 6l6 6-6 6"></path></svg></a>
+      </div>
+    </div>
+  </div>
+  <sc-for list="{{rows}}" as="row" hint-placeholder-count="4">
+    <a href="Wisdom-Story.dc.html" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 24px; background: #ffffff">
+      <span style="flex-shrink: 0; width: 64px; height: 64px; border-radius: 18px; overflow: hidden; background: {{row.bg}}"><svg aria-hidden="true" viewBox="0 0 64 64" style="display: block; width: 64px; height: 64px"><circle cx="44" cy="26" r="12" style="fill: #ffc531"></circle><path d="M0 48 Q16 32 34 44 T64 40 V64 H0 Z" style="fill: {{row.hill}}"></path></svg></span>
+      <span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-family: 'Source Serif 4', Georgia, serif; font-size: 16px; line-height: 1.3; font-weight: 600">{{row.quote}}</span>
+        <span style="font-size: 13px; color: #3d4175">{{row.source}}</span>
+      </span>
+      <sc-if value="{{ row.kept }}" hint-placeholder-val="{{ true }}"><svg role="img" aria-label="Kept" viewBox="0 0 24 24" style="flex-shrink: 0; width: 24px; height: 24px; fill: #ffc531; stroke: #14174a; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M12 20s-7-4.500-7-10a4 4 0 0 1 7-2.500A4 4 0 0 1 19 10c0 5.500-7 10-7 10z"></path></svg></sc-if>
+    </a>
+  </sc-for>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+var tints = [['#ffe3dc', '#14174a'], ['#ddf3e4', '#8fd0a6'], ['#e9e4ff', '#14174a'], ['#fff0bf', '#bfe6cc']];
+var list = [
+['[Yesterday\'s quotation]', 1],
+['[An earlier quotation]', 0],
+['[An earlier quotation]', 1],
+['[An earlier quotation]', 0]
+];
+return {
+rows: list.map(function (r, i) { return { quote: r[0], source: '[Its source]', kept: !!r[1], bg: tints[i % 4][0], hill: tints[i % 4][1] }; })
+};
+}
+}
+</script>
+</body>
+</html>

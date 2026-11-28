@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Khabar alerts</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#14174a;text-decoration:none}a:hover{color:#14174a}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; gap: 20px; background: #eaf4ff; color: #14174a; font-family: system-ui, sans-serif">
+  <div style="display: flex; align-items: center; justify-content: space-between">
+    <a href="Variant.dc.html" aria-label="Back" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 999px; background: #ffffff">
+      <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: none; stroke: #14174a; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round"><path d="M15 5l-7 7 7 7"></path></svg>
+    </a>
+    <button type="button" aria-label="Listen" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 999px; background: #ffffff">
+      <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: none; stroke: #14174a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M4 10v4h3l5 4V6L7 10H4z M16 9a4 4 0 0 1 0 6 M18.5 6.5a8 8 0 0 1 0 11"></path></svg>
+    </button>
+  </div>
+  <div style="flex-grow: 1"></div>
+  <div role="img" aria-label="A bell brings a khabar card" style="display: flex; flex-direction: column; align-items: center; gap: 20px">
+    <div style="display: flex; align-items: center; justify-content: center; width: 176px; height: 176px; border-radius: 999px; background: #fff0bf">
+      <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 96px; height: 96px; fill: none; stroke: #14174a; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.500 2h-15L6 16z M10 20a2 2 0 0 0 4 0 M3.500 8a8 8 0 0 1 2-3.500 M20.500 8a8 8 0 0 0-2-3.500"></path></svg>
+    </div>
+    <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: none; stroke: #14174a; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round"><path d="M12 4v15 M6 13l6 6 6-6"></path></svg>
+    <div style="width: 220px; border-radius: 24px; overflow: hidden; background: #ffffff">
+      <div style="height: 56px; background: #ddf3e4">
+        <svg viewBox="0 0 220 56" style="display: block; width: 220px; height: 56px"><circle cx="170" cy="28" r="16" style="fill: #ffc531"></circle><path d="M0 56 V40 C40 22 80 24 116 38 C150 50 186 44 220 30 V56 Z" style="fill: #8fd0a6"></path></svg>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px 16px">
+        <div style="width: 150px; height: 9px; border-radius: 999px; background: #14174a"></div>
+        <div style="width: 110px; height: 9px; border-radius: 999px; background: #b8bcd6"></div>
+      </div>
+    </div>
+  </div>
+  <div style="flex-grow: 1"></div>
+  <div style="display: flex; align-items: center; justify-content: center; gap: 40px">
+    <a href="Home.dc.html" aria-label="Not now" style="display: flex; align-items: center; justify-content: center; width: 72px; height: 72px; border-radius: 999px; background: #ffffff">
+      <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 32px; height: 32px; fill: none; stroke: #14174a; stroke-width: 3; stroke-linecap: round"><path d="M6 6l12 12 M18 6L6 18"></path></svg>
+    </a>
+    <a href="Home.dc.html" aria-label="Yes, bring khabar" style="display: flex; align-items: center; justify-content: center; width: 104px; height: 104px; border-radius: 999px; background: #ffc531">
+      <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 52px; height: 52px; fill: none; stroke: #14174a; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+    </a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

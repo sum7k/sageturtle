@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Your PIN code</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#14174a;text-decoration:none}a:hover{color:#14174a}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; gap: 16px; background: #eaf4ff; color: #14174a; font-family: 'Anek Latin', system-ui, sans-serif">
+  <div style="display: flex; align-items: center; justify-content: space-between">
+    <a href="Lock.dc.html" aria-label="Back" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 999px; background: #ffffff">
+      <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: none; stroke: #14174a; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round"><path d="M15 5l-7 7 7 7"></path></svg>
+    </a>
+    <button type="button" aria-label="Listen" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 999px; background: #ffffff; color: #14174a">
+      <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: none; stroke: #14174a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M4 10v4h3l5 4V6L7 10H4z M16 9a4 4 0 0 1 0 6 M18.5 6.5a8 8 0 0 1 0 11"></path></svg>
+    </button>
+  </div>
+  <div style="display: flex; justify-content: center">
+    <div style="display: flex; align-items: center; justify-content: center; width: 88px; height: 88px; border-radius: 999px; background: #ddf3e4">
+      <svg role="img" aria-label="Your place" viewBox="0 0 24 24" style="width: 48px; height: 48px; fill: none; stroke: #14174a; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M4 11l8-7 8 7 M6 10v10h12V10 M10 20v-6h4v6"></path></svg>
+    </div>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px">
+    <sc-for list="{{boxes}}" as="box" hint-placeholder-count="6">
+      <div style="display: flex; align-items: center; justify-content: center; height: 60px; border-radius: 16px; background: #ffffff; font-size: 28px; font-weight: 700">{{box.d}}</div>
+    </sc-for>
+  </div>
+  <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+    <div style="display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 600">
+      <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: none; stroke: #14174a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M12 21s-6.500-5.800-6.500-11a6.500 6.500 0 0 1 13 0c0 5.200-6.500 11-6.500 11z M12 12.500a2.500 2.500 0 1 0 0-5 2.500 2.500 0 0 0 0 5z"></path></svg>
+      <span>{{place}}</span>
+    </div>
+    <button type="button" aria-label="Find my place" style="display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 48px; height: 48px; padding: 0; border: 0; border-radius: 999px; background: #ffffff"><svg aria-hidden="true" viewBox="0 0 24 24" style="width: 26px; height: 26px; fill: none; stroke: #14174a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M12 19a7 7 0 1 0 0-14 7 7 0 0 0 0 14z M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z M12 2v3 M12 19v3 M2 12h3 M19 12h3"></path></svg></button>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+    <sc-for list="{{keys}}" as="key" hint-placeholder-count="12">
+      <button type="button" onClick="{{ key.press }}" aria-label="{{ key.aria }}" style="display: flex; align-items: center; justify-content: center; height: 62px; border: 0; border-radius: 20px; background: {{key.bg}}; color: #14174a; font-size: 28px; font-weight: 700">
+        <sc-if value="{{ key.isDigit }}" hint-placeholder-val="{{ true }}"><span>{{key.label}}</span></sc-if>
+        <sc-if value="{{ key.isIcon }}" hint-placeholder-val="{{ false }}">
+          <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: none; stroke: #14174a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="{{ key.d }}"></path></svg>
+        </sc-if>
+      </button>
+    </sc-for>
+  </div>
+  <div style="flex-grow: 1"></div>
+  <div style="display: flex; justify-content: center">
+    <a href="Variant.dc.html" aria-label="Continue" style="display: flex; align-items: center; justify-content: center; width: 76px; height: 76px; border-radius: 999px; background: #ffc531">
+      <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 36px; height: 36px; fill: none; stroke: #14174a; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+    </a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+var self = this;
+var digits = (this.state && typeof this.state.digits === 'string') ? this.state.digits : '221001';
+var MIC = 'M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z M6 11a6 6 0 0 0 12 0 M12 17v4';
+var BACK = 'M9 6h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5-6 5-6z M12 10l4 4 M16 10l-4 4';
+function digitKey(n) {
+return { isDigit: true, isIcon: false, label: String(n), aria: String(n), d: '', bg: '#ffffff',
+press: function () { if (digits.length < 6) self.setState({ digits: digits + n }); } };
+}
+var keys = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(digitKey);
+keys.push({ isDigit: false, isIcon: true, label: '', aria: 'Say the PIN code', d: MIC, bg: '#ffc531', press: function () {} });
+keys.push(digitKey(0));
+keys.push({ isDigit: false, isIcon: true, label: '', aria: 'Delete', d: BACK, bg: '#e9e4ff',
+press: function () { self.setState({ digits: digits.slice(0, -1) }); } });
+var place = '';
+if (digits.length === 6) place = digits === '221001' ? 'Varanasi, Uttar Pradesh' : '[Place name]';
+return {
+boxes: [0, 1, 2, 3, 4, 5].map(function (i) { return { d: digits.charAt(i) }; }),
+keys: keys,
+place: place
+};
+}
+}
+</script>
+</body>
+</html>

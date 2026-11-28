@@ -1,0 +1,580 @@
+{
+ "v": 3,
+ "attachments": {},
+ "boards": {
+  "Alerts.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "6 Khabar alerts",
+   "w": 390,
+   "x": 2350,
+   "y": 0
+  },
+  "Home.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "7 Home",
+   "w": 390,
+   "x": 2820,
+   "y": 0
+  },
+  "Landing-InApp.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "1 Landing: inside another app",
+   "w": 390,
+   "x": -940,
+   "y": 0
+  },
+  "Landing-iPhone.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "1 Landing: iPhone Safari",
+   "w": 390,
+   "x": -470,
+   "y": 0
+  },
+  "Language.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "2 Language",
+   "w": 390,
+   "x": 470,
+   "y": 0
+  },
+  "Lock.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "3 Lock",
+   "w": 390,
+   "x": 940,
+   "y": 0
+  },
+  "Main.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "1 Landing: Android and Chrome",
+   "w": 390,
+   "x": 0,
+   "y": 0
+  },
+  "Pincode.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "4 PIN code",
+   "w": 390,
+   "x": 1410,
+   "y": 0
+  },
+  "Profiles.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "8 Profiles",
+   "w": 390,
+   "x": 3290,
+   "y": 0
+  },
+  "Variant.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "5 What you do",
+   "w": 390,
+   "x": 1880,
+   "y": 0
+  },
+  "Landing-iPhone-Old.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "1 Landing: iPhone Safari, older",
+   "w": 390,
+   "x": -470,
+   "y": 1800
+  },
+  "Offline.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "7 Home: no network",
+   "w": 390,
+   "x": 1880,
+   "y": 1800
+  },
+  "Home-Night.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "7 Home: night",
+   "w": 390,
+   "x": 2350,
+   "y": 1800
+  },
+  "Listening.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "7 Home: listening",
+   "w": 390,
+   "x": 2820,
+   "y": 1800
+  },
+  "AddChild.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "8 Profiles: add a child",
+   "w": 390,
+   "x": 3290,
+   "y": 1800
+  },
+  "Khabri.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "9 Khabri: a khabar to read",
+   "w": 390,
+   "x": 2820,
+   "y": 3600
+  },
+  "Khabri-Swipe.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "9 Khabri: swipe left to like",
+   "w": 390,
+   "x": 3290,
+   "y": 3600
+  },
+  "Khabri-Watch.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "9 Khabri: a khabar to watch",
+   "w": 390,
+   "x": 3760,
+   "y": 3600
+  },
+  "Khabri-Day.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "9 Khabri: your day card",
+   "w": 390,
+   "x": 4230,
+   "y": 3600
+  },
+  "Me.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "10 Me",
+   "w": 390,
+   "x": 2820,
+   "y": 5400
+  },
+  "Me-Friends.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "10 Me: one list (friends)",
+   "w": 390,
+   "x": 3290,
+   "y": 5400
+  },
+  "Me-Child.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "10 Me: child control",
+   "w": 390,
+   "x": 3760,
+   "y": 5400
+  },
+  "Me-NoAds.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "10 Me: remove ads",
+   "w": 390,
+   "x": 4230,
+   "y": 5400
+  },
+  "Class-Teacher.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "11 Class: the teacher",
+   "w": 390,
+   "x": 2820,
+   "y": 7200
+  },
+  "Class-Parent.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "11 Class: the parent",
+   "w": 390,
+   "x": 3290,
+   "y": 7200
+  },
+  "Class-Kid.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "11 Class: the kid",
+   "w": 390,
+   "x": 3760,
+   "y": 7200
+  },
+  "Class-Teen.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "11 Class: the teen",
+   "w": 390,
+   "x": 4230,
+   "y": 7200
+  },
+  "Home-Open.dc.html": {
+   "h": 956,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "7 Home: a tile opened",
+   "w": 390,
+   "x": 1410,
+   "y": 1800
+  },
+  "Home-Arrange.dc.html": {
+   "h": 924,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "7 Home: arranging a tile",
+   "w": 390,
+   "x": 940,
+   "y": 1800
+  },
+  "Me-Reach.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "10 Me: reach me",
+   "w": 390,
+   "x": 4700,
+   "y": 5400
+  },
+  "Wisdom.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "12 Wisdom: the quotations",
+   "w": 390,
+   "x": 2820,
+   "y": 9000
+  },
+  "Wisdom-Story.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "12 Wisdom: a story (farming)",
+   "w": 390,
+   "x": 3290,
+   "y": 9000
+  },
+  "Wisdom-Story-Shop.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "12 Wisdom: the same quotation, for a shop",
+   "w": 390,
+   "x": 3760,
+   "y": 9000
+  },
+  "Wisdom-Kid.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "12 Wisdom: the same quotation, for a kid",
+   "w": 390,
+   "x": 4230,
+   "y": 9000
+  },
+  "Messages.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "13 Messages: people and rooms",
+   "w": 390,
+   "x": 2820,
+   "y": 10800
+  },
+  "Messages-Child.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "13 Messages: a guardian and a child",
+   "w": 390,
+   "x": 3290,
+   "y": 10800
+  },
+  "Messages-Kid.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "13 Messages: the kid (Guardians)",
+   "w": 390,
+   "x": 3760,
+   "y": 10800
+  },
+  "Messages-Kid-Chat.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "13 Messages: the kid talks to a guardian",
+   "w": 390,
+   "x": 4230,
+   "y": 10800
+  },
+  "Messages-Class.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "13 Messages: the class chat (teen)",
+   "w": 390,
+   "x": 4700,
+   "y": 10800
+  },
+  "Messages-Class-Teacher.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "radius": 28,
+   "title": "13 Messages: speak to the class (teacher)",
+   "w": 390,
+   "x": 5170,
+   "y": 10800
+  }
+ },
+ "createdOnFiles": {
+  "at": "2026-11-26T13:05:00Z",
+  "v": 1
+ },
+ "designSystems": [],
+ "launch": {
+  "view": "canvas"
+ },
+ "noteOrder": [
+  "heading",
+  "landing",
+  "voice",
+  "kids",
+  "pictures",
+  "khabri",
+  "heading2",
+  "heading3",
+  "me",
+  "handoff",
+  "heading4",
+  "class",
+  "variants",
+  "tiles",
+  "heading5",
+  "wisdom",
+  "heading6",
+  "messages",
+  "messages2"
+ ],
+ "notes": {
+  "heading": {
+   "kind": "title1",
+   "maxW": 4620,
+   "text": "BodhiLabs shell: first run and home",
+   "w": 240,
+   "x": -940,
+   "y": -300
+  },
+  "kids": {
+   "fill": "blue",
+   "text": "Kids and Teens are not on screen 5. An adult adds a child on screen 8, and the adult's fingerprint is needed to enter or leave a child's profile.",
+   "w": 560,
+   "x": 1880,
+   "y": 964
+  },
+  "landing": {
+   "fill": "purple",
+   "text": "The landing page has no words, because the language is not known yet. The page shows one of three pictures, chosen by the browser. The grey bar on the iPhone and in-app screens is the browser's own bar, drawn only to show where the arrow points.",
+   "w": 560,
+   "x": -940,
+   "y": 964
+  },
+  "pictures": {
+   "fill": "green",
+   "text": "Home is shown for a person who farms and also runs a shop, in English. There is one tile per app, and Wisdom is the first. Two small dots mean the tile opens into versions, because the person's variants call that app by different names. The gold mic takes what is left of the last row. The line icons stand in for drawn pictures in Khabri's style. The khabar headline is a placeholder.",
+   "w": 560,
+   "x": 2820,
+   "y": 964
+  },
+  "voice": {
+   "fill": "orange",
+   "text": "No instruction is written anywhere. Every screen speaks itself aloud in the chosen language. Tap a block to hear its name. Tap the gold tick to go on. Only names, numbers and content stay as text.",
+   "w": 560,
+   "x": 0,
+   "y": 964
+  },
+  "khabri": {
+   "fill": "orange",
+   "text": "Khabri inside the shell: one khabar at a time, read whole on its card. There are no levels to choose. Every khabar starts with the easiest part, and each paragraph after it adds more detail, so the reader goes as deep as they like by reading on. Swipe left to like, swipe right for not for me. Khabri's gear and its You page are gone: those facts live in Me, and the day items come as a card in the deck. All text in brackets is placeholder content.",
+   "w": 560,
+   "x": 2820,
+   "y": 4564
+  },
+  "heading2": {
+   "kind": "title1",
+   "maxW": 1800,
+   "text": "Khabri",
+   "w": 240,
+   "x": 2820,
+   "y": 3380
+  },
+  "heading3": {
+   "kind": "title1",
+   "maxW": 1800,
+   "text": "Me",
+   "w": 240,
+   "x": 2820,
+   "y": 5180
+  },
+  "me": {
+   "fill": "blue",
+   "text": "Me opens from the round picture on Home and in Khabri. The white band holds the person's lists: family, friends, work, trade, neighbours and class. Only the lists that fit the variant are shown (a farmer has no work list). One person can be in more than one list. People are added only by scanning each other's code. Family leads to Profiles (screen 8). The tiles below show their present value and open the same screen used at set-up. Remove ads is shown to adults only.",
+   "w": 560,
+   "x": 2820,
+   "y": 6364
+  },
+  "heading4": {
+   "kind": "title1",
+   "maxW": 1800,
+   "text": "The class",
+   "w": 240,
+   "x": 2820,
+   "y": 6980
+  },
+  "class": {
+   "fill": "green",
+   "text": "A class is one shared group that each person sees through their own role. The teacher makes it and people join by scanning the class code. The teacher sees students, speaks to all, gives homework and starts a call; messages stop outside office hours. The parent finds the class under the child, lets a teacher in with a fingerprint, and sees the other parents. A kid manages nothing: the teacher is one of the guardians. A teen sees classmates and a class chat that the teacher can see.",
+   "w": 560,
+   "x": 2820,
+   "y": 8164
+  },
+  "variants": {
+   "fill": "purple",
+   "text": "A person can do more than one thing, so screen 5 lets them pick up to three (a farmer who also runs a shop). Five pairs do not go together (for example Retired with Office job), so picking one drops the other. That makes 97 kinds of person. Adding or removing one asks for the lock. The lists in Me cover everything the person does.",
+   "w": 560,
+   "x": 1880,
+   "y": 1160
+  },
+  "tiles": {
+   "fill": "orange",
+   "text": "One tile per app. A first tap says the name, a second tap opens it. Earnings opens into Mandi (farming) and Leads (shop); Calls has the same name in both, so it opens straight away. A long press arranges a tile: the star keeps it on top, the arrows move it, the crossed eye hides it, the tick is done. Hidden tiles wait behind a last grey tile. There are no folders, because the grouping does that job.",
+   "w": 560,
+   "x": 940,
+   "y": 2800
+  },
+  "handoff": {
+   "fill": "green",
+   "text": "BodhiLabs does not carry one-to-one calls and messages itself. Each row has two buttons: the handset opens the phone's dialer, and the second opens the chat in the app that person chose in Reach me (WhatsApp, Telegram or SMS). These are plain links, with no fees. Reach me is one optional number and one app; it is not the account and is never checked by OTP. WhatsApp has no link that starts a call, so a call always goes to the dialer. Kids are never handed off: they keep calls and messages inside the app, with guardians only. Groups (speak to the class, class chat, class call) also stay inside the app.",
+   "w": 560,
+   "x": 3420,
+   "y": 6364
+  },
+  "heading5": {
+   "kind": "title1",
+   "maxW": 1800,
+   "text": "Wisdom",
+   "w": 240,
+   "x": 2820,
+   "y": 8780
+  },
+  "wisdom": {
+   "fill": "orange",
+   "w": 560,
+   "x": 2820,
+   "y": 9964,
+   "text": "Wisdom is the first tile on Home. It holds a list of quotations, one new each day. Each quotation is shown word for word with its source, and under it is a short moral story written for the reader's own life, ending in one line of moral. The story is different for each variant: the same quotation is drawn here for farming, for a shop and for a kid. A person with more than one variant changes the story with the round pictures at the top. A kid's story is told in three big pictures and is heard first. The heart keeps a quotation. There are no ads, comments or scores. Which traditions and which quotations are not decided, so all text in brackets is placeholder content. This app is built last."
+  },
+  "heading6": {
+   "kind": "title1",
+   "maxW": 2740,
+   "text": "Messages",
+   "w": 240,
+   "x": 2820,
+   "y": 10580
+  },
+  "messages": {
+   "fill": "blue",
+   "w": 560,
+   "x": 2820,
+   "y": 11764,
+   "text": "Messages is the door to people. For adults it shows the lists from Me, with the list that fits their work first (here trade, for a person who farms and runs a shop). A row hands off: the handset opens the phone's dialer and the mark opens that person's chat in WhatsApp, Telegram or SMS. BodhiLabs keeps no one-to-one chat for adults. The number comes from that person's Reach me; a person who left it empty has no buttons. The white band on top holds what stays inside the app: a guardian's chats with a child, and the class. In-app messages are voice notes and stickers; typing is one tap away. A parent sees the child's chats with every guardian. A kid sees only guardians, as big faces. The class chat is seen by the teacher. A teacher's notice to a class of kids goes to the parents, and only in office hours."
+  },
+  "messages2": {
+   "fill": "green",
+   "w": 560,
+   "x": 3420,
+   "y": 11764,
+   "text": "To click through: Home, then the Messages tile. From the class screens (row 11), the teen's gold chat button and the teacher's gold mic open the last two screens here. All names in brackets are placeholders. Calls inside the app (the camera buttons) are drawn but come later."
+  }
+ },
+ "order": [
+  "Main.dc.html",
+  "Landing-iPhone.dc.html",
+  "Landing-InApp.dc.html",
+  "Language.dc.html",
+  "Lock.dc.html",
+  "Pincode.dc.html",
+  "Variant.dc.html",
+  "Alerts.dc.html",
+  "Home.dc.html",
+  "Profiles.dc.html",
+  "Landing-iPhone-Old.dc.html",
+  "Offline.dc.html",
+  "Home-Night.dc.html",
+  "Listening.dc.html",
+  "AddChild.dc.html",
+  "Khabri.dc.html",
+  "Khabri-Swipe.dc.html",
+  "Khabri-Watch.dc.html",
+  "Khabri-Day.dc.html",
+  "Me.dc.html",
+  "Me-Friends.dc.html",
+  "Me-Child.dc.html",
+  "Me-NoAds.dc.html",
+  "Me-Reach.dc.html",
+  "Class-Teacher.dc.html",
+  "Class-Parent.dc.html",
+  "Class-Kid.dc.html",
+  "Class-Teen.dc.html",
+  "Home-Arrange.dc.html",
+  "Home-Open.dc.html",
+  "Wisdom.dc.html",
+  "Wisdom-Story.dc.html",
+  "Wisdom-Story-Shop.dc.html",
+  "Wisdom-Kid.dc.html",
+  "Messages.dc.html",
+  "Messages-Child.dc.html",
+  "Messages-Kid.dc.html",
+  "Messages-Kid-Chat.dc.html",
+  "Messages-Class.dc.html",
+  "Messages-Class-Teacher.dc.html"
+ ],
+ "pages": [],
+ "title": "BodhiLabs shell screens"
+}

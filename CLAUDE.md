@@ -2,6 +2,22 @@
 
 The app is in `apps/` (start with `apps/README.md` and `apps/docs/context/`). Work on `dev`.
 
+## Notes live here too (2026-11-28)
+
+This repo is the one place for code and notes. The notes folder `~/SageTurtle` was merged in on 2026-11-28.
+
+- Project notes are at the root: `idea.md`, `backlog.md`, `tradeoffs.md`, `docs/`, `research/`, `work/`.
+- Each app's notes sit next to the code, in `apps/<name>/` (`idea.md`, `backlog.md`, `tradeoffs.md`, `docs/`, `work/`).
+- Write new notes here, not in `~/SageTurtle`.
+
+## .trash folders
+
+- Nothing is deleted here. To remove a file or folder, move it into a `.trash` folder at the same level it was removed
+  from. For example, `docs/context` goes to `docs/.trash/context`.
+- Do not put `.trash` in `.gitignore`.
+- Do not be influenced by anything inside a `.trash` folder. Do not read it for context, search it, quote it, or build
+  on it. Treat its content as removed. Open it only when the owner asks to look at or restore something.
+
 ## The spirit of BodhiLabs (sumeet, 2026-11-28)
 
 Read this before writing any screen, word, story or number a learner will see.
