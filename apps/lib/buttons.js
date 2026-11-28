@@ -51,5 +51,8 @@ export function surprise(last, random = Math.random()) {
 }
 
 /** What is counted: taps on Book, taps on a picture ("icon:money"), a picture being shown ("seen:money"),
- * taps on the joker ("joker") and what the joker showed ("joker:speak"). */
-export const TRACKED = [BOOK.id, ...ICON_IDS.map((i) => `icon:${i}`), ...ICON_IDS.map((i) => `seen:${i}`), JOKER.id, ...SURPRISE_IDS.map((i) => `${JOKER.id}:${i}`)];
+ * taps on the joker ("joker") and what the joker showed ("joker:speak"), and in Gyan each word picked ("answer")
+ * and each right one ("right"). */
+export const TRACKED = [BOOK.id, ...ICON_IDS.map((i) => `icon:${i}`), ...ICON_IDS.map((i) => `seen:${i}`), JOKER.id, ...SURPRISE_IDS.map((i) => `${JOKER.id}:${i}`), "answer", "right"];
+/** Counted without knowing who, before a phone has an id: the first page opened, and the app installed. */
+export const COUNTED = ["visit", "install"];

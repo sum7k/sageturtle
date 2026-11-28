@@ -1,8 +1,10 @@
 // Registration and tap counts. Taps wait on the phone until they reach the server, so none is lost without network.
 import { load, update, nextStep } from "./store.js";
-import { TRACKED } from "./buttons.js";
+import { TRACKED, COUNTED } from "./buttons.js";
 
 export const KEY = "bodhilabs.taps.v1";
+const REF = "bodhilabs.ref.v1"; // who sent this person here, kept from the first visit
+const VISIT = "bodhilabs.visit.v1"; // the day this browser was last counted as a visit
 const SEEN = "bodhilabs.seen.v1"; // the day the pictures on Home were last counted as shown
 
 /** Add one tap to the waiting counts. Unknown buttons are ignored. */
@@ -37,7 +39,8 @@ export async function sync({ profile = false } = {}) {
     let me = load();
     if (nextStep(me)) return;
     if (!me.uid || profile) {
-      const res = await post("/api/register", profileOf(me));
+      let ref = ""; try { ref = localStorage.getItem(REF) ?? ""; } catch {}
+      const res = await post("/api/register", { ...profileOf(me), ref });
       if (!res.ok) return;
       const { id } = await res.json();
       me = update((m) => { m.uid = id; });
@@ -71,4 +74,34 @@ export function seen(icons, day) {
     localStorage.setItem(SEEN, day);
   } catch { return; }
   write(icons.reduce((p, id) => addTap(p, `seen:${id}`), read()));
+}
+
+/**
+ * Who sent the person: "?from=whatsapp" (or utm_source) in the link, else the site the link was on. Our own pages
+ * and an empty answer give "". Only a short name is kept, never a full address.
+ */
+export function refOf(search = "", referrer = "", host = "") {
+  const q = new URLSearchParams(search);
+  const named = (q.get("from") ?? q.get("utm_source") ?? "").toLowerCase();
+  if (/^[a-z0-9._-]{1,40}$/.test(named)) return named;
+  try {
+    const from = new URL(referrer).hostname.toLowerCase().replace(/^www\./, "");
+    return from && from !== host.replace(/^www\./, "") && /^[a-z0-9.-]{1,60}$/.test(from) ? from : "";
+  } catch { return ""; }
+}
+
+/** Count something that has no person yet. Lost without network, which is fine for a rough count. */
+export function count(name) {
+  if (COUNTED.includes(name)) post("/api/count", { name }).catch(() => {});
+}
+
+/** The first page was opened: remember who sent the person (first time only) and count the visit once a day. */
+export function visit() {
+  try {
+    if (localStorage.getItem(REF) === null) localStorage.setItem(REF, refOf(location.search, document.referrer, location.hostname));
+    const day = today();
+    if (localStorage.getItem(VISIT) === day) return;
+    localStorage.setItem(VISIT, day);
+  } catch { return; }
+  count("visit");
 }

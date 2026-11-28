@@ -1,10 +1,11 @@
 // A stand-in for Cloudflare D1 in tests, built on Node's own SQLite. It runs the real schema and the real queries.
 import { DatabaseSync } from "node:sqlite";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 
 export function testDb() {
   const db = new DatabaseSync(":memory:");
-  db.exec(readFileSync(new URL("../migrations/0001_init.sql", import.meta.url), "utf8"));
+  const dir = new URL("../migrations/", import.meta.url);
+  for (const f of readdirSync(dir).sort()) db.exec(readFileSync(new URL(f, dir), "utf8"));
   const prepare = (sql) => {
     const make = (args) => ({
       bind: (...a) => make(a),

@@ -7,6 +7,7 @@ import { Turtle } from "@/components/Art";
 import { browserKind, openAppUrl } from "@/lib/browser";
 import { guessLang } from "@/lib/langs";
 import { t } from "@/lib/strings";
+import { count, visit } from "@/lib/track";
 
 /**
  * The landing page, seen only in a browser tab. Its job is to get the app installed, and then to send the person
@@ -27,11 +28,12 @@ export default function Landing() {
   useEffect(() => {
     // Inside the installed app this page is never shown.
     if (matchMedia("(display-mode: standalone)").matches || navigator.standalone === true) return router.replace("/app");
+    visit();
     setLang(guessLang(navigator.language));
     setKind(browserKind(navigator.userAgent));
     const ask = (e) => { e.preventDefault(); prompt.current = e; setByHand(false); };
     const wait = setTimeout(() => { if (!prompt.current) setByHand(true); }, 3000);
-    const done = () => setStage("open");
+    const done = () => { count("install"); setStage("open"); };
     addEventListener("beforeinstallprompt", ask);
     addEventListener("appinstalled", done);
     // A phone that already has the app: say so at once (Chrome on Android can tell).

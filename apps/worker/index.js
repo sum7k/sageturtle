@@ -2,12 +2,13 @@
 //   GET  /api/where     the Indian state the request comes from, to pre-select a language
 //   POST /api/register  a phone chooses its language (or later adds its place and work)
 //   POST /api/tap       taps on Home's buttons, and which pictures were shown
+//   POST /api/count     a visit or an install, counted without knowing who
 //   GET  /api/voice     one recorded word, letter or greeting (worker/voice.js)
-//   GET  /admin         the admin panel, behind Cloudflare Access
-import { TRACKED } from "../lib/buttons.js";
+//   GET  /admin         the admin panel, behind a passcode or Cloudflare Access (POST /admin signs in)
+import { TRACKED, COUNTED } from "../lib/buttons.js";
 import { LANGS } from "../lib/langs.js";
 import { VARIANTS, validCombo } from "../lib/variants.js";
-import { accessEmail } from "./access.js";
+import { accessEmail, passOk, passLogin } from "./access.js";
 import { adminPage } from "./admin.js";
 import { voice } from "./voice.js";
 
@@ -49,8 +50,11 @@ async function register(req, env, now) {
     return json({ id: b.id });
   }
   const id = crypto.randomUUID();
-  await env.DB.prepare("INSERT INTO users (id, created_at, created_day, last_day, lang, pin, variants) VALUES (?, ?, ?, ?, ?, ?, ?)")
-    .bind(id, now, day, day, lang, pin, JSON.stringify(variants)).run();
+  // Where the phone is comes from Cloudflare (a state in India, else the country). Who sent it comes from the phone.
+  const state = String((req.cf?.country === "IN" ? req.cf.regionCode : req.cf?.country) ?? "").slice(0, 8);
+  const ref = typeof b.ref === "string" && /^[a-z0-9._-]{1,60}$/.test(b.ref) ? b.ref : "";
+  await env.DB.prepare("INSERT INTO users (id, created_at, created_day, last_day, lang, pin, variants, state, ref) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
+    .bind(id, now, day, day, lang, pin, JSON.stringify(variants), state, ref).run();
   return json({ id });
 }
 
@@ -69,20 +73,28 @@ async function tap(req, env, now) {
   return json({ ok: true });
 }
 
+async function count(req, env, now) {
+  const b = await body(req);
+  if (!b || !COUNTED.includes(b.name)) return bad("bad request");
+  await env.DB.prepare("INSERT INTO counts (day, name, n) VALUES (?, ?, 1) ON CONFLICT (day, name) DO UPDATE SET n = n + 1").bind(istDay(now), b.name).run();
+  return json({ ok: true });
+}
+
 async function admin(req, env, now) {
-  const email = await accessEmail(req, env, now);
-  if (!email) return new Response("Not allowed. The admin panel opens only through Cloudflare Access.", { status: 403, headers: { "cache-control": "no-store" } });
+  const email = (await passOk(req, env)) ? "passcode" : await accessEmail(req, env, now);
+  if (!email && env.ADMIN_KEY) return passLogin(req, env, now);
+  if (!email) return new Response("Not allowed. The admin panel is not set up yet.", { status: 403, headers: { "cache-control": "no-store" } });
   return new Response(await adminPage(env.DB, now, email), { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex" } });
 }
 
 /** Cloudflare knows roughly where a request comes from. Only the state code is passed on, and nothing is saved. */
 const where = (req) => json({ state: req.cf?.country === "IN" ? String(req.cf.regionCode ?? "") : "" });
 
-const POSTS = { "/api/register": register, "/api/tap": tap };
+const POSTS = { "/api/register": register, "/api/tap": tap, "/api/count": count };
 
 export async function handle(req, env, now = Date.now()) {
   const { pathname } = new URL(req.url);
-  if (pathname === "/admin" || pathname === "/admin/") return req.method === "GET" ? admin(req, env, now) : bad("not allowed", 405);
+  if (pathname === "/admin" || pathname === "/admin/") return req.method === "GET" ? admin(req, env, now) : req.method === "POST" ? passLogin(req, env, now) : bad("not allowed", 405);
   if (pathname === "/api/where") return where(req);
   if (pathname === "/api/voice") return req.method === "GET" ? voice(req, env) : bad("not allowed", 405);
   if (POSTS[pathname]) return req.method === "POST" ? POSTS[pathname](req, env, now) : bad("not allowed", 405);

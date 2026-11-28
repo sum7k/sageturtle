@@ -7,6 +7,7 @@ import { useMe } from "@/components/useMe";
 import { PICTURE, WORD_KEYS, round, wordFor, lettersFor } from "@/lib/book";
 import { say } from "@/lib/speak";
 import { t } from "@/lib/strings";
+import { tap } from "@/lib/track";
 
 const KEY = "bodhilabs.book.v1"; // which round the person has reached
 
@@ -27,6 +28,8 @@ function Words({ lang }) {
   const pick = (key) => {
     if (right) return;
     say(wordFor(lang, key), lang);
+    tap("answer");
+    if (key === r.answer) tap("right");
     if (key !== r.answer) return setWrong((w) => [...w, key]);
     setRight(true);
     setTimeout(() => {

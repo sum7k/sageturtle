@@ -284,3 +284,49 @@ test("a recording is made once by Sarvam, saved, and only for the app's own word
   assert.equal((await ask(clipUrl("hi", "man", "गाय"), { VOICE })).status, 503, "no key: the phone speaks instead");
   assert.equal(calls.length, 2);
 });
+
+test("where people come from and how far they get", async () => {
+  const { refOf } = await import("../lib/track.js");
+  assert.equal(refOf("?from=WhatsApp", "", "bodhilabs.org"), "whatsapp");
+  assert.equal(refOf("?utm_source=yt", "https://x.com/a", "bodhilabs.org"), "yt");
+  assert.equal(refOf("", "https://www.youtube.com/watch?v=1", "bodhilabs.org"), "youtube.com");
+  assert.equal(refOf("", "https://www.bodhilabs.org/home", "bodhilabs.org"), "");
+  assert.equal(refOf("?from=<script>", "", "bodhilabs.org"), "");
+  const e = env();
+  const reg = async (body, cf) => (await handle(Object.assign(new Request("https://bodhilabs.org/api/register", { method: "POST", body: JSON.stringify(body) }), { cf }), e, NOW)).json();
+  const a = await reg({ lang: "hi", ref: "whatsapp" }, { country: "IN", regionCode: "UP" });
+  await reg({ lang: "hi", ref: "bad ref!" }, { country: "IN", regionCode: "UP" });
+  await reg({ lang: "ta" }, { country: "US", regionCode: "CA" });
+  for (const name of ["visit", "visit", "visit", "install"]) assert.equal((await post(e, "/api/count", { name })).status, 200);
+  assert.equal((await post(e, "/api/count", { name: "other" })).status, 400);
+  await post(e, "/api/tap", { user: a.id, taps: { book: 1, answer: 3, right: 1 } });
+  const d = await adminData(e.DB, NOW);
+  assert.deepEqual(d.states.map((r) => [r.state, r.users]), [["UP", 2], ["US", 1]]);
+  assert.deepEqual(d.refs.map((r) => [r.ref, r.users]), [["", 2], ["whatsapp", 1]]);
+  assert.deepEqual(d.funnel.map((f) => f.total), [3, 1, 3, 1, 1, 1]);
+  assert.deepEqual(d.funnel.map((f) => f.today), [3, 1, 3, 1, 1, 1]);
+  assert.match(await adminPage(e.DB, NOW, "x"), /How far people get/);
+});
+
+test("the passcode opens the admin panel and the phone stays signed in", async () => {
+  const e = { ...env(), ADMIN_KEY: "open-sesame-42" };
+  const kv = new Map();
+  e.VOICE = { get: async (k) => kv.get(k) ?? null, put: async (k, v) => { kv.set(k, v); } };
+  const at = (init = {}) => handle(new Request("https://bodhilabs.org/admin", init), e, NOW);
+  const form = (key) => at({ method: "POST", headers: { "content-type": "application/x-www-form-urlencoded", origin: "https://bodhilabs.org" }, body: new URLSearchParams({ key }) });
+  const box = await at();
+  assert.equal(box.status, 200);
+  assert.match(await box.text(), /Passcode/);
+  assert.equal((await form("wrong")).status, 401);
+  const ok = await form("open-sesame-42");
+  assert.equal(ok.status, 303);
+  const cookie = ok.headers.get("set-cookie");
+  assert.match(cookie, /HttpOnly; Secure/);
+  const inside = await at({ headers: { cookie: cookie.split(";")[0] } });
+  assert.match(await inside.text(), /How far people get/);
+  assert.match(await (await at({ headers: { cookie: "bl_admin=forged" } })).text(), /Passcode/);
+  assert.equal((await at({ method: "POST", headers: { "content-type": "application/x-www-form-urlencoded", origin: "https://evil.example" }, body: new URLSearchParams({ key: "open-sesame-42" }) })).status, 403);
+  for (let i = 0; i < 20; i++) await form("wrong");
+  assert.equal((await form("open-sesame-42")).status, 429, "too many wrong tries shuts the door for the day");
+  assert.equal((await handle(new Request("https://bodhilabs.org/admin"), { ...env(), ADMIN_KEY: "short" }, NOW)).status, 403, "a short passcode is not accepted");
+});

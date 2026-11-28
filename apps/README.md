@@ -74,10 +74,10 @@ npm run preview                  # builds, makes a local database, serves http:/
    repository (Worker, Settings, Builds): branch `dev`, root directory `apps`, build command `npm run build`, deploy
    command `npm run ship` (applies D1 migrations, then publishes to bodhilabs.org and www.bodhilabs.org).
    Pushes to other branches do not deploy. By hand from a computer: `npx wrangler login`, then `npm run deploy`.
-2. In Cloudflare Zero Trust, add an Access application (self-hosted) for `bodhilabs.org/admin` with a policy that
-   allows only the owner's email.
-3. Put the team domain (such as `name.cloudflareaccess.com`) and the application's audience tag into `ACCESS_TEAM_DOMAIN`
-   and `ACCESS_AUD` in `wrangler.jsonc`, and deploy again. Until both are set, `/admin` answers 403.
+2. The admin panel `/admin` opens with a passcode: set the Worker secret `ADMIN_KEY` (8 characters or more) in the
+   Cloudflare dashboard. The phone that typed it stays signed in for a year. Until it is set, `/admin` answers 403.
+   Cloudflare Access also works: make an Access application for `bodhilabs.org/admin` and put its team domain and
+   audience tag into `ACCESS_TEAM_DOMAIN` and `ACCESS_AUD` in `wrangler.jsonc`.
 
 ## Not done yet
 
