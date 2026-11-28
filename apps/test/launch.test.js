@@ -8,7 +8,7 @@ import { mark, report } from "../lib/learn.js";
 import { shouldLook, afterLook } from "../lib/ask.js";
 import { SUBJECTS, LANG_ORDER, ring, nameOf } from "../lib/subjects.js";
 import { LIVES, nextLife, lifeLang } from "../lib/lives.js";
-import { mustInstall, openAppUrl } from "../lib/browser.js";
+import { mustInstall, openAppUrl, isInstalled } from "../lib/browser.js";
 import { LANGS, langById, guessLang, stateLang, firstGuess } from "../lib/langs.js";
 import { STR, t } from "../lib/strings.js";
 import { LETTERS, lettersFor, WORDS, WORD_KEYS, PICTURE, round, wordFor } from "../lib/book.js";
@@ -319,6 +319,14 @@ test("a browser tab is sent to the install page, the installed app never", () =>
   assert.equal(mustInstall({ path: "/home", standalone: true, host: "bodhilabs.org" }), false);
   assert.equal(mustInstall({ path: "/", standalone: false, host: "bodhilabs.org" }), false);
   assert.equal(mustInstall({ path: "/book", standalone: false, host: "localhost" }), false);
+  // The installed app is known in every way a browser may show it, and is never asked to install.
+  const mode = (m) => ({ media: (q) => q === `(display-mode: ${m})` });
+  for (const m of ["standalone", "minimal-ui", "window-controls-overlay", "tabbed"]) assert.equal(isInstalled(mode(m)), true, m);
+  assert.equal(isInstalled(mode("browser")), false);
+  assert.equal(isInstalled({ standalone: true }), true);
+  assert.equal(isInstalled({ referrer: "android-app://org.chromium.webapk" }), true);
+  assert.equal(isInstalled({ marked: true }), true);
+  assert.equal(isInstalled(), false);
 });
 
 test("every spoken text gets a man's voice and a woman's, Indian first", async () => {

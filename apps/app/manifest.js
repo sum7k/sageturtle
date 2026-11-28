@@ -6,7 +6,7 @@ export default function manifest() {
     name: "BodhiLabs",
     short_name: "BodhiLabs",
     id: "/",
-    start_url: "/app",
+    start_url: "/app?source=pwa",
     scope: "/",
     display: "standalone",
     // Lets the landing page ask the phone whether the app is already installed.

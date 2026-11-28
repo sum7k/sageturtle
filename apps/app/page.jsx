@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Icon, { P } from "@/components/Icon";
 import { Turtle } from "@/components/Art";
-import { browserKind, openAppUrl } from "@/lib/browser";
+import { browserKind, installedHere, onInstalled, openAppUrl } from "@/lib/browser";
 import { guessLang } from "@/lib/langs";
 import { t } from "@/lib/strings";
 import { count, visit } from "@/lib/track";
@@ -26,19 +26,21 @@ export default function Landing() {
   const [byHand, setByHand] = useState(false); // Chrome gave no prompt: show the menu steps
 
   useEffect(() => {
-    // Inside the installed app this page is never shown.
-    if (matchMedia("(display-mode: standalone)").matches || navigator.standalone === true) return router.replace("/app");
+    // Inside the installed app this page is never shown. On a computer, Chrome moves this very tab into the app's
+    // window when the app is installed or opened from the address bar, so the page also watches for that.
+    if (installedHere()) return router.replace("/app");
+    const leave = onInstalled(() => router.replace("/app"));
     visit();
     setLang(guessLang(navigator.language));
     setKind(browserKind(navigator.userAgent));
     const ask = (e) => { e.preventDefault(); prompt.current = e; setByHand(false); };
     const wait = setTimeout(() => { if (!prompt.current) setByHand(true); }, 3000);
-    const done = () => { count("install"); setStage("open"); };
+    const done = () => { count("install"); if (installedHere()) router.replace("/app"); else setStage("open"); };
     addEventListener("beforeinstallprompt", ask);
     addEventListener("appinstalled", done);
     // A phone that already has the app: say so at once (Chrome on Android can tell).
     navigator.getInstalledRelatedApps?.().then((apps) => { if (apps.length) setStage("open"); }).catch(() => {});
-    return () => { clearTimeout(wait); removeEventListener("beforeinstallprompt", ask); removeEventListener("appinstalled", done); };
+    return () => { leave(); clearTimeout(wait); removeEventListener("beforeinstallprompt", ask); removeEventListener("appinstalled", done); };
   }, [router]);
 
   const install = async () => {
