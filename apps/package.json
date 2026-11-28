@@ -13,7 +13,8 @@
     "start": "next start",
     "test": "node --test \"test/**/*.test.js\"",
     "preview": "next build && wrangler d1 migrations apply bodhilabs --local && wrangler dev --host localhost",
-    "deploy": "next build && wrangler d1 migrations apply bodhilabs --remote && wrangler deploy"
+    "ship": "wrangler d1 migrations apply bodhilabs --remote && wrangler deploy",
+    "deploy": "next build && npm run ship"
   },
   "dependencies": {
     "next": "^16.4.6",

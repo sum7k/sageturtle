@@ -59,12 +59,14 @@ cp .dev.vars.example .dev.vars   # opens /admin on localhost only
 npm run preview                  # builds, makes a local database, serves http://localhost:8787
 ```
 
-`npm run dev` runs the pages alone, without the Worker: taps and the form then fail quietly.
+`npm run dev` runs the pages alone, without the Worker: taps then fail quietly.
 
 ## Deploy
 
-1. `npx wrangler login`, then `npm run deploy`. This builds, creates the tables in the `bodhilabs` D1 database and
-   publishes the Worker to bodhilabs.org and www.bodhilabs.org.
+1. A push to `dev` deploys by itself through Cloudflare Workers Builds, once the `bodhilabs` Worker is connected to this
+   repository (Worker, Settings, Builds): branch `dev`, root directory `apps`, build command `npm run build`, deploy
+   command `npm run ship` (applies D1 migrations, then publishes to bodhilabs.org and www.bodhilabs.org).
+   By hand from a computer: `npx wrangler login`, then `npm run deploy`.
 2. In Cloudflare Zero Trust, add an Access application (self-hosted) for `bodhilabs.org/admin` with a policy that
    allows only the owner's email.
 3. Put the team domain (such as `name.cloudflareaccess.com`) and the application's audience tag into `ACCESS_TEAM_DOMAIN`
