@@ -139,7 +139,7 @@ h1, h2, p { margin: 0; }
 .talk .mine { font-size: 18px; white-space: pre-wrap; overflow-wrap: anywhere; }
 .talk .theirs { background: var(--mint); border-radius: 16px; padding: 12px; font-size: 18px; white-space: pre-wrap; overflow-wrap: anywhere; }
 
-/* the joker: one life */
+/* Lives: one life */
 .life { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
 .life .face { width: 132px; height: 132px; border-radius: 999px; background: var(--cream); font-size: 72px; display: flex; align-items: center; justify-content: center; }
 .life h2 { font-size: 26px; line-height: 1.2; }

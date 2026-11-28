@@ -14,7 +14,7 @@ import { tap } from "@/lib/track";
 const LAST = "bodhilabs.life.v1"; // the life shown last time, so the next one is another
 
 /**
- * The joker: the life of one great person, a different one each time it is opened. It can be read, and the gold
+ * Lives (जीवनी): the life of one great person, a different one each time it is opened. It can be read, and the gold
  * button reads it aloud. The round arrow brings another life.
  */
 export default function Life() {
@@ -49,7 +49,7 @@ export default function Life() {
   };
   return (
     <main className="screen">
-      <Bar back="/home" title={nameOf(subjectById("joker"), me.lang)} right={
+      <Bar back="/home" title={nameOf(subjectById("lives"), me.lang)} right={
         <button type="button" className="round white" aria-label="Another life" onClick={another}><Icon d={P.next} sw={2.5} /></button>} />
       <article className="life" lang={lang} key={life.id}>
         <div className="face" aria-hidden="true">{life.picture}</div>

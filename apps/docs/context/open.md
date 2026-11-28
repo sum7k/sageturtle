@@ -34,7 +34,7 @@ Messages leaves two things to others: open groups go to Discussions, and calls i
 
 ## Built and not built (branch `dev`)
 
-Built for the first release: landing, the language screen with picture tiles and greetings, the 4 by 4 grid on Home (subjects turned by the lagna; only Word and the joker open) and inside Word (only Letters open), the four middle pages (Learned, Now, Next, Ask with answers from the admin panel), the joker's lives with audio (three placeholders), Book's word matching and letters, install as an app (no caching and no offline opening until the first version is released, sumeet 2026-11-28) and an "Open the app" button,
+Built for the first release: landing, the language screen with picture tiles and greetings, the 4 by 4 grid on Home (subjects turned by the lagna; only Word and Lives open) and inside Word (only Letters open), the four middle pages (Learned, Now, Next, Ask with answers from the admin panel), Lives (जीवनी) with audio (three placeholders), Book's word matching and letters, install as an app (no caching and no offline opening until the first version is released, sumeet 2026-11-28) and an "Open the app" button,
 counts of subjects pressed and lives shown, and the admin panel. Words in 11 languages. Horoscope, Khabri, Me and registration are built but not linked.
 The server holds phones and taps (Cloudflare D1). 34 tests pass. A push to `dev` deploys through Cloudflare Workers Builds.
 

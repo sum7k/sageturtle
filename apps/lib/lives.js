@@ -1,4 +1,4 @@
-// The joker opens the life of one great person of the world, a different one each time: how they learned and how
+// Lives (जीवनी), the twelfth subject on Home, opens the life of one great person of the world, a different one each time: how they learned and how
 // they grew. A child sees through a life why learning matters (sumeet, 2026-11-28). The set will hold 121 lives, of
 // artists, thinkers, scientists and others, each in the eleven languages, to read or to hear.
 // These three are placeholders so the screen can be built. The list and the texts are being written elsewhere:

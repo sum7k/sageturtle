@@ -12,14 +12,14 @@ Until 2026-11-28 the product was called SageTurtle.
   (`firstGuess` in `lib/langs.js`). The drawings are placeholders, with no religious symbols.
 - **Every level is a 4 by 4 grid** (`components/Grid.jsx`, `lib/grid.js`). The twelve outer boxes are the level's
   twelve houses, house 1 top left and then round with the clock. On Home (`app/home`) they are the eleven subjects
-  and the joker (`lib/subjects.js`), turned by the rising sign (`lib/lagna.js`), whose subject is in house 1. Inside
+  and Lives (`lib/subjects.js`), turned by the rising sign (`lib/lagna.js`), whose subject is in house 1. Inside
   Word (`app/word`, `lib/word.js`) they are Word's own twelve houses in order; only Letters is open, and it is the
   word game. A press on a closed box is only counted. The language button is in the top corner of Home.
 - **The four boxes in the middle are the same on every level**: Learned (`app/past`), Now (`app/now`, what goes well
   and what needs practice), Next (`app/next`) and Ask (`app/ask`). The first three read what the phone remembers of
   the word game (`lib/learn.js`, kept on the phone). Ask sends a typed question (`/api/ask`, table `questions`, five
   a day); it shows in the admin panel under Questions, and the answer written there shows in the app under the question.
-- **The joker opens one great life** (`lib/lives.js`, `app/life/page.jsx`): a short biography about how the person
+- **Lives (जीवनी) opens one great life** (`lib/lives.js`, `app/life/page.jsx`): a short biography about how the person
   learned and grew, never the same one twice in a row, to read or to hear in a Sarvam voice (`/api/voice?life=<id>`).
   Three placeholder lives, in English and Hindi; the set of 121 is being written. Shown and heard are counted.
 - **Gyan** (the reading app; `book` in the code, `lib/book.js`). Everything spoken is heard twice, in a man's and a
@@ -57,7 +57,7 @@ The pages are static files (`next build` writes `out/`). Cloudflare serves them 
 | Table | One row per | Used for |
 | :--- | :--- | :--- |
 | `users` | phone that chose a language | users, new and active users; language; place and work once registered |
-| `taps` | person, thing and day | taps (sum of `count`) and distinct users (count of people). The thing is `word`, `book` (the word game), `subject:<id>`, `word:<house>`, `joker`, `life:<id>` (a life shown), `heard`, `centre:<box>`, `answer` or `right` |
+| `taps` | person, thing and day | taps (sum of `count`) and distinct users (count of people). The thing is `word`, `book` (the word game), `subject:<id>`, `word:<house>`, `lives`, `life:<id>` (a life shown), `heard`, `centre:<box>`, `answer` or `right` |
 | `questions` | question from the Ask box | waiting and answered questions |
 | `wishes` | (unused) | answers to a question that was removed on 2026-11-28 |
 

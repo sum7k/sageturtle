@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { BOOK, WORD, JOKER, TRACKED, tapName } from "../lib/buttons.js";
+import { BOOK, WORD, LIFE, TRACKED, tapName } from "../lib/buttons.js";
 import { AROUND, CENTRE, SAY } from "../lib/grid.js";
 import { WORD_HOUSES } from "../lib/word.js";
 import { mark, report } from "../lib/learn.js";
@@ -146,20 +146,20 @@ test("the Open the app button uses an Android intent, with the start page in the
   assert.equal(openAppUrl(android, "http://localhost:8787"), "/app");
 });
 
-test("Home holds eleven subjects and the joker, turned by the rising sign", () => {
+test("Home holds twelve subjects, turned by the rising sign", () => {
   assert.equal(SUBJECTS.length, 12);
-  assert.equal(SUBJECTS[11].id, "joker"); // Meena, the twelfth sign
-  assert.deepEqual(SUBJECTS.filter((x) => x.open).map((x) => [x.id, x.open]), [["word", "/word"], ["joker", "/life"]]);
+  assert.equal(SUBJECTS[11].id, "lives"); // Meena, the twelfth sign
+  assert.deepEqual(SUBJECTS.filter((x) => x.open).map((x) => [x.id, x.open]), [["word", "/word"], ["lives", "/life"]]);
   assert.equal(new Set(SUBJECTS.map((x) => x.id)).size, 12);
   for (const x of SUBJECTS) for (const l of LANG_ORDER) assert.ok(x.name[l], `${x.id} ${l}`);
   assert.deepEqual([...LANG_ORDER].sort(), LANGS.map((l) => l.id).sort());
   assert.equal(nameOf(SUBJECTS[2], "hi"), "शब्द");
   assert.equal(nameOf(SUBJECTS[2], "xx"), "Word");
   // Vrishchika (7) rising: Nature is in house 1, People in house 2, and Art comes last.
-  assert.deepEqual(ring(7).map((x) => x.id), ["nature", "people", "hand", "money", "joker", "body", "music", "word", "earth", "rule", "number", "art"]);
+  assert.deepEqual(ring(7).map((x) => x.id), ["nature", "people", "hand", "money", "lives", "body", "music", "word", "earth", "rule", "number", "art"]);
   assert.equal(ring(0)[0].id, "body");
   for (const x of SUBJECTS) assert.ok(TRACKED.includes(tapName("home", x)), x.id);
-  assert.deepEqual([tapName("home", SUBJECTS[2]), tapName("home", SUBJECTS[11]), tapName("home", SUBJECTS[0])], [WORD.id, JOKER.id, "subject:body"]);
+  assert.deepEqual([tapName("home", SUBJECTS[2]), tapName("home", SUBJECTS[11]), tapName("home", SUBJECTS[0])], [WORD.id, LIFE.id, "subject:body"]);
 });
 
 test("every level is a grid of sixteen: twelve houses around and the same four in the middle", () => {
@@ -252,12 +252,12 @@ test("taps wait on the phone and are taken off only when sent", () => {
 test("the admin panel shows which subjects are pressed, which lives are shown and how many are heard", async () => {
   const e = env();
   const a = await signUp(e), b = await signUp(e);
-  await post(e, "/api/tap", { user: a, taps: { "subject:number": 3, joker: 2, "life:einstein": 2, heard: 1, "centre:now": 1, word: 1, "word:names": 2 } });
+  await post(e, "/api/tap", { user: a, taps: { "subject:number": 3, lives: 2, "life:einstein": 2, heard: 1, "centre:now": 1, word: 1, "word:names": 2 } });
   await post(e, "/api/tap", { user: b, taps: { "subject:number": 1, book: 1, "life:leonardo": 1 } });
   const d = await adminData(e.DB, NOW);
   assert.equal(d.subjects.length, 12);
   assert.deepEqual([d.subjects[0].id, d.subjects[0].users, d.subjects[0].taps], ["number", 2, 4]);
-  assert.deepEqual(d.subjects.filter((x) => x.taps).map((x) => x.id).sort(), ["joker", "number", "word"]);
+  assert.deepEqual(d.subjects.filter((x) => x.taps).map((x) => x.id).sort(), ["lives", "number", "word"]);
   assert.deepEqual(d.lives.map((l) => [l.id, l.taps]), [["einstein", 2], ["leonardo", 1], ["aryabhata", 0]]);
   assert.equal(d.heard.taps, 1);
   assert.deepEqual(d.centre.map((c) => [c.id, c.users]), [["past", 0], ["now", 1], ["next", 0], ["ask", 0]]);
@@ -285,7 +285,7 @@ test("counts from an unknown phone, for unknown things, or to a removed address 
   assert.deepEqual(await from(undefined), { state: "" });
 });
 
-test("the joker opens a different life each time, in the person's language or else English", () => {
+test("Lives opens a different life each time, in the person's language or else English", () => {
   assert.ok(LIVES.length >= 2);
   for (const l of LIVES) { assert.ok(l.picture && l.years && l.name.en && l.text.en, l.id); assert.ok(l.text.en.length <= 2500, l.id); }
   let last = null;
@@ -297,7 +297,7 @@ test("the joker opens a different life each time, in the person's language or el
   assert.ok(nextLife(null, 0.999999));
   assert.equal(lifeLang(LIVES[0], "hi"), "hi");
   assert.equal(lifeLang(LIVES[0], "ta"), "en");
-  assert.ok(TRACKED.includes(JOKER.id) && TRACKED.includes("heard"));
+  assert.ok(TRACKED.includes(LIFE.id) && TRACKED.includes("heard"));
   for (const l of LIVES) assert.ok(TRACKED.includes(`life:${l.id}`));
   assert.equal(addTap({}, "life:einstein")["life:einstein"], 1);
 });

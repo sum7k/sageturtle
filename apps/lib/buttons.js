@@ -6,11 +6,11 @@ import { LIFE_IDS } from "./lives.js";
 
 export const BOOK = { id: "book", href: "/book" }; // the word game, house 3 of Word
 export const WORD = { id: "word", href: "/word" }; // Word, the subject
-export const JOKER = { id: "joker" };
+export const LIFE = { id: "lives" }; // Lives (जीवनी), the twelfth subject
 
 /** The name a press on a box is counted under. `level` is "home" or "word". */
 export function tapName(level, box) {
-  if (level === "home") return box.id === "word" ? WORD.id : box.id === "joker" ? JOKER.id : `subject:${box.id}`;
+  if (level === "home") return box.id === "word" ? WORD.id : box.id === LIFE.id ? LIFE.id : `subject:${box.id}`;
   return box.open === BOOK.href ? BOOK.id : `word:${box.id}`;
 }
 

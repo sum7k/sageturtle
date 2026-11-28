@@ -15,9 +15,9 @@ import { t } from "@/lib/strings";
 import { sync } from "@/lib/track";
 
 /**
- * Home: the 4 by 4 grid. The twelve outer boxes are the eleven subjects and the joker, one for each sign of the
+ * Home: the 4 by 4 grid. The twelve outer boxes are twelve subjects, one for each sign of the
  * zodiac. The houses never move; the subjects turn with the lagna, so the subject of the sign that is rising now is
- * in house 1 (top left, ringed in gold). Only Word and the joker can be entered yet. The four in the middle are the
+ * in house 1 (top left, ringed in gold). Only Word and Lives can be entered yet. The four in the middle are the
  * learner's own: learned, now, next and ask. The small button in the corner is for settings (now: the language).
  */
 export default function Home() {

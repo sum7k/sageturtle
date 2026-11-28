@@ -60,7 +60,7 @@ export async function adminData(db, now = Date.now()) {
     centre: CENTRE.map((c) => ({ id: c.id, picture: c.picture, name: c.name.en, ...zero, ...by[`centre:${c.id}`] })),
     // Questions from the "?" box: those waiting for an answer, and the last ones answered.
     questions: { open: asked, done: answered },
-    // The joker: which lives were shown, and how many people listened.
+    // Lives: which lives were shown, and how many people listened.
     lives: LIVES.map((l) => ({ id: l.id, picture: l.picture, name: l.name.en, ...zero, ...by[`life:${l.id}`] })).sort((a, b) => b.taps - a.taps),
     heard: { ...zero, ...by.heard },
     langs, states, refs, variants, signups,
@@ -113,7 +113,7 @@ ${d.questions.done.length ? `<details><summary>Answered</summary>${d.questions.d
     ...d.subjects.map((x) => [`<span class="pic">${x.picture}</span>${esc(x.name)}${x.open ? "" : ' <span class="tag">closed</span>'}`, num(x.users), num(x.taps), num(x.taps_today)]),
     ...d.centre.map((x) => [`<span class="pic">${x.picture}</span>${esc(x.name)} <span class="tag">middle</span>`, num(x.users), num(x.taps), num(x.taps_today)]),
   ])}</div>
-<p class="muted">Closed subjects only count the press. Lives is the joker. The four marked "middle" are the boxes in the middle of every grid.</p></section>
+<p class="muted">Closed subjects only count the press. The four marked "middle" are the boxes in the middle of every grid.</p></section>
 <section><h2>Inside Word</h2><div class="card">${table(["House", "People", "Presses", "Today"],
     d.houses.map((x) => [`${x.n}. <span class="pic">${x.picture}</span>${esc(x.name)}${x.open ? "" : ' <span class="tag">closed</span>'}`, num(x.users), num(x.taps), num(x.taps_today)]))}</div></section>
 <section><h2>Where people are</h2><div class="card">${table(["State", "People"], d.states.map((r) => [esc(r.state || "Not known"), num(r.users)]))}</div></section>
