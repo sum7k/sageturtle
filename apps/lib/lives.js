@@ -1,6 +1,9 @@
 // Lives (जीवनी), the twelfth subject on Home, opens the life of one great person of the world, a different one each time: how they learned and how
-// they grew. A child sees through a life why learning matters (sumeet, 2026-11-28). The set will hold 121 lives, of
+// they grew (sumeet, 2026-11-28). The set will hold 121 lives, of
 // artists, thinkers, scientists and others, each in the eleven languages, to read or to hear.
+// How a life is told (CLAUDE.md, "The spirit of BodhiLabs"): the person's struggle, their work, their values, what
+// was strong in them and how it grew. Never "be like them", never "they did this, so you do it too", and no ending
+// that tells the learner to become great. The learner is their own person and takes what speaks to them.
 // These three are placeholders so the screen can be built. The list and the texts are being written elsewhere:
 // add a life here with its `text` per language. A language with no text yet shows and speaks the English one.
 export const LIVES = [
