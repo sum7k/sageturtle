@@ -59,9 +59,13 @@ function speakPhone(text, locale, { voice, pitch }) {
   });
 }
 
-/** Speak text aloud in the given language, in both voices. Returns false when nothing can be played. */
-export function say(text, lang = "en") {
-  if (!text || (typeof Audio === "undefined" && !globalThis.speechSynthesis)) return false;
+/**
+ * Speak text aloud in the given language, in both voices. Returns false when nothing can be played.
+ * `done` is called once both voices have finished (or at once when nothing can be played); it is not called
+ * when a newer call cut this one short.
+ */
+export function say(text, lang = "en", done = () => {}) {
+  if (!text || (typeof Audio === "undefined" && !globalThis.speechSynthesis)) { done(); return false; }
   const mine = ++turn;
   const locale = langById(lang).locale;
   player?.pause();
@@ -77,6 +81,7 @@ export function say(text, lang = "en") {
         if (mine === turn) await speakPhone(text, locale, side);
       }
     }
+    if (mine === turn) done();
   })();
   return true;
 }

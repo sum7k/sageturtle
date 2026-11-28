@@ -248,6 +248,17 @@ test("every spoken text gets a man's voice and a woman's, Indian first", async (
   const none = pair([], "or-IN", 0.1);
   assert.equal(none.length, 2);
   assert.equal(none[0].voice, null);
+  // The word game waits for this: `done` comes only after both voices have ended.
+  const { say } = await import("../lib/speak.js");
+  const ends = [];
+  globalThis.speechSynthesis = { cancel() {}, getVoices: () => [], speak: (u) => ends.push(u.onend) };
+  globalThis.SpeechSynthesisUtterance = class {};
+  let finished = false;
+  assert.equal(say("cow", "ur", () => { finished = true; }), true);
+  const tick = () => new Promise((r) => setTimeout(r, 0));
+  await tick(); ends[0](); assert.equal(finished, false, "one voice is not enough");
+  await tick(); ends[1](); await tick(); assert.equal(finished, true);
+  delete globalThis.speechSynthesis; delete globalThis.SpeechSynthesisUtterance;
 });
 
 test("a recording is made once by Sarvam, saved, and only for the app's own words", async () => {

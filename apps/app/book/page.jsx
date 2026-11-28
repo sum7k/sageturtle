@@ -24,20 +24,27 @@ function Words({ lang }) {
   if (n === null) return null;
 
   const r = round(n);
-  const hear = () => say(wordFor(lang, r.answer), lang);
+  const hear = () => { if (!right) say(wordFor(lang, r.answer), lang); }; // not while the right word is being said
   const pick = (key) => {
     if (right) return;
-    say(wordFor(lang, key), lang);
     tap("answer");
-    if (key === r.answer) tap("right");
-    if (key !== r.answer) return setWrong((w) => [...w, key]);
+    if (key !== r.answer) { say(wordFor(lang, key), lang); return setWrong((w) => [...w, key]); }
+    tap("right");
     setRight(true);
-    setTimeout(() => {
+    // The next picture comes only when both voices have said the word, and never sooner than a second.
+    // If the sound never ends (a stalled network), it comes after ten seconds anyway.
+    let went = false, spoken = false, waited = false;
+    const next = () => {
+      if (went) return;
+      went = true;
       try { localStorage.setItem(KEY, String(n + 1)); } catch {}
       setN(n + 1);
       setWrong([]);
       setRight(false);
-    }, 1100);
+    };
+    setTimeout(() => { waited = true; if (spoken) next(); }, 1100);
+    setTimeout(next, 10000);
+    say(wordFor(lang, key), lang, () => { spoken = true; if (waited) next(); });
   };
   const lap = n % WORD_KEYS.length;
   return (
