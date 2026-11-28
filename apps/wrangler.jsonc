@@ -18,6 +18,8 @@
   // Recorded voices, made once by Sarvam and kept here (worker/voice.js). The Sarvam key is a secret named
   // SARVAM_API_KEY, set in the Cloudflare dashboard, never in this file.
   "kv_namespaces": [{ "binding": "VOICE", "id": "0c946f0199fc41249268f30fc7468815" }],
+  // Workers AI: writes an answer from lines of our own lessons, until the phone has its own model (worker/answer.js).
+  "ai": { "binding": "AI" },
   // Cloudflare Access for /admin. Fill both in after making the Access application; until then /admin answers 403.
   "vars": {
     "ACCESS_TEAM_DOMAIN": "",

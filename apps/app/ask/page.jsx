@@ -10,7 +10,8 @@ import { centreById, say } from "@/lib/grid";
 import { nameOf } from "@/lib/subjects";
 import { answer } from "@/lib/find";
 import { langById } from "@/lib/langs";
-import { compose, mindOn } from "@/lib/mind";
+import { askCloud, compose, mindReady, warm } from "@/lib/mind";
+import { load } from "@/lib/store";
 import { hush, sayLine, sayOwn } from "@/lib/speak";
 import { tap } from "@/lib/track";
 
@@ -19,7 +20,7 @@ import { tap } from "@/lib/track";
  * the line that fits is shown with its drawing and said aloud, so a learner who cannot read yet is answered too.
  * When the lessons do not hold a sure answer, the question goes to a person: it is read in the admin panel, and
  * the answer written there shows here, under the question. The talk button sends it to a person in any case.
- * Where the small model is switched on (lib/mind.js), its own sentence from the found lines is shown above them.
+ * A sentence written from the found lines, by a model on Cloudflare or by the phone's own (lib/mind.js), is shown above them.
  */
 export default function Ask() {
   const { ready, lang, back } = useLearner();
@@ -30,8 +31,9 @@ export default function Ask() {
   const [hearing, setHearing] = useState(false);
   const who = useRef(Math.random() < 0.5 ? "man" : "woman");
   const ear = useRef(null);
+  const latest = useRef(0); // counts the questions, so a late answer to an old one is dropped
   const read = () => myQuestions(true).then((q) => q && setList(q));
-  useEffect(() => { if (ready) read(); }, [ready]);
+  useEffect(() => { if (ready) { read(); warm(); } }, [ready]);
   useEffect(() => () => { hush(); ear.current?.abort(); }, []);
   if (!ready) return <main className="screen" />;
 
@@ -54,18 +56,24 @@ export default function Ask() {
     tap(sure ? "ask:found" : lines.length ? "ask:near" : "ask:none");
     setText("");
     setState("");
-    const think = lines.length > 0 && mindOn(); // the small model on the phone, where it is switched on (lib/mind.js)
-    setFound(lines.length ? { asked: mine, lines, at: 0, own: think ? "…" : "" } : null);
-    if (think) {
-      compose(mine, lines.map((l) => l.passage.text), lines[0].passage.lang).then((own) => {
-        setFound((f) => (f?.asked === mine ? { ...f, own } : f));
-        if (own) sayOwn(own, lines[0].passage.lang, lines[0].passage.who);
+    setFound(lines.length ? { asked: mine, lines, at: 0, own: lines.length ? "…" : "" } : null);
+    if (lines.length) {
+      // The found lines are put into a sentence that answers the question as it was asked: by the phone's own model
+      // when it is there (lib/mind.js), else by one on Cloudflare. When neither has an answer, the line itself is said.
+      const stamp = ++latest.current;
+      const heardIn = lines[0].passage.lang;
+      const wide = answer(mine, lang, 5); // a few more lines for the model to choose from
+      const write = mindReady() ? compose(mine, wide.map((l) => l.passage.text), heardIn) : askCloud(load().uid, mine, wide.map((l) => l.passage.id), heardIn);
+      write.then((own) => {
+        if (latest.current !== stamp) return; // a newer question has been asked meanwhile
+        setFound((f) => (f ? { ...f, own } : f));
+        if (own) sayOwn(own, heardIn, lines[0].passage.who);
         else show(lines, 0);
       });
-    } else if (lines.length) show(lines, 0);
+    }
     if (!sure) toPerson(mine);
   };
-  const turn = (at) => { setFound({ ...found, at }); show(found.lines, at); };
+  const turn = (at) => { latest.current++; setFound({ ...found, at, own: found.own === "…" ? "" : found.own }); show(found.lines, at); };
   // The phone writes down what is said (the browser's own speech recognition, where it has one).
   const Hear = typeof window !== "undefined" ? window.SpeechRecognition ?? window.webkitSpeechRecognition : null;
   const listen = () => {
