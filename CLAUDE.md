@@ -4,11 +4,12 @@ The app is in `apps/` (start with `apps/README.md` and `apps/docs/context/`). Wo
 
 ## Notes live here too (2026-11-28)
 
-This repo is the one place for code and notes. The notes folder `~/SageTurtle` was merged in on 2026-11-28.
+This repo is the one place for code and notes. On sumeet's computer it is the folder `~/cubegullak`. The old notes
+folder `~/SageTurtle` was merged in on 2026-11-28 and is retired.
 
 - Project notes are at the root: `idea.md`, `backlog.md`, `tradeoffs.md`, `docs/`, `research/`, `work/`.
 - Each app's notes sit next to the code, in `apps/<name>/` (`idea.md`, `backlog.md`, `tradeoffs.md`, `docs/`, `work/`).
-- Write new notes here, not in `~/SageTurtle`.
+- Write new notes here. There is no other folder.
 
 ## .trash folders
 
