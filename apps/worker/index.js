@@ -2,12 +2,14 @@
 //   GET  /api/where     the Indian state the request comes from, to pre-select a language
 //   POST /api/register  a phone chooses its language (or later adds its place and work)
 //   POST /api/tap       taps on Home's buttons, and which pictures were shown
+//   GET  /api/voice     one recorded word, letter or greeting (worker/voice.js)
 //   GET  /admin         the admin panel, behind Cloudflare Access
 import { TRACKED } from "../lib/buttons.js";
 import { LANGS } from "../lib/langs.js";
 import { VARIANTS, validCombo } from "../lib/variants.js";
 import { accessEmail } from "./access.js";
 import { adminPage } from "./admin.js";
+import { voice } from "./voice.js";
 
 const MAX_BODY = 4096;
 const MAX_TAPS = 500; // the most taps on one button that one message may carry
@@ -82,6 +84,7 @@ export async function handle(req, env, now = Date.now()) {
   const { pathname } = new URL(req.url);
   if (pathname === "/admin" || pathname === "/admin/") return req.method === "GET" ? admin(req, env, now) : bad("not allowed", 405);
   if (pathname === "/api/where") return where(req);
+  if (pathname === "/api/voice") return req.method === "GET" ? voice(req, env) : bad("not allowed", 405);
   if (POSTS[pathname]) return req.method === "POST" ? POSTS[pathname](req, env, now) : bad("not allowed", 405);
   if (pathname.startsWith("/api/") || pathname.startsWith("/admin/")) return bad("not found", 404);
   return env.ASSETS.fetch(req);

@@ -1,20 +1,20 @@
 // The app is read, not heard, with two exceptions for people who cannot read yet: a language tile on the first
 // screen says hello in its language, and Gyan says a word or a letter, because hearing it is how reading is taught.
-// It uses the phone's own voices, which cost nothing and need no network.
 //
 // The rule (sumeet, 2026-11-28): everything spoken is heard twice, once in a man's voice and once in a woman's,
 // in an Indian accent, because hearing both pitches makes a word easier to catch. Which goes first is random.
-// A phone does not say whether a voice is a man's or a woman's. So: where the voice's name tells, that voice is
-// used. Otherwise the same voice is played lower for the man and higher for the woman. There is no neutral voice
-// on phones; a third, neutral one can come with recorded sound.
+// First choice: a recording made once by Sarvam (lib/voice.js). If there is none (no network, Urdu, not set up),
+// the phone's own voice speaks instead. A phone does not say whether a voice is a man's or a woman's: where the
+// voice's name tells, that voice is used; otherwise the same voice is played lower for the man and higher for the woman.
 import { langById } from "./langs.js";
+import { SARVAM_LANG, clipUrl } from "./voice.js";
 
 const MAN = /\b(male|man|rishi|hemant|ravi|prabhat|madhur|valluvar|mohan|niranjan|manohar|gagan|sukant|midhun|salman|asad|bashkar)\b|-x-(hi[ce]|en[ce]|bn[b]|ta[d]|te[m]|gu[m]|kn[m]|ml[m]|mr[m]|ur[m])-/i;
 const WOMAN = /\b(female|woman|lekha|veena|heera|kalpana|swara|neerja|pallavi|tanishaa|aarohi|shruti|dhwani|sapna|sobhana|subhasini|uzma|gul|sangeeta|kanya|isha)\b|-x-(hi[ad]|en[ad]|bn[a]|ta[c]|te[f]|gu[f]|kn[f]|ml[f]|mr[f]|ur[f])-/i;
 
 /**
- * The two ways one text is spoken: a man's voice and a woman's. `voices` are the phone's voices; only those of the
- * language are used, the Indian ones first. With no named voice for a side, pitch stands in for it.
+ * The two ways the phone's own voice speaks one text: a man's voice and a woman's. `voices` are the phone's voices;
+ * only those of the language are used, the Indian ones first. With no named voice for a side, pitch stands in for it.
  */
 export function pair(voices, locale, random = Math.random()) {
   const base = locale.slice(0, 2).toLowerCase();
@@ -33,19 +33,50 @@ export function pair(voices, locale, random = Math.random()) {
   return random < 0.5 ? both : both.reverse();
 }
 
-/** Speak text aloud in the given language, in both voices. Returns false when the phone cannot speak. */
-export function say(text, lang = "en") {
-  const synth = globalThis.speechSynthesis;
-  if (!synth || !text) return false;
-  const locale = langById(lang).locale;
-  synth.cancel();
-  for (const { voice, pitch } of pair(synth.getVoices?.() ?? [], locale)) {
+let player = null; // one player for every recording, so a phone that allowed the first sound allows the next
+let turn = 0; // a new call stops the one before it
+
+function playClip(url) {
+  return new Promise((done, fail) => {
+    player ??= new Audio();
+    player.onended = done;
+    player.onerror = () => fail(new Error("no recording"));
+    player.src = url;
+    player.play().catch(fail);
+  });
+}
+function speakPhone(text, locale, { voice, pitch }) {
+  return new Promise((done) => {
+    const synth = globalThis.speechSynthesis;
+    if (!synth) return done();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = locale;
     if (voice) u.voice = voice;
     u.pitch = pitch;
     u.rate = 0.85;
+    u.onend = u.onerror = done;
     synth.speak(u);
-  }
+  });
+}
+
+/** Speak text aloud in the given language, in both voices. Returns false when nothing can be played. */
+export function say(text, lang = "en") {
+  if (!text || (typeof Audio === "undefined" && !globalThis.speechSynthesis)) return false;
+  const mine = ++turn;
+  const locale = langById(lang).locale;
+  player?.pause();
+  globalThis.speechSynthesis?.cancel();
+  const sides = pair(globalThis.speechSynthesis?.getVoices?.() ?? [], locale);
+  (async () => {
+    for (const side of sides) {
+      if (mine !== turn) return;
+      try {
+        if (!SARVAM_LANG[lang] || typeof Audio === "undefined") throw new Error("no recording");
+        await playClip(clipUrl(lang, side.who, text));
+      } catch {
+        if (mine === turn) await speakPhone(text, locale, side);
+      }
+    }
+  })();
   return true;
 }

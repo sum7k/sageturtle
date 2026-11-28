@@ -254,3 +254,33 @@ test("every spoken text gets a man's voice and a woman's, Indian first", async (
   assert.equal(none.length, 2);
   assert.equal(none[0].voice, null);
 });
+
+test("a recording is made once by Sarvam, saved, and only for the app's own words", async () => {
+  const { voice } = await import("../worker/voice.js");
+  const { spoken, clipUrl, SARVAM_LANG } = await import("../lib/voice.js");
+  assert.ok(spoken("hi").includes("गाय") && spoken("hi").includes("नमस्ते। आइए पढ़ें।") && spoken("hi").includes("क"));
+  assert.equal(SARVAM_LANG.or, "od-IN");
+  assert.equal(SARVAM_LANG.ur, undefined);
+  const store = new Map();
+  const VOICE = { get: async (k) => store.get(k) ?? null, put: async (k, v) => { store.set(k, v.buffer ?? v); } };
+  const calls = [];
+  const sarvam = async (url, init) => { calls.push([url, init]); return Response.json({ audios: [btoa("mp3!")] }); };
+  const ask = (path, env) => voice(new Request(`https://bodhilabs.org${path}`), env, sarvam);
+  const env = { VOICE, SARVAM_API_KEY: "k" };
+  const url = clipUrl("hi", "woman", "गाय");
+  const first = await ask(url, env);
+  assert.equal(first.status, 200);
+  assert.equal(first.headers.get("content-type"), "audio/mpeg");
+  assert.equal(await first.text(), "mp3!");
+  const sent = JSON.parse(calls[0][1].body);
+  assert.deepEqual([calls[0][0], sent.text, sent.language_code, sent.speaker, sent.output_audio_codec], ["https://api.sarvam.ai/text-to-speech", "गाय", "hi-IN", "ishita", "mp3"]);
+  assert.equal(calls[0][1].headers["api-subscription-key"], "k");
+  assert.equal(await (await ask(url, env)).text(), "mp3!");
+  assert.equal(calls.length, 1, "the second time it is read, not made");
+  assert.equal(JSON.parse((await ask(clipUrl("or", "man", spoken("or")[0]), env), calls[1][1].body)).language_code, "od-IN");
+  assert.equal((await ask(clipUrl("hi", "woman", "anything else"), env)).status, 404);
+  assert.equal((await ask(clipUrl("ur", "woman", spoken("ur")[0]), env)).status, 404);
+  assert.equal((await ask(clipUrl("hi", "robot", "गाय"), env)).status, 404);
+  assert.equal((await ask(clipUrl("hi", "man", "गाय"), { VOICE })).status, 503, "no key: the phone speaks instead");
+  assert.equal(calls.length, 2);
+});

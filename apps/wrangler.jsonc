@@ -15,6 +15,9 @@
   "d1_databases": [
     { "binding": "DB", "database_name": "bodhilabs", "database_id": "ed3d9f94-b443-44dc-8275-a27a384a19b6", "migrations_dir": "migrations" }
   ],
+  // Recorded voices, made once by Sarvam and kept here (worker/voice.js). The Sarvam key is a secret named
+  // SARVAM_API_KEY, set in the Cloudflare dashboard, never in this file.
+  "kv_namespaces": [{ "binding": "VOICE", "id": "0c946f0199fc41249268f30fc7468815" }],
   // Cloudflare Access for /admin. Fill both in after making the Access application; until then /admin answers 403.
   "vars": {
     "ACCESS_TEAM_DOMAIN": "",
