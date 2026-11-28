@@ -28,7 +28,7 @@ Messages leaves two things to others: open groups go to Discussions, and calls i
 ## Built and not built (branch `dev`)
 
 Built for the first release: landing, the language screen with picture tiles and greetings, Home with Book, ten greyed
-picture buttons and the joker, Book's word matching and letters, install as an app with offline opening and an "Open the app" button,
+picture buttons and the joker, Book's word matching and letters, install as an app (no caching and no offline opening until the first version is released, sumeet 2026-11-28) and an "Open the app" button,
 counts of pictures shown and tapped, and the admin panel. Words in 11 languages. Horoscope, Khabri, Me and registration are built but not linked.
 The server holds phones and taps (Cloudflare D1). 34 tests pass. A push to `dev` deploys through Cloudflare Workers Builds.
 
