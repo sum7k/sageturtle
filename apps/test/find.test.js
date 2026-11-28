@@ -21,7 +21,7 @@ const OURS = [
     line("senses", "आँख, कान, नाक, जीभ और त्वचा। ये हमारी पाँच इंद्रियाँ हैं।", "Eyes, ears, nose, tongue and skin. These are our five senses."),
   ] },
 ];
-const ask = (q, lang) => answer(q, lang, 3, OURS);
+const ask = (q, lang) => answer(q, lang, 3, { lessons: OURS });
 const best = (q, lang) => ask(q, lang)[0];
 
 test("every line of every real lesson can be found by its own words, in each language it is written in", () => {
@@ -73,6 +73,10 @@ test("stages above the learner's are left out", () => {
   const later = [{ ...OURS[0], id: "later", stage: 5 }];
   assert.equal(passages("hi", { lessons: later, upTo: 1 }).length, 0);
   assert.equal(find(index(passages("hi", { lessons: later })), "आग गरम", 1).length, 1);
+  const two = [OURS[1], { ...OURS[0], stage: 2 }]; // animals at stage 1, fire at stage 2
+  assert.deepEqual(answer("why is fire hot", "en", 3, { lessons: two, upTo: 1 }), []);
+  assert.equal(answer("why is fire hot", "en", 3, { lessons: two, upTo: 2 })[0].passage.art, "safe");
+  assert.equal(answer("what does a cow eat", "en", 3, { lessons: two, upTo: 2 })[0].passage.art, "cow"); // stages behind stay open
 });
 
 // The small model (lib/mind.js). The model itself cannot run here; a stand-in takes its place.
