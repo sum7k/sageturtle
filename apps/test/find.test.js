@@ -74,3 +74,40 @@ test("stages above the learner's are left out", () => {
   assert.equal(passages("hi", { lessons: later, upTo: 1 }).length, 0);
   assert.equal(find(index(passages("hi", { lessons: later })), "आग गरम", 1).length, 1);
 });
+
+// The small model (lib/mind.js). The model itself cannot run here; a stand-in takes its place.
+import { capable, compose, prompt, tidy, MODEL } from "../lib/mind.js";
+
+test("the model is asked to use only the found lines, in the learner's language", () => {
+  const [m] = prompt("मछली कहाँ रहती है?", ["मछली पानी में रहती है।"], "hi");
+  assert.equal(m.role, "user");
+  assert.match(m.content, /ONLY the lesson lines/);
+  assert.match(m.content, /Hindi/);
+  assert.match(m.content, /- मछली पानी में रहती है।/);
+  assert.match(m.content, /Question: मछली कहाँ रहती है\?/);
+});
+
+test("a reply is cleaned, and no answer or a runaway one is dropped", () => {
+  assert.equal(tidy("  **मछली** पानी में\nरहती है। "), "मछली पानी में रहती है।");
+  assert.equal(tidy("NONE"), "");
+  assert.equal(tidy("none."), "");
+  assert.equal(tidy("x".repeat(401)), "");
+  assert.equal(tidy(undefined), "");
+});
+
+test("only a phone with WebGPU, memory and no data saver runs the model", () => {
+  assert.equal(capable({}), false);
+  assert.equal(capable({ gpu: {}, deviceMemory: 2 }), false);
+  assert.equal(capable({ gpu: {}, deviceMemory: 4, connection: { saveData: true } }), false);
+  assert.equal(capable({ gpu: {}, deviceMemory: 8 }), true);
+  assert.equal(capable({ gpu: {} }), true);
+});
+
+test("an answer is composed from the found lines, and a failing model gives none", async () => {
+  let seen;
+  const lib = { pipeline: async (task, model, opts) => { seen = { task, model, opts }; return async (messages) => [{ generated_text: [...messages, { role: "assistant", content: " मछली पानी में रहती है। " }] }]; } };
+  assert.equal(await compose("मछली कहाँ रहती है?", ["मछली पानी में रहती है।"], "hi", lib), "मछली पानी में रहती है।");
+  assert.equal(seen.model, MODEL);
+  assert.equal(seen.opts.device, "webgpu");
+  assert.equal(await compose("x", [], "hi", lib), "");
+});

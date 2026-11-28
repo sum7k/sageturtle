@@ -10,7 +10,8 @@ import { centreById, say } from "@/lib/grid";
 import { nameOf } from "@/lib/subjects";
 import { answer } from "@/lib/find";
 import { langById } from "@/lib/langs";
-import { hush, sayLine } from "@/lib/speak";
+import { compose, mindOn } from "@/lib/mind";
+import { hush, sayLine, sayOwn } from "@/lib/speak";
 import { tap } from "@/lib/track";
 
 /**
@@ -18,6 +19,7 @@ import { tap } from "@/lib/track";
  * the line that fits is shown with its drawing and said aloud, so a learner who cannot read yet is answered too.
  * When the lessons do not hold a sure answer, the question goes to a person: it is read in the admin panel, and
  * the answer written there shows here, under the question. The talk button sends it to a person in any case.
+ * Where the small model is switched on (lib/mind.js), its own sentence from the found lines is shown above them.
  */
 export default function Ask() {
   const { ready, lang, back } = useLearner();
@@ -52,8 +54,15 @@ export default function Ask() {
     tap(sure ? "ask:found" : lines.length ? "ask:near" : "ask:none");
     setText("");
     setState("");
-    setFound(lines.length ? { asked: mine, lines, at: 0 } : null);
-    if (lines.length) show(lines, 0);
+    const think = lines.length > 0 && mindOn(); // the small model on the phone, where it is switched on (lib/mind.js)
+    setFound(lines.length ? { asked: mine, lines, at: 0, own: think ? "…" : "" } : null);
+    if (think) {
+      compose(mine, lines.map((l) => l.passage.text), lines[0].passage.lang).then((own) => {
+        setFound((f) => (f?.asked === mine ? { ...f, own } : f));
+        if (own) sayOwn(own, lines[0].passage.lang, lines[0].passage.who);
+        else show(lines, 0);
+      });
+    } else if (lines.length) show(lines, 0);
     if (!sure) toPerson(mine);
   };
   const turn = (at) => { setFound({ ...found, at }); show(found.lines, at); };
@@ -85,6 +94,7 @@ export default function Ask() {
           <button type="button" className="stage" aria-label="Hear again" onClick={() => show(found.lines, found.at)}>
             <LessonArt key={line.passage.id} art={line.passage.art} prop={line.passage.prop} />
           </button>
+          {found.own && <p className="theirs own" dir="auto" lang={line.passage.lang}>{found.own}</p>}
           <p className="theirs" dir="auto" lang={line.passage.lang}>{line.passage.text}</p>
           <div className="foot">
             <button type="button" className="round white" aria-label="Back one" disabled={found.at === 0} onClick={() => turn(found.at - 1)}><Icon d={P.left} sw={2.5} /></button>

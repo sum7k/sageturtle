@@ -23,7 +23,8 @@ Until 2026-11-28 the product was called SageTurtle.
   download, nothing sent). The line that fits is shown with its drawing and said in its recorded voice. When the
   lessons hold no sure answer, or the learner presses the talk button, the question goes to a person (`/api/ask`,
   table `questions`, five a day); it shows in the admin panel under Questions, and the answer written there shows in
-  the app under the question.
+  the app under the question. A small language model on the phone that rewords the found lines (`lib/mind.js`, Gemma 3 270M
+  on WebGPU) is built but off: it is tried at `/lab` (`public/lab.html`), where a switch turns it on for that phone.
 - **Lives (जीवनी) opens one great life** (`lib/lives.js`, `app/life/page.jsx`): a short biography about how the person
   learned and grew, never the same one twice in a row, to read or to hear in a Sarvam voice (`/api/voice?life=<id>`).
   Three placeholder lives, in English and Hindi; the set of 121 is being written. Shown and heard are counted.

@@ -141,3 +141,17 @@ export function sayLine(id, text, lang, who, done = () => {}) {
   })();
   return true;
 }
+
+/**
+ * Speak a text that has no recording (an answer written on the phone, lib/mind.js), once, in the phone's own voice.
+ * `done` is called when it ends; not when a newer call or hush() cut it short.
+ */
+export function sayOwn(text, lang, who = "woman", done = () => {}) {
+  hush();
+  const mine = turn;
+  if (!text || !globalThis.speechSynthesis) { done(); return false; }
+  const locale = langById(lang).locale;
+  const side = pair(globalThis.speechSynthesis.getVoices?.() ?? [], locale, 0).find((s) => s.who === who);
+  speakPhone(text, locale, side).then(() => { if (mine === turn) done(); });
+  return true;
+}
