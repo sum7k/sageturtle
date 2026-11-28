@@ -46,3 +46,32 @@ their own way of seeing and saying it. A voice may tell more than one chapter.
   lesson opens with the teller saying who they are (`apps/lib/lessons.js`).
 
 The first one is `apps/lib/chapters/zero.js`: Number, stage 6, told in the voice of Brahmagupta.
+
+## Why each app exists (sumeet, 2026-11-28)
+
+Every app (a house on Home) has a purpose: why it is there, who it is for and what it wants to achieve. Any work on
+an app follows its purpose. If a feature or a line of content goes against it, change it or leave it out. A house
+whose purpose is not written yet is not built until sumeet defines it.
+
+**ज्ञान, Gyan (Knowledge), house 1.** Learning for every child, from the year before school to class 11: a full
+school year at each of the twelve stages, as good as a parallel school, so a child needs no other book. Walked by
+stage, at the learner's own pace, following what they like. Each learner stays an individual: no comparison, no
+competition, progress only against their own past (the spirit above). Built as a cube of twelves: twelve stages,
+twelve subjects in each, twelve lesson houses in each subject.
+
+**वर्तमान, Vartaman (Present), house 2.** People who have learned to read and write now live in the world: they work,
+play, enjoy and express themselves, so they need to know what is going on that matters to them. Vartaman brings the
+news of the present that has weight for a person who wants to do something in life, whether a child or an old
+person, whatever their work, so they can read about many fields and understand them.
+- Leave out petty crime and local incidents ("someone was killed in Kenya": nothing to do with the reader). There is
+  no crime or court topic.
+- Bring in big events that touch people's lives or work, such as a war that affects trade, prices or safety.
+- Plain words that every age can read, children too: no brutality, violence or sexuality in detail, no
+  sensationalising, no fear.
+- Each house holds eleven items; its twelfth is for past news.
+
+**जीवनी, Lives, the twelfth subject of every stage.** The lives of people of every field and land, told as their
+road: their struggle, how they worked, what they valued, what was strong in them and how it grew. A life is never
+bait for greatness and never "become like X" (the spirit above); the learner takes what speaks to them.
+
+**Houses 3 to 12 on Home, and the joker in the middle.** To be defined by sumeet.
