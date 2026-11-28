@@ -8,7 +8,7 @@ import { mkdirSync } from "node:fs";
 
 const npx = process.platform === "win32" ? "npx.cmd" : "npx";
 mkdirSync("out", { recursive: true }); // the Worker wants its files folder to exist, even when empty
-spawnSync(npx, ["wrangler", "d1", "migrations", "apply", "bodhilabs", "--local"], { stdio: "inherit" });
+spawnSync(npx, ["wrangler", "d1", "migrations", "apply", "DB", "--local"], { stdio: "inherit" });
 
 const run = (args) => spawn(npx, args, { stdio: "inherit" });
 const both = [run(["wrangler", "dev", "--host", "localhost", "--port", "8787"]), run(["next", "dev", "--port", "3000"])];
