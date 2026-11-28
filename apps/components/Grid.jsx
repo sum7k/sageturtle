@@ -28,11 +28,11 @@ export default function Grid({ level, houses, lang, first = -1 }) {
   return (
     <div className="grid16">
       {houses.map((box, i) => (
-        <button key={box.id} type="button" lang={lang} style={place(AROUND[i])}
+        <button key={box.id} type="button" lang={lang} style={place(AROUND[i])} aria-label={nameOf(box, lang) || `${i + 1}`}
           className={`cell${box.open ? "" : " locked"}${i === first ? " first" : ""}${shake === box.id ? " shake" : ""}`}
           onClick={() => press(box)} onAnimationEnd={() => setShake(null)}>
-          <span className="emoji" aria-hidden="true">{box.picture}</span>
-          <span className="name">{nameOf(box, lang)}</span>
+          {box.picture && <span className="emoji" aria-hidden="true">{box.picture}</span>}
+          {nameOf(box, lang) && <span className="name">{nameOf(box, lang)}</span>}
         </button>
       ))}
       {CENTRE.map((c) => (

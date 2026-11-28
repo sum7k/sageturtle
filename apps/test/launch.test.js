@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { BOOK, WORD, LIFE, TRACKED, tapName } from "../lib/buttons.js";
 import { AROUND, CENTRE, SAY } from "../lib/grid.js";
 import { WORD_HOUSES } from "../lib/word.js";
+import { TOP } from "../lib/top.js";
 import { mark, report } from "../lib/learn.js";
 import { shouldLook, afterLook } from "../lib/ask.js";
 import { SUBJECTS, LANG_ORDER, ring, nameOf } from "../lib/subjects.js";
@@ -160,8 +161,8 @@ test("Home holds twelve subjects, turned by the rising sign", () => {
   // Vrishchika (7) rising: Nature is in house 1, People in house 2, and Art comes last.
   assert.deepEqual(ring(7).map((x) => x.id), ["nature", "people", "hand", "money", "lives", "body", "music", "word", "earth", "rule", "number", "art"]);
   assert.equal(ring(0)[0].id, "body");
-  for (const x of SUBJECTS) assert.ok(TRACKED.includes(tapName("home", x)), x.id);
-  assert.deepEqual([tapName("home", SUBJECTS[2]), tapName("home", SUBJECTS[11]), tapName("home", SUBJECTS[0])], [WORD.id, LIFE.id, "subject:body"]);
+  for (const x of SUBJECTS) assert.ok(TRACKED.includes(tapName("gyan", x)), x.id);
+  assert.deepEqual([tapName("gyan", SUBJECTS[2]), tapName("gyan", SUBJECTS[11]), tapName("gyan", SUBJECTS[0])], [WORD.id, LIFE.id, "subject:body"]);
 });
 
 test("every level is a grid of sixteen: twelve houses around and the same four in the middle", () => {
@@ -174,6 +175,13 @@ test("every level is a grid of sixteen: twelve houses around and the same four i
   assert.deepEqual(CENTRE.map((c) => c.id), ["past", "now", "next", "ask"]);
   for (const c of CENTRE) { assert.ok(TRACKED.includes(`centre:${c.id}`)); for (const l of LANG_ORDER) assert.ok(c.name[l], `${c.id} ${l}`); }
   for (const [k, v] of Object.entries(SAY)) for (const l of LANG_ORDER) assert.ok(v[l], `${k} ${l}`);
+  // Home, the top level: Gyan is open, Vartaman waits, ten boxes are empty; every press is counted.
+  assert.equal(TOP.length, 12);
+  assert.deepEqual(TOP.slice(0, 2).map((x) => [x.id, x.open, x.name.hi]), [["gyan", "/gyan", "ज्ञान"], ["vartaman", undefined, "वर्तमान"]]);
+  assert.ok(TOP.slice(2).every((x) => !x.open && !x.picture));
+  assert.equal(new Set(TOP.map((x) => x.id)).size, 12);
+  for (const x of TOP) assert.ok(TRACKED.includes(tapName("top", x)), x.id);
+  for (const l of LANGS) assert.ok(TOP[0].name[l.id] && TOP[1].name[l.id], l.id);
   // Inside Word: twelve houses in order, only Letters open, and it is the word game.
   assert.equal(WORD_HOUSES.length, 12);
   assert.equal(new Set(WORD_HOUSES.map((h) => h.id)).size, 12);
@@ -265,6 +273,7 @@ test("the admin panel shows which subjects are pressed, which lives are shown an
   assert.deepEqual(d.centre.map((c) => [c.id, c.users]), [["past", 0], ["now", 1], ["next", 0], ["ask", 0]]);
   assert.deepEqual(d.houses.slice(0, 3).map((h) => [h.n, h.id, h.taps]), [[1, "names", 2], [2, "sounds", 0], [3, "letters", 1]]);
   assert.match(await adminPage(e.DB, NOW, "x"), /Inside Word/);
+  assert.deepEqual(d.top.slice(0, 3).map((x) => [x.n, x.id, x.name]), [[1, "gyan", "Gyan"], [2, "vartaman", "Vartaman"], [3, "top:3", "Empty box"]]);
   const html = await adminPage(e.DB, NOW, "owner@example.com");
   assert.match(html, /Subjects pressed/);
   assert.match(html, /Lives shown/);
@@ -391,12 +400,12 @@ test("where people come from and how far they get", async () => {
   await reg({ lang: "ta" }, { country: "US", regionCode: "CA" });
   for (const name of ["visit", "visit", "visit", "install"]) assert.equal((await post(e, "/api/count", { name })).status, 200);
   assert.equal((await post(e, "/api/count", { name: "other" })).status, 400);
-  await post(e, "/api/tap", { user: a.id, taps: { word: 1, book: 1, answer: 3, right: 1 } });
+  await post(e, "/api/tap", { user: a.id, taps: { gyan: 1, word: 1, book: 1, answer: 3, right: 1 } });
   const d = await adminData(e.DB, NOW);
   assert.deepEqual(d.states.map((r) => [r.state, r.users]), [["UP", 2], ["US", 1]]);
   assert.deepEqual(d.refs.map((r) => [r.ref, r.users]), [["", 2], ["whatsapp", 1]]);
-  assert.deepEqual(d.funnel.map((f) => f.total), [3, 1, 3, 1, 1, 1, 1]);
-  assert.deepEqual(d.funnel.map((f) => f.today), [3, 1, 3, 1, 1, 1, 1]);
+  assert.deepEqual(d.funnel.map((f) => f.total), [3, 1, 3, 1, 1, 1, 1, 1]);
+  assert.deepEqual(d.funnel.map((f) => f.today), [3, 1, 3, 1, 1, 1, 1, 1]);
   assert.match(await adminPage(e.DB, NOW, "x"), /How far people get/);
 });
 

@@ -24,7 +24,7 @@ export default function Nature() {
   if (!me || nextStep(me)) return <main className="screen" />;
   return (
     <main className="screen">
-      <Bar back={open ? undefined : "/home"} onBack={open ? () => setOpen(null) : undefined} title={nameOf(subjectById("nature"), me.lang)} />
+      <Bar back={open ? undefined : "/gyan"} onBack={open ? () => setOpen(null) : undefined} title={nameOf(subjectById("nature"), me.lang)} />
       {open ? <Lesson key={open.id} lesson={open} lang={me.lang} onClose={() => setOpen(null)} /> : (
         <div className="tiles">
           {LESSONS.map((l, i) => (

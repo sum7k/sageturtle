@@ -17,7 +17,7 @@ export default function Word() {
   if (!me || nextStep(me)) return <main className="screen" />;
   return (
     <main className="screen">
-      <Bar back="/home" title={nameOf(subjectById("word"), me.lang)} />
+      <Bar back="/gyan" title={nameOf(subjectById("word"), me.lang)} />
       <Grid level="word" houses={WORD_HOUSES} lang={me.lang} />
     </main>
   );

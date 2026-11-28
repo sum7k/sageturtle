@@ -49,7 +49,7 @@ export default function Life() {
   };
   return (
     <main className="screen">
-      <Bar back="/home" title={nameOf(subjectById("lives"), me.lang)} right={
+      <Bar back="/gyan" title={nameOf(subjectById("lives"), me.lang)} right={
         <button type="button" className="round white" aria-label="Another life" onClick={another}><Icon d={P.next} sw={2.5} /></button>} />
       <article className="life" lang={lang} key={life.id}>
         <div className="face" aria-hidden="true">{life.picture}</div>
