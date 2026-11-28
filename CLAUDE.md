@@ -42,6 +42,7 @@ their own way of seeing and saying it. A voice may tell more than one chapter.
   their mouth that is not true. Where later people corrected them, they say so themselves.
 - **The spirit above still holds.** The narrator teaches the subject; they are not held up as someone to copy, and
   they never compare the learner with anyone.
-- A chapter keeps one narrator from start to end, and one recorded voice (a man's or a woman's, as fits).
+- A chapter keeps one teller from start to end, and one recorded voice (a man's or a woman's, as fits). Each
+  lesson opens with the teller saying who they are (`apps/lib/lessons.js`).
 
 The first one is `apps/lib/chapters/zero.js`: Number, stage 6, told in the voice of Brahmagupta.

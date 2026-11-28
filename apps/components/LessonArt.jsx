@@ -123,6 +123,8 @@ const Drops = ({ x, y = 90, n = 3 }) => Array.from({ length: n }, (_, i) => <E k
 const No = ({ x, y, r }) => (<g className="mv glow"><circle cx={x} cy={y} r={r} fill="none" stroke="#e5484d" strokeWidth="7" /><path d={`M${x - r * 0.7} ${y - r * 0.7}L${x + r * 0.7} ${y + r * 0.7}`} stroke="#e5484d" strokeWidth="7" /></g>);
 
 Object.assign(ART, {
+  // The teller says who they are: a person, and one thing of their work beside them.
+  teller: ({ prop }) => (<Room c="#fff0bf"><circle cx="180" cy="150" r="120" fill="#fff" opacity="0.6" className="mv glow" /><Person x="150" y="252" s={2} c="#8a6fb0" move="sway" /><E x="268" y="150" s={64} move="bob">{prop}</E></Room>),
   // My body
   body: () => (<Room><Kid hop /></Room>),
   head: () => (<Room c="#ddf3e4"><Kid on="head" /></Room>),
@@ -158,11 +160,11 @@ Object.assign(ART, ZERO_ART);
 export const ART_IDS = Object.keys(ART);
 
 /** One drawing, by its name. `still` holds every move (used while the lesson is paused). */
-export default function LessonArt({ art, still = false }) {
+export default function LessonArt({ art, prop, still = false }) {
   const Draw = ART[art];
   return (
     <svg aria-hidden="true" viewBox="0 0 360 300" className={`art${still ? " still" : ""}`}>
-      {Draw ? <Draw /> : <rect width="360" height="300" fill={SKY} />}
+      {Draw ? <Draw prop={prop} /> : <rect width="360" height="300" fill={SKY} />}
     </svg>
   );
 }

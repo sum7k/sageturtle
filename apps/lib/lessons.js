@@ -5,24 +5,31 @@
 // The steps come from gyan/docs/syllabus-map.md. The lines were written by Claude, in Hindi and English first;
 // the other ten languages follow once the lessons are approved. Until then they are heard in English.
 //
+// The teller (sumeet, 2026-11-28): every lesson is told by a great person of that field, in the first person and in
+// their manner (`by`), never in the voice of a machine. The words are written for the lesson in that person's manner;
+// they are not that person's own quotes. `who` is the Sarvam voice, a man's or a woman's, to match the teller.
+// The first scene is the teller saying who they are; what they say of themselves must be true to their life.
+//
 // The spirit (CLAUDE.md): a lesson shows and names. It never compares the learner with anyone and never hurries them.
 
 import { ZERO } from "./chapters/zero.js";
 
 /**
  * Chapters, from stage 4 on, where the learner reads: a set of lessons on one topic, told in the voice of a great
- * person of the field (lib/narrators.js). Their lessons are written (the line is shown under the drawing), are heard
- * in the narrator's one voice, and end with a few sums to try. Each chapter lives in its own file in lib/chapters.
+ * person of the field (lib/narrators.js). Their lessons are written (the line is shown under the drawing), say whose
+ * voice they are told in, and end with a few sums to try. Each chapter lives in its own file in lib/chapters.
  */
 export const CHAPTERS = [ZERO];
 export const chaptersOf = (subject) => CHAPTERS.filter((c) => c.subject === subject);
-const inChapter = CHAPTERS.flatMap((c) => c.lessons.map((l) => ({ ...l, subject: c.subject, stage: c.stage, by: c.by, chapter: c.id })));
+const inChapter = CHAPTERS.flatMap((c) => c.lessons.map((l) => ({ ...l, subject: c.subject, stage: c.stage, by: c.by, who: c.who, chapter: c.id })));
 
 export const LESSONS = [
   // Stage 1, Nature: "The body and its five senses".
   {
     id: "body", subject: "nature", stage: 1, picture: "🧒", name: { en: "My body", hi: "मेरा शरीर" },
+    by: { id: "sushruta", en: "Sushruta", hi: "सुश्रुत" }, who: "man",
     scenes: [
+      { art: "teller", prop: "🌿", say: { hi: "मैं सुश्रुत हूँ। मैं वैद्य हूँ। मैंने शरीर को बहुत ध्यान से देखा है। आओ, तुम्हें अपना शरीर दिखाऊँ।", en: "I am Sushruta. I am a healer. I have looked at the body very closely. Come, let me show you your body." } },
       { art: "body", say: { hi: "यह हमारा शरीर है। इसी से हम चलते हैं, खेलते हैं और काम करते हैं।", en: "This is our body. With it we walk, play and work." } },
       { art: "head", say: { hi: "सबसे ऊपर सिर है। सिर में आँख, कान, नाक और मुँह हैं।", en: "At the top is the head. The head has eyes, ears, a nose and a mouth." } },
       { art: "hands", say: { hi: "ये दो हाथ हैं। हाथों से हम पकड़ते हैं और चीज़ें बनाते हैं।", en: "These are two hands. With our hands we hold things and make things." } },
@@ -34,7 +41,9 @@ export const LESSONS = [
   // Stage 1, Nature: "The body and its five senses".
   {
     id: "senses", subject: "nature", stage: 1, picture: "👀", name: { en: "The five senses", hi: "पाँच इंद्रियाँ" },
+    by: { id: "charaka", en: "Charaka", hi: "चरक" }, who: "man",
     scenes: [
+      { art: "teller", prop: "👀", say: { hi: "मैं चरक हूँ। मैं भी वैद्य हूँ। मैं बताता हूँ कि शरीर दुनिया को कैसे जानता है।", en: "I am Charaka. I too am a healer. I will tell you how the body knows the world." } },
       { art: "face", say: { hi: "हमारा शरीर दुनिया को पाँच तरह से जानता है।", en: "Our body knows the world in five ways." } },
       { art: "see", say: { hi: "आँखों से हम देखते हैं। देखो, एक फूल।", en: "With our eyes, we see. Look, a flower." } },
       { art: "hear", say: { hi: "कानों से हम सुनते हैं। सुनो, चिड़िया गा रही है।", en: "With our ears, we hear. Listen, a bird is singing." } },
@@ -47,7 +56,9 @@ export const LESSONS = [
   // Stage 1, Nature: "Fire: what burns, what it gives, how to be safe".
   {
     id: "fire", subject: "nature", stage: 1, picture: "🔥", name: { en: "Fire", hi: "आग" },
+    by: { id: "faraday", en: "Michael Faraday", hi: "माइकल फैराडे" }, who: "man",
     scenes: [
+      { art: "teller", prop: "🕯️", say: { hi: "मैं माइकल फैराडे हूँ। मुझे जलती लौ को देर तक देखना बहुत अच्छा लगता है। आओ, आग को साथ में देखें।", en: "I am Michael Faraday. I love to watch a burning flame for a long time. Come, let us look at fire together." } },
       { art: "night", say: { hi: "बहुत पहले की बात है। रात में बहुत अँधेरा होता था। और बहुत ठंड लगती थी।", en: "Long, long ago, the night was very dark. And it was very cold." } },
       { art: "lightning", say: { hi: "एक दिन आसमान से बिजली गिरी। एक सूखा पेड़ जलने लगा। यह आग थी।", en: "One day, lightning fell from the sky. A dry tree began to burn. This was fire." } },
       { art: "light", say: { hi: "आग से रोशनी मिलती है। अँधेरा दूर हो जाता है।", en: "Fire gives light. The dark goes away." } },
@@ -55,13 +66,15 @@ export const LESSONS = [
       { art: "cook", say: { hi: "आग पर खाना पकता है। पका हुआ खाना नरम होता है।", en: "Food is cooked on fire. Cooked food is soft." } },
       { art: "burns", say: { hi: "सूखी लकड़ी जलती है। सूखे पत्ते भी जलते हैं।", en: "Dry wood burns. Dry leaves burn too." } },
       { art: "noburn", say: { hi: "पत्थर नहीं जलता। और पानी आग को बुझा देता है।", en: "A stone does not burn. And water puts fire out." } },
-      { art: "safe", say: { hi: "आग बहुत गरम होती है। हम आग को छूते नहीं। हम आग से थोड़ा दूर रहते हैं।", en: "Fire is very hot. We do not touch fire. We stay a little away from it." } },
+      { art: "safe", say: { hi: "आग बहुत गरम होती है। मैं भी आग को छूता नहीं। हम आग से थोड़ा दूर रहते हैं।", en: "Fire is very hot. I do not touch fire either. We stay a little away from it." } },
     ],
   },
   // Stage 1, Nature: "Animals, birds and plants by name".
   {
     id: "animals", subject: "nature", stage: 1, picture: "🐘", name: { en: "Animals", hi: "जानवर" },
+    by: { id: "aristotle", en: "Aristotle", hi: "अरस्तू" }, who: "man",
     scenes: [
+      { art: "teller", prop: "🐚", say: { hi: "मैं अरस्तू हूँ। मैं समुद्र के किनारे बैठकर जानवरों को देखता था। जो देखता था, उसे याद रखता था।", en: "I am Aristotle. I used to sit by the sea and watch the animals. What I saw, I remembered." } },
       { art: "many", say: { hi: "हमारे आसपास बहुत से जानवर रहते हैं।", en: "Many animals live around us." } },
       { art: "elephant", say: { hi: "यह हाथी है। हाथी बहुत बड़ा होता है। उसकी लंबी सूँड़ होती है।", en: "This is an elephant. An elephant is very big. It has a long trunk." } },
       { art: "cow", say: { hi: "यह गाय है। गाय घास खाती है।", en: "This is a cow. A cow eats grass." } },
@@ -74,7 +87,9 @@ export const LESSONS = [
   // Stage 1, Nature: "Animals, birds and plants by name".
   {
     id: "birds", subject: "nature", stage: 1, picture: "🦜", name: { en: "Birds", hi: "पक्षी" },
+    by: { id: "salim-ali", en: "Salim Ali", hi: "सालिम अली" }, who: "man",
     scenes: [
+      { art: "teller", prop: "🐦", say: { hi: "मैं सालिम अली हूँ। बचपन में मैंने एक छोटी चिड़िया देखी। फिर मैं जीवन भर पक्षियों को देखता रहा।", en: "I am Salim Ali. As a child I saw a little bird. After that I watched birds all my life." } },
       { art: "wings", say: { hi: "पक्षियों के पंख होते हैं। ज़्यादातर पक्षी उड़ते हैं।", en: "Birds have wings. Most birds fly." } },
       { art: "parrot", say: { hi: "यह तोता है। तोता हरा होता है। उसकी चोंच लाल होती है।", en: "This is a parrot. A parrot is green. Its beak is red." } },
       { art: "rooster", say: { hi: "यह मुर्गा है। मुर्गा सुबह-सुबह बाँग देता है।", en: "This is a rooster. A rooster crows early in the morning." } },
@@ -86,7 +101,9 @@ export const LESSONS = [
   // Stage 1, Nature: "Animals, birds and plants by name".
   {
     id: "plants", subject: "nature", stage: 1, picture: "🌳", name: { en: "Plants", hi: "पेड़-पौधे" },
+    by: { id: "bose", en: "Jagadish Chandra Bose", hi: "जगदीश चंद्र बसु" }, who: "man",
     scenes: [
+      { art: "teller", prop: "🌱", say: { hi: "मैं जगदीश चंद्र बसु हूँ। मैंने जाना कि पौधे भी जीते हैं, और अपने ढंग से महसूस करते हैं।", en: "I am Jagadish Chandra Bose. I found that plants are alive too, and feel in their own way." } },
       { art: "seed", say: { hi: "यह एक बीज है। बीज मिट्टी में सोता है।", en: "This is a seed. The seed sleeps in the soil." } },
       { art: "sprout", say: { hi: "पानी और धूप मिलने पर बीज से पौधा निकलता है।", en: "With water and sunlight, a plant comes out of the seed." } },
       { art: "tree", say: { hi: "पौधा धीरे-धीरे बढ़कर पेड़ बनता है। नीचे जड़ें हैं, बीच में तना है, और ऊपर पत्ते हैं।", en: "Slowly the plant grows into a tree. Below are the roots, in the middle is the trunk, and above are the leaves." } },
@@ -97,7 +114,9 @@ export const LESSONS = [
   // Stage 1, Nature: "what can be eaten".
   {
     id: "food", subject: "nature", stage: 1, picture: "🥭", name: { en: "What we eat", hi: "हम क्या खाते हैं" },
+    by: { id: "janaki", en: "Janaki Ammal", hi: "जानकी अम्माल" }, who: "woman",
     scenes: [
+      { art: "teller", prop: "🌾", say: { hi: "मैं जानकी अम्माल हूँ। मैंने जीवन भर पौधों को पढ़ा। आओ देखें, पौधे हमें खाने को क्या देते हैं।", en: "I am Janaki Ammal. I studied plants all my life. Come, let us see what plants give us to eat." } },
       { art: "fruit", say: { hi: "पेड़ों पर फल लगते हैं। आम, केला और अंगूर। पके फल मीठे होते हैं।", en: "Fruit grows on trees. Mango, banana and grapes. Ripe fruit is sweet." } },
       { art: "roots", say: { hi: "कुछ खाना ज़मीन के नीचे उगता है। जैसे गाजर और शकरकंद।", en: "Some food grows under the ground. Like carrots and sweet potatoes." } },
       { art: "nuts", say: { hi: "बीज और मेवे भी खाए जाते हैं। मधुमक्खी के छत्ते से शहद मिलता है।", en: "Seeds and nuts are eaten too. Honey comes from the hive of bees." } },

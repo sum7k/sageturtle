@@ -8,13 +8,15 @@
 const M = "−"; // the minus sign
 
 export const ZERO = {
-  id: "zero", subject: "number", stage: 6, by: "brahmagupta", picture: "०",
+  id: "zero", subject: "number", stage: 6, picture: "०",
+  by: { id: "brahmagupta", en: "Brahmagupta", hi: "ब्रह्मगुप्त", years: "598–668" }, who: "man",
   name: { en: "Zero, fortune and debt", hi: "शून्य, धन और ऋण" },
   lessons: [
     {
       id: "shunya", picture: "०", name: { en: "Zero is a number", hi: "शून्य भी एक संख्या है" },
       scenes: [
-        { art: "z_sky", say: { hi: "मैं ब्रह्मगुप्त हूँ, भिल्लमाल का। मैं आकाश के ग्रहों और तारों की चाल गिनता हूँ। तीस वर्ष की आयु में मैंने अपना ग्रंथ लिखा। उसमें गिनती की एक बात है, जो आज तुम्हें बताता हूँ।", en: "I am Brahmagupta, of Bhillamala. I reckon the motions of the planets and the stars. At thirty I wrote my book. In it there is a matter of counting that I will tell you today." } },
+        { art: "teller", prop: "✨", say: { hi: "मैं ब्रह्मगुप्त हूँ, भिल्लमाल का। मैं आकाश के ग्रहों और तारों की चाल गिनता हूँ।", en: "I am Brahmagupta, of Bhillamala. I reckon the motions of the planets and the stars." } },
+        { art: "z_sky", say: { hi: "तीस वर्ष की आयु में मैंने अपना ग्रंथ लिखा। उसमें गिनती की एक बात है, जो आज तुम्हें बताता हूँ।", en: "At thirty I wrote my book. In it there is a matter of counting that I will tell you today." } },
         { art: "z_place", say: { hi: "गिनने वाले खाली स्थान पर एक बिंदु रखते आए हैं। दो सौ पाँच लिखना हो, तो दहाई के खाली स्थान पर बिंदु। पर वह बस एक निशान था कि यहाँ कुछ नहीं है। वह संख्या नहीं था।", en: "Those who count have long put a dot in an empty place. To write two hundred and five, a dot goes where the tens are empty. But it was only a mark that nothing is here. It was not a number." } },
         { art: "z_take", say: { hi: "अब देखो। मेरे पास पाँच मुद्राएँ हैं। मैं पाँचों दे देता हूँ। क्या बचा? तुम कहोगे, कुछ नहीं। मैं कहता हूँ, इस कुछ नहीं को भी गिना जा सकता है। इसका नाम शून्य है।", en: "Now look. I have five coins. I give away all five. What is left? You will say, nothing. I say this nothing can be counted too. Its name is zero." } },
         { art: "z_same", say: { hi: "कोई भी संख्या लो और उसे उसी में से घटाओ। तीन में से तीन। सौ में से सौ। हर बार शून्य मिलता है। जो घटाने से मिलता है, वह संख्या है। इसलिए मैं शून्य के नियम लिखता हूँ, जैसे दूसरी संख्याओं के।", en: "Take any number and subtract it from itself. Three from three. A hundred from a hundred. Each time you get zero. What comes out of a subtraction is a number. So I write rules for zero, as for other numbers." } },
@@ -27,6 +29,7 @@ export const ZERO = {
     {
       id: "dhanrin", picture: "⚖️", name: { en: "Fortune and debt", hi: "धन और ऋण" },
       scenes: [
+        { art: "teller", prop: "⚖️", say: { hi: "मैं ब्रह्मगुप्त हूँ। पिछली बार हम शून्य तक पहुँचे थे। आज शून्य के उस पार चलते हैं।", en: "I am Brahmagupta. Last time we reached zero. Today we go to the other side of zero." } },
         { art: "d_owe", say: { hi: "किसी व्यापारी से पूछो। उसके पास तीन मुद्राएँ हैं और उसे पाँच चुकानी हैं। तीनों दे दीं, फिर भी दो देनी बाक़ी हैं। यह बाक़ी भी एक संख्या है।", en: "Ask any trader. A trader holds three coins and must pay five. All three are given, and still two are owed. What is still owed is a number too." } },
         { art: "d_names", say: { hi: "जो पास है, उसे मैं धन कहता हूँ। जो देना है, उसे ऋण। ऋण शून्य से छोटी संख्या है। तुम्हारे समय में इन्हें धनात्मक और ऋणात्मक संख्या कहते हैं, और ऋण के आगे एक छोटी रेखा लगाते हैं।", en: "What is held, I call a fortune. What is owed, I call a debt. A debt is a number less than zero. In your time these are called positive and negative numbers, and a small stroke is written before a debt." } },
         { art: "d_line", say: { hi: "एक रेखा खींचो। बीच में शून्य रखो। दाईं ओर धन हैं: एक, दो, तीन। बाईं ओर ऋण हैं: ऋण एक, ऋण दो, ऋण तीन। जितना बाएँ जाओ, संख्या उतनी छोटी।", en: "Draw a line. Put zero in the middle. To the right are the fortunes: one, two, three. To the left are the debts: minus one, minus two, minus three. The further left, the smaller the number." } },
@@ -39,7 +42,8 @@ export const ZERO = {
     {
       id: "jod", picture: "➕", name: { en: "The rules of adding", hi: "जोड़ के नियम" },
       scenes: [
-        { art: "a_pp", say: { hi: "अब नियम। धन और धन का जोड़, धन। दो और तीन, पाँच। रेखा पर दाईं ओर दो चलो, फिर तीन और।", en: "Now the rules. A fortune and a fortune make a fortune. Two and three, five. On the line, go two to the right, then three more." } },
+        { art: "teller", prop: "➕", say: { hi: "मैं ब्रह्मगुप्त हूँ। धन और ऋण के नाम तुम जानते हो। आज उन्हें जोड़ने के नियम।", en: "I am Brahmagupta. You know the names fortune and debt. Today, the rules for adding them." } },
+        { art: "a_pp", say: { hi: "धन और धन का जोड़, धन। दो और तीन, पाँच। रेखा पर दाईं ओर दो चलो, फिर तीन और।", en: "A fortune and a fortune make a fortune. Two and three, five. On the line, go two to the right, then three more." } },
         { art: "a_dd", say: { hi: "ऋण और ऋण का जोड़, ऋण। दो का ऋण और तीन का ऋण, पाँच का ऋण। रेखा पर बाईं ओर दो चलो, फिर तीन और।", en: "A debt and a debt make a debt. A debt of two and a debt of three, a debt of five. On the line, go two to the left, then three more." } },
         { art: "a_pd", say: { hi: "धन और ऋण मिलें, तो उनका अंतर लो, और जो बड़ा था उसी का नाम रखो। पाँच का धन और तीन का ऋण। तीन जोड़े कट गए। दो का धन बचा।", en: "When a fortune meets a debt, take their difference, and keep the name of the larger. A fortune of five and a debt of three. Three pairs cancel. A fortune of two is left." } },
         { art: "a_dp", say: { hi: "अब तीन का धन और सात का ऋण। तीन जोड़े कट गए। चार का ऋण बचा, क्योंकि ऋण बड़ा था।", en: "Now a fortune of three and a debt of seven. Three pairs cancel. A debt of four is left, because the debt was the larger." } },
@@ -51,6 +55,7 @@ export const ZERO = {
     {
       id: "ghata", picture: "➖", name: { en: "The rules of subtracting", hi: "घटाने के नियम" },
       scenes: [
+        { art: "teller", prop: "➖", say: { hi: "मैं ब्रह्मगुप्त हूँ। जोड़ना हो गया। आज घटाना, जहाँ हिसाब करने वाले सबसे अधिक उलझते हैं।", en: "I am Brahmagupta. Adding is done. Today subtracting, where those who reckon get tangled the most." } },
         { art: "s_less", say: { hi: "छोटी संख्या में से बड़ी घटाओ। तीन में से पाँच। रेखा पर तीन से पाँच क़दम बाएँ चलो। तुम शून्य को पार कर ऋण दो पर पहुँचे।", en: "Take a larger number from a smaller. Five from three. On the line, walk five steps left from three. You cross zero and reach minus two." } },
         { art: "s_zero", say: { hi: "शून्य में से धन घटाओ, तो ऋण मिलता है। शून्य में से ऋण घटाओ, तो धन मिलता है। दूसरी बात पर ठहरो। उसे अभी दिखाता हूँ।", en: "Take a fortune from zero and you get a debt. Take a debt from zero and you get a fortune. Stay with the second one. I will show it now." } },
         { art: "s_debt", say: { hi: "तुम्हें चार मुद्राएँ देनी थीं। तुम ऋण चार पर थे। किसी ने वह ऋण हटा दिया। अब तुम शून्य पर हो, पहले से चार ऊपर। ऋण का हटना वही है जो धन का जुड़ना।", en: "You owed four coins. You stood on minus four. Someone took that debt away. Now you are on zero, four higher than before. To take away a debt is the same as to add a fortune." } },
@@ -63,6 +68,7 @@ export const ZERO = {
     {
       id: "guna", picture: "✖️", name: { en: "The rules of multiplying", hi: "गुणा के नियम" },
       scenes: [
+        { art: "teller", prop: "✖️", say: { hi: "मैं ब्रह्मगुप्त हूँ। आज गुणा। इसमें एक नियम ऐसा है जिसे लोग बिना समझे मान लेते हैं। हम उसे समझ कर मानेंगे।", en: "I am Brahmagupta. Today, multiplying. One rule in it is often taken without being understood. We will understand it first." } },
         { art: "m_pp", say: { hi: "गुणा बार बार जोड़ना है। तीन बार दो मुद्राएँ, छह मुद्राएँ। धन गुणा धन, धन।", en: "To multiply is to add again and again. Three times two coins, six coins. A fortune times a fortune is a fortune." } },
         { art: "m_pd", say: { hi: "तीन बार दो का ऋण, छह का ऋण। धन गुणा ऋण, ऋण।", en: "Three times a debt of two, a debt of six. A fortune times a debt is a debt." } },
         { art: "m_fall", say: { hi: "अब ऋण गुणा ऋण। इसे मान मत लो, क्रम से देखो। ऋण दो को तीन से, दो से, एक से और शून्य से गुणा करो। ऋण छह, ऋण चार, ऋण दो, शून्य। हर पंक्ति में उत्तर दो बढ़ता है।", en: "Now a debt times a debt. Do not take it on trust; watch the order. Multiply minus two by three, by two, by one and by zero. Minus six, minus four, minus two, zero. On each line the answer rises by two." } },
@@ -76,6 +82,7 @@ export const ZERO = {
     {
       id: "bhag", picture: "➗", name: { en: "Dividing, and where I stopped", hi: "भाग, और जहाँ मैं रुका" },
       scenes: [
+        { art: "teller", prop: "➗", say: { hi: "मैं ब्रह्मगुप्त हूँ। आज भाग, और वह स्थान जहाँ मेरा अपना नियम ठीक नहीं बैठा।", en: "I am Brahmagupta. Today, dividing, and the place where my own rule did not hold." } },
         { art: "v_share", say: { hi: "भाग गुणा का उलटा है। छह को दो से भाग दो, तो पूछो: कौन सी संख्या दो से गुणा होकर छह देती है? तीन।", en: "To divide is to multiply backwards. Divide six by two and ask: which number, times two, gives six? Three." } },
         { art: "v_signs", say: { hi: "इसलिए भाग में नाम वैसे ही चलते हैं जैसे गुणा में। नाम एक जैसे, तो उत्तर धन। नाम अलग, तो उत्तर ऋण।", en: "So in dividing the names go as they do in multiplying. Names alike, the answer is a fortune. Names different, the answer is a debt." } },
         { art: "v_zeroby", say: { hi: "शून्य को किसी संख्या से भाग दो, शून्य। बाँटने को कुछ है ही नहीं, तो पाँचों के हिस्से में शून्य।", en: "Divide zero by a number and you get zero. There is nothing to share, so each of the five gets zero." } },

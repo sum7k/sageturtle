@@ -7,7 +7,7 @@ import Lesson from "@/components/Lesson";
 import { useMe } from "@/components/useMe";
 import { nextStep } from "@/lib/store";
 import { chaptersOf, lessonById } from "@/lib/lessons";
-import { narratorById, inVoiceOf, notTheirWords } from "@/lib/narrators";
+import { inVoiceOf, notTheirWords } from "@/lib/narrators";
 import { subjectById, nameOf } from "@/lib/subjects";
 import { tap } from "@/lib/track";
 
@@ -34,7 +34,7 @@ export default function NumberPage() {
           <div className="head">
             <span className="step">{c.stage}</span>
             <h2>{word(c.name)}</h2>
-            <p className="by">{inVoiceOf(c.by, lang)} · {narratorById(c.by).years}</p>
+            <p className="by">{inVoiceOf(c.by, lang)} · {c.by.years}</p>
             <p className="honest">{notTheirWords(lang)}</p>
           </div>
           <ol className="lessons">

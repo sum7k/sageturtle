@@ -477,6 +477,7 @@ test("a lesson is scenes: a drawing and a spoken line, recorded once under the l
   const art = ["../components/LessonArt.jsx", "../components/art/zero.jsx"].map((f) => fs.readFileSync(new URL(f, import.meta.url), "utf8")).join("\n");
   assert.equal(lessonsOf("nature", 1).length, 7);
   for (const l of LESSONS) {
+    assert.ok(l.by.hi && l.by.en && ["man", "woman"].includes(l.who) && l.scenes[0].art === "teller" && l.scenes[0].say.hi.startsWith(`मैं ${l.by.hi} हूँ`), `${l.id}: told by a named person, who says so first`);
     assert.ok(TRACKED.includes(`lesson:${l.id}`) && TRACKED.includes(`watched:${l.id}`));
     for (const s of l.scenes) {
       assert.ok(s.say.hi && s.say.en, `${l.id}: every line in Hindi and English`);
@@ -502,15 +503,14 @@ test("a lesson is scenes: a drawing and a spoken line, recorded once under the l
 
 test("a chapter is told in one named voice, and its sums are right", async () => {
   const { CHAPTERS, LESSONS, chaptersOf } = await import("../lib/lessons.js");
-  const { NARRATORS, inVoiceOf, notTheirWords } = await import("../lib/narrators.js");
+  const { inVoiceOf, notTheirWords } = await import("../lib/narrators.js");
   assert.deepEqual(chaptersOf("number").map((c) => c.id), ["zero"]);
   for (const c of CHAPTERS) {
-    const who = NARRATORS[c.by];
-    assert.ok(who && ["man", "woman"].includes(who.who), `${c.id}: a narrator`);
-    for (const l of LANG_ORDER) { assert.ok(inVoiceOf(c.by, l).includes(who.name[l]), l); assert.ok(notTheirWords(l)); }
+    assert.ok(c.by.hi && c.by.en && ["man", "woman"].includes(c.who), `${c.id}: a teller`);
+    for (const l of LANG_ORDER) { assert.ok(inVoiceOf(c.by, l).includes(c.by[l] ?? c.by.en), l); assert.ok(notTheirWords(l)); }
     for (const l of c.lessons) {
       const whole = LESSONS.find((x) => x.id === l.id);
-      assert.equal(whole.by, c.by); assert.equal(whole.stage, c.stage);
+      assert.equal(whole.by, c.by); assert.equal(whole.who, c.who); assert.equal(whole.stage, c.stage);
       assert.ok(l.name.hi && l.name.en);
       for (const [sum, choices, good] of l.ask) {
         assert.equal(choices.length, 3);

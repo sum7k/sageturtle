@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>BodhiLabs lab: answers on the phone</title>
+<style>
+  body { font: 17px/1.45 system-ui, sans-serif; margin: 0; padding: 16px; background: #e8f2fd; color: #14143c; max-width: 640px; margin-inline: auto; }
+  h1 { font-size: 20px; } section { background: #fff; border-radius: 18px; padding: 14px; margin: 12px 0; }
+  button, select, textarea { font: inherit; } textarea { width: 100%; box-sizing: border-box; border-radius: 12px; padding: 10px; }
+  button { background: #ffc530; border: 0; border-radius: 999px; padding: 10px 20px; font-weight: 700; margin: 6px 6px 0 0; }
+  button:disabled { opacity: .4; } .line { background: #def2e2; border-radius: 12px; padding: 8px 10px; margin: 6px 0; }
+  .own { background: #fff3c9; } small { color: #555; } label { display: block; margin-top: 8px; }
+</style>
+</head>
+<body>
+<h1>Lab: answers on the phone</h1>
+<p><small>For trying, not for learners. Step 1 finds lines of our lessons (no download). Step 2 is a small language model on this phone (one download of about 273 MB; use Wi-Fi).</small></p>
+<section>
+  <select id="lang"><option value="hi">हिन्दी</option><option value="en">English</option></select>
+  <textarea id="q" rows="2" placeholder="मछली कहाँ रहती है?"></textarea>
+  <button id="ask">Ask</button>
+  <div id="found"></div>
+</section>
+<section>
+  <b>Step 2: the small model</b> <small id="can"></small><br>
+  <button id="get">Download and start the model</button> <small id="state"></small>
+  <div id="own"></div>
+  <label><input type="checkbox" id="on"> Use the model in Ask, in the app on this phone</label>
+</section>
+<script type="module">
+  import { answer } from "/labjs/find.js";
+  import { capable, compose, load, mindOn, setMind, SIZE_MB } from "/labjs/mind.js";
+  const $ = (id) => document.getElementById(id);
+  let ready = false;
+  $("can").textContent = capable() ? "This phone can run it." : "This phone cannot run it (no WebGPU, little memory, or data saver is on).";
+  $("get").disabled = !capable();
+  $("on").checked = mindOn();
+  $("on").disabled = !capable();
+  $("on").onchange = () => setMind($("on").checked);
+  $("get").onclick = async () => {
+    $("get").disabled = true;
+    const began = performance.now();
+    try {
+      await load((pct) => { $("state").textContent = `downloading ${pct}% of about ${SIZE_MB.q4f16} MB`; });
+      ready = true;
+      $("state").textContent = `ready in ${Math.round((performance.now() - began) / 1000)} s`;
+    } catch (e) { $("state").textContent = "failed: " + (e?.message ?? e); $("get").disabled = false; }
+  };
+  $("ask").onclick = async () => {
+    const q = $("q").value.trim(), lang = $("lang").value;
+    if (!q) return;
+    const t0 = performance.now();
+    const lines = answer(q, lang);
+    const ms = (performance.now() - t0).toFixed(1);
+    $("found").innerHTML = `<small>${lines.length ? (lines[0].sure ? "sure" : "only the nearest; in the app this also goes to a person") : "nothing found; in the app this goes to a person"} (${ms} ms)</small>`;
+    for (const l of lines) { const d = document.createElement("div"); d.className = "line"; d.textContent = `${l.passage.id}: ${l.passage.text}`; $("found").append(d); }
+    $("own").textContent = "";
+    if (!ready || !lines.length) return;
+    $("own").innerHTML = "<small>the model is writing…</small>";
+    const t1 = performance.now();
+    const text = await compose(q, lines.map((l) => l.passage.text), lang);
+    $("own").innerHTML = `<small>the model (${Math.round(performance.now() - t1)} ms)</small><div class="line own"></div>`;
+    $("own").querySelector(".line").textContent = text || "(no answer of its own; the found line is shown)";
+  };
+</script>
+</body>
+</html>
