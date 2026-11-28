@@ -8,18 +8,16 @@
 // The spirit (CLAUDE.md): a lesson shows and names. It never compares the learner with anyone and never hurries them.
 
 export const LESSONS = [
-  // Stage 1, Nature: "Fire: what burns, what it gives, how to be safe".
+  // Stage 1, Nature: "The body and its five senses".
   {
-    id: "fire", subject: "nature", stage: 1, picture: "🔥", name: { en: "Fire", hi: "आग" },
+    id: "body", subject: "nature", stage: 1, picture: "🧒", name: { en: "My body", hi: "मेरा शरीर" },
     scenes: [
-      { art: "night", say: { hi: "बहुत पहले की बात है। रात में बहुत अँधेरा होता था। और बहुत ठंड लगती थी।", en: "Long, long ago, the night was very dark. And it was very cold." } },
-      { art: "lightning", say: { hi: "एक दिन आसमान से बिजली गिरी। एक सूखा पेड़ जलने लगा। यह आग थी।", en: "One day, lightning fell from the sky. A dry tree began to burn. This was fire." } },
-      { art: "light", say: { hi: "आग से रोशनी मिलती है। अँधेरा दूर हो जाता है।", en: "Fire gives light. The dark goes away." } },
-      { art: "warm", say: { hi: "आग से गर्मी मिलती है। ठंड दूर हो जाती है।", en: "Fire gives warmth. The cold goes away." } },
-      { art: "cook", say: { hi: "आग पर खाना पकता है। पका हुआ खाना नरम होता है।", en: "Food is cooked on fire. Cooked food is soft." } },
-      { art: "burns", say: { hi: "सूखी लकड़ी जलती है। सूखे पत्ते भी जलते हैं।", en: "Dry wood burns. Dry leaves burn too." } },
-      { art: "noburn", say: { hi: "पत्थर नहीं जलता। और पानी आग को बुझा देता है।", en: "A stone does not burn. And water puts fire out." } },
-      { art: "safe", say: { hi: "आग बहुत गरम होती है। हम आग को छूते नहीं। हम आग से थोड़ा दूर रहते हैं।", en: "Fire is very hot. We do not touch fire. We stay a little away from it." } },
+      { art: "body", say: { hi: "यह हमारा शरीर है। इसी से हम चलते हैं, खेलते हैं और काम करते हैं।", en: "This is our body. With it we walk, play and work." } },
+      { art: "head", say: { hi: "सबसे ऊपर सिर है। सिर में आँख, कान, नाक और मुँह हैं।", en: "At the top is the head. The head has eyes, ears, a nose and a mouth." } },
+      { art: "hands", say: { hi: "ये दो हाथ हैं। हाथों से हम पकड़ते हैं और चीज़ें बनाते हैं।", en: "These are two hands. With our hands we hold things and make things." } },
+      { art: "legs", say: { hi: "ये दो पैर हैं। पैरों से हम चलते हैं, दौड़ते हैं और कूदते हैं।", en: "These are two legs. With our legs we walk, run and jump." } },
+      { art: "wash", say: { hi: "हम अपने शरीर को साफ़ रखते हैं। पानी से हाथ धोते हैं और नहाते हैं।", en: "We keep our body clean. We wash our hands and bathe with water." } },
+      { art: "bodies", say: { hi: "हर किसी का शरीर थोड़ा अलग होता है। कोई लंबा, कोई छोटा। हर शरीर अच्छा है।", en: "Every body is a little different. Some are tall, some are small. Every body is good." } },
     ],
   },
   // Stage 1, Nature: "The body and its five senses".
@@ -35,6 +33,20 @@ export const LESSONS = [
       { art: "five", say: { hi: "आँख, कान, नाक, जीभ और त्वचा। ये हमारी पाँच इंद्रियाँ हैं।", en: "Eyes, ears, nose, tongue and skin. These are our five senses." } },
     ],
   },
+  // Stage 1, Nature: "Fire: what burns, what it gives, how to be safe".
+  {
+    id: "fire", subject: "nature", stage: 1, picture: "🔥", name: { en: "Fire", hi: "आग" },
+    scenes: [
+      { art: "night", say: { hi: "बहुत पहले की बात है। रात में बहुत अँधेरा होता था। और बहुत ठंड लगती थी।", en: "Long, long ago, the night was very dark. And it was very cold." } },
+      { art: "lightning", say: { hi: "एक दिन आसमान से बिजली गिरी। एक सूखा पेड़ जलने लगा। यह आग थी।", en: "One day, lightning fell from the sky. A dry tree began to burn. This was fire." } },
+      { art: "light", say: { hi: "आग से रोशनी मिलती है। अँधेरा दूर हो जाता है।", en: "Fire gives light. The dark goes away." } },
+      { art: "warm", say: { hi: "आग से गर्मी मिलती है। ठंड दूर हो जाती है।", en: "Fire gives warmth. The cold goes away." } },
+      { art: "cook", say: { hi: "आग पर खाना पकता है। पका हुआ खाना नरम होता है।", en: "Food is cooked on fire. Cooked food is soft." } },
+      { art: "burns", say: { hi: "सूखी लकड़ी जलती है। सूखे पत्ते भी जलते हैं।", en: "Dry wood burns. Dry leaves burn too." } },
+      { art: "noburn", say: { hi: "पत्थर नहीं जलता। और पानी आग को बुझा देता है।", en: "A stone does not burn. And water puts fire out." } },
+      { art: "safe", say: { hi: "आग बहुत गरम होती है। हम आग को छूते नहीं। हम आग से थोड़ा दूर रहते हैं।", en: "Fire is very hot. We do not touch fire. We stay a little away from it." } },
+    ],
+  },
   // Stage 1, Nature: "Animals, birds and plants by name".
   {
     id: "animals", subject: "nature", stage: 1, picture: "🐘", name: { en: "Animals", hi: "जानवर" },
@@ -46,6 +58,41 @@ export const LESSONS = [
       { art: "fish", say: { hi: "यह मछली है। मछली पानी में रहती है।", en: "This is a fish. A fish lives in water." } },
       { art: "monkey", say: { hi: "यह बंदर है। बंदर पेड़ पर चढ़ता है।", en: "This is a monkey. A monkey climbs trees." } },
       { art: "each", say: { hi: "हाथी, गाय, मोर, मछली और बंदर। हर एक अलग है, और हर एक अपनी तरह से जीता है।", en: "Elephant, cow, peacock, fish and monkey. Each one is different, and each one lives in its own way." } },
+    ],
+  },
+  // Stage 1, Nature: "Animals, birds and plants by name".
+  {
+    id: "birds", subject: "nature", stage: 1, picture: "🦜", name: { en: "Birds", hi: "पक्षी" },
+    scenes: [
+      { art: "wings", say: { hi: "पक्षियों के पंख होते हैं। ज़्यादातर पक्षी उड़ते हैं।", en: "Birds have wings. Most birds fly." } },
+      { art: "parrot", say: { hi: "यह तोता है। तोता हरा होता है। उसकी चोंच लाल होती है।", en: "This is a parrot. A parrot is green. Its beak is red." } },
+      { art: "rooster", say: { hi: "यह मुर्गा है। मुर्गा सुबह-सुबह बाँग देता है।", en: "This is a rooster. A rooster crows early in the morning." } },
+      { art: "owl", say: { hi: "यह उल्लू है। उल्लू रात में जागता है।", en: "This is an owl. An owl is awake at night." } },
+      { art: "duck", say: { hi: "यह बतख है। बतख पानी में तैरती है।", en: "This is a duck. A duck swims on water." } },
+      { art: "nest", say: { hi: "पक्षी घोंसला बनाते हैं। घोंसले में अंडे होते हैं। अंडों से बच्चे निकलते हैं।", en: "Birds make a nest. In the nest there are eggs. Chicks come out of the eggs." } },
+    ],
+  },
+  // Stage 1, Nature: "Animals, birds and plants by name".
+  {
+    id: "plants", subject: "nature", stage: 1, picture: "🌳", name: { en: "Plants", hi: "पेड़-पौधे" },
+    scenes: [
+      { art: "seed", say: { hi: "यह एक बीज है। बीज मिट्टी में सोता है।", en: "This is a seed. The seed sleeps in the soil." } },
+      { art: "sprout", say: { hi: "पानी और धूप मिलने पर बीज से पौधा निकलता है।", en: "With water and sunlight, a plant comes out of the seed." } },
+      { art: "tree", say: { hi: "पौधा धीरे-धीरे बढ़कर पेड़ बनता है। नीचे जड़ें हैं, बीच में तना है, और ऊपर पत्ते हैं।", en: "Slowly the plant grows into a tree. Below are the roots, in the middle is the trunk, and above are the leaves." } },
+      { art: "flower", say: { hi: "पेड़ पर फूल खिलते हैं। फूलों से फल बनते हैं।", en: "Flowers bloom on the tree. Flowers turn into fruit." } },
+      { art: "shade", say: { hi: "पेड़ हमें छाया देते हैं और फल देते हैं। पक्षी पेड़ पर रहते हैं।", en: "Trees give us shade and fruit. Birds live in trees." } },
+    ],
+  },
+  // Stage 1, Nature: "what can be eaten".
+  {
+    id: "food", subject: "nature", stage: 1, picture: "🥭", name: { en: "What we eat", hi: "हम क्या खाते हैं" },
+    scenes: [
+      { art: "fruit", say: { hi: "पेड़ों पर फल लगते हैं। आम, केला और अंगूर। पके फल मीठे होते हैं।", en: "Fruit grows on trees. Mango, banana and grapes. Ripe fruit is sweet." } },
+      { art: "roots", say: { hi: "कुछ खाना ज़मीन के नीचे उगता है। जैसे गाजर और शकरकंद।", en: "Some food grows under the ground. Like carrots and sweet potatoes." } },
+      { art: "nuts", say: { hi: "बीज और मेवे भी खाए जाते हैं। मधुमक्खी के छत्ते से शहद मिलता है।", en: "Seeds and nuts are eaten too. Honey comes from the hive of bees." } },
+      { art: "noteat", say: { hi: "पर हर चीज़ खाई नहीं जाती। कुछ चीज़ें हमें बीमार कर सकती हैं।", en: "But not everything can be eaten. Some things can make us ill." } },
+      { art: "askfirst", say: { hi: "जिस चीज़ को हम नहीं जानते, उसे बड़ों से पूछकर ही खाते हैं।", en: "What we do not know, we eat only after asking a grown-up." } },
+      { art: "drink", say: { hi: "और हम साफ़ पानी पीते हैं। पानी सबको चाहिए।", en: "And we drink clean water. Everyone needs water." } },
     ],
   },
 ];

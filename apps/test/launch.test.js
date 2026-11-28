@@ -474,7 +474,7 @@ test("a lesson is scenes: a drawing and a spoken line, recorded once under the l
   const { lineUrl } = await import("../lib/voice.js");
   const { voice } = await import("../worker/voice.js");
   const art = (await import("node:fs")).readFileSync(new URL("../components/LessonArt.jsx", import.meta.url), "utf8");
-  assert.equal(lessonsOf("nature", 1).length, 3);
+  assert.equal(lessonsOf("nature", 1).length, 7);
   for (const l of LESSONS) {
     assert.ok(TRACKED.includes(`lesson:${l.id}`) && TRACKED.includes(`watched:${l.id}`));
     for (const s of l.scenes) {
@@ -482,7 +482,7 @@ test("a lesson is scenes: a drawing and a spoken line, recorded once under the l
       assert.ok(new RegExp(`\\n  ${s.art}: \\(`).test(art), `${l.id}: the drawing "${s.art}" exists`);
     }
   }
-  const fire = LESSONS[0];
+  const fire = LESSONS.find((l) => l.id === "fire");
   assert.equal(lessonLang(fire, "hi"), "hi");
   assert.equal(lessonLang(fire, "ta"), "en"); // not written yet: heard in English
   assert.equal(lineText(lineId(fire, 2), "hi"), fire.scenes[2].say.hi);
