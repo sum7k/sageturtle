@@ -22,7 +22,6 @@ export default function Landing() {
   const [kind, setKind] = useState(null);
   const [lang, setLang] = useState("en");
   const [stage, setStage] = useState("install"); // install, installing, open
-  const [canAsk, setCanAsk] = useState(false);
   const [byHand, setByHand] = useState(false); // Chrome gave no prompt: show the menu steps
 
   useEffect(() => {
@@ -30,7 +29,7 @@ export default function Landing() {
     if (matchMedia("(display-mode: standalone)").matches || navigator.standalone === true) return router.replace("/app");
     setLang(guessLang(navigator.language));
     setKind(browserKind(navigator.userAgent));
-    const ask = (e) => { e.preventDefault(); prompt.current = e; setCanAsk(true); setByHand(false); };
+    const ask = (e) => { e.preventDefault(); prompt.current = e; setByHand(false); };
     const wait = setTimeout(() => { if (!prompt.current) setByHand(true); }, 3000);
     const done = () => setStage("open");
     addEventListener("beforeinstallprompt", ask);
@@ -46,7 +45,6 @@ export default function Landing() {
     prompt.current.prompt();
     const choice = await prompt.current.userChoice.catch(() => null);
     prompt.current = null;
-    setCanAsk(false);
     if (choice?.outcome === "accepted") setStage((s) => (s === "open" ? s : "installing")); // `appinstalled` follows
   };
 
