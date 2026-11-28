@@ -11,6 +11,7 @@ import { nameOf } from "@/lib/subjects";
 import { answer } from "@/lib/find";
 import { langById } from "@/lib/langs";
 import { askCloud, compose, mindReady, warm } from "@/lib/mind";
+import { allOpen, loadStage } from "@/lib/stages";
 import { load } from "@/lib/store";
 import { hush, sayLine, sayOwn } from "@/lib/speak";
 import { tap } from "@/lib/track";
@@ -51,7 +52,8 @@ export default function Ask() {
   const ask = (asked = text) => {
     const mine = asked.trim();
     if (!mine) return;
-    const lines = answer(mine, lang);
+    const upTo = allOpen() ? Infinity : loadStage(); // never a line from a stage ahead of the learner
+    const lines = answer(mine, lang, 3, { upTo });
     const sure = !!lines[0]?.sure;
     tap(sure ? "ask:found" : lines.length ? "ask:near" : "ask:none");
     setText("");
@@ -62,7 +64,7 @@ export default function Ask() {
       // when it is there (lib/mind.js), else by one on Cloudflare. When neither has an answer, the line itself is said.
       const stamp = ++latest.current;
       const heardIn = lines[0].passage.lang;
-      const wide = answer(mine, lang, 5); // a few more lines for the model to choose from
+      const wide = answer(mine, lang, 5, { upTo }); // a few more lines for the model to choose from
       const write = mindReady() ? compose(mine, wide.map((l) => l.passage.text), heardIn) : askCloud(load().uid, mine, wide.map((l) => l.passage.id), heardIn);
       write.then((own) => {
         if (latest.current !== stamp) return; // a newer question has been asked meanwhile

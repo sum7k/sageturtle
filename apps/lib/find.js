@@ -117,14 +117,17 @@ export function find(ix, question, most = 3, lang = ix.docs[0]?.passage.lang) {
   return out.sort((a, b) => b.sure - a.sure || b.score - a.score).slice(0, most);
 }
 
-const made = new Map(); // one index per language, made the first time it is needed
-/** Ask the lessons a question in the learner's language. Lessons not yet written in it are searched in English. */
-export function answer(question, lang, most = 3, lessons = LESSONS) {
+const made = new Map(); // one index per language and stage, made the first time it is needed
+/**
+ * Ask the lessons a question in the learner's language. Lessons not yet written in it are searched in English.
+ * `upTo` is the learner's stage: only lines of that stage and the ones behind it can answer, never a stage ahead.
+ */
+export function answer(question, lang, most = 3, { lessons = LESSONS, upTo = Infinity } = {}) {
   for (const l of lang === "en" ? ["en"] : [lang, "en"]) {
-    const key = lessons === LESSONS ? l : null; // only the app's own lessons are kept
-    const ix = (key && made.get(key)) || index(passages(l, { lessons }));
+    const key = lessons === LESSONS ? `${l}:${upTo}` : null; // only the app's own lessons are kept
+    const ix = (key && made.get(key)) || index(passages(l, { lessons, upTo }));
     if (key) made.set(key, ix);
-    const got = find(ix, question, most);
+    const got = find(ix, question, most, l);
     if (got.length) return got;
   }
   return [];
